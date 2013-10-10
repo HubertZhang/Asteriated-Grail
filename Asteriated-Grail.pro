@@ -23,4 +23,4 @@ HEADERS  += mainwindow.h \
     player.h \
     card.h
 
-FORMS    += mainwindow.ui
+FORMS    +=
