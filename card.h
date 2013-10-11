@@ -5,7 +5,7 @@ class Card
 {
     int status;             //status of this card
     int type;               //type of this card
-    /*How to set JiNeng......*/
+    /*How to set skills......*/
 public:
     Card();
 };
