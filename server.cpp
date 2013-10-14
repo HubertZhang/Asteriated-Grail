@@ -34,14 +34,6 @@ void Server::Game()
 
 void Server::init()
 {
-    /*init Piles*/
-    Pile = new int[CARD_NUMBER];
-    DiscardPile = new int[CARD_NUMBER];
-    BeginOfPile = Pile;
-    EndOfPile = Pile+CARD_NUMBER;
-    BeginOfDiscardPile = DiscardPile;
-    EndOfDiscardPile = DiscardPile;
-    for(int i = 0; i<CARD_NUMBER; i++) DiscardPile[i]=Pile[i] = i;
 
     /*Arrenge Team*/
     srand(time(0));
@@ -57,8 +49,15 @@ void Server::init()
  */
     /*Choose Role*/
 
-    /*Shuffle Cards*/
-    shuffle_cards();
+    /*init Piles*/
+    Pile = new int[CARD_NUMBER];
+    DiscardPile = new int[CARD_NUMBER];
+    EndOfPile = Pile+CARD_NUMBER;
+    EndOfDiscardPile = DiscardPile;
+    NextCard = Pile;
+    for(int i = 0; i<CARD_NUMBER; i++) Pile[i] = i;
+    random_shuffle(BeginOfPile,EndOfPile);
+
     /*Deal Cards*/
     for (int i = 0; i<PlayerNumber; i++) deal_cards(i,4);
 }
@@ -69,11 +68,29 @@ void Server::shuffle_cards()
      *  How to know whether this card is used or still in Pile(Pai Ku)
      *  How to only shuffle the cards in the discard pile(Qi Pai Dui)
      */
-    random_shuffle(BeginOfDiscardPile,EndOfDiscardPile);
-    int*
+    int* temp = Pile;
+    Pile = DiscardPile;
+    DiscardPile = temp;
+
+    NextCard = Pile;
+    EndOfPile = EndOfDiscardPile;
+    EndOfDiscardPile = DiscardPile;
+    random_shuffle(Pile,EndOfPile);
 }
 
 void Server::deal_cards(int id, int number)
 {
     /*  Use what to indentify players?*/
+    NumberOfLeftCards = NextCard-EndOfPile;
+    if (NumberOfLeftCards<number)
+    {
+        int temp = NumberOfLeftCards;
+        deal_cards(id,temp);
+        shuffle_cards();
+        deal_cards(id,number-temp);
+    }
+    else
+    {
+        //deal cards
+    }
 }
