@@ -34,6 +34,15 @@ void Server::Game()
 
 void Server::init()
 {
+    /*init Piles*/
+    Pile = new int[CARD_NUMBER];
+    DiscardPile = new int[CARD_NUMBER];
+    BeginOfPile = Pile;
+    EndOfPile = Pile+CARD_NUMBER;
+    BeginOfDiscardPile = DiscardPile;
+    EndOfDiscardPile = DiscardPile;
+    for(int i = 0; i<CARD_NUMBER; i++) DiscardPile[i]=Pile[i] = i;
+
     /*Arrenge Team*/
     srand(time(0));
     int team[2][PlayerNumber/2];
@@ -57,9 +66,11 @@ void Server::init()
 void Server::shuffle_cards()
 {
     /*  How to store cards?
-     *  How to know whether this card is used or still in Library(Pai Ku)
+     *  How to know whether this card is used or still in Pile(Pai Ku)
      *  How to only shuffle the cards in the discard pile(Qi Pai Dui)
      */
+    random_shuffle(BeginOfDiscardPile,EndOfDiscardPile);
+    int*
 }
 
 void Server::deal_cards(int id, int number)
