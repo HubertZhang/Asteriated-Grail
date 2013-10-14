@@ -1,3 +1,7 @@
+/*The work that the server should do is to handle the signals that come from outside.
+ *
+ *
+ */
 #ifndef SERVER_H
 #define SERVER_H
 #include "card.h"
@@ -7,8 +11,8 @@
 #include <exception>
 struct Team
 {
-    int grail[2];
-    int morale[2];
+    int grail;
+    int morale;
     Player* player[3];
 };
 
@@ -16,7 +20,7 @@ class Server : public QObject
 {
     Q_OBJECT
     static int PlayerNumber;
-    Card card[];
+    Card discardPile[150];
     Player* players;
     Team team[2];
     void shuffle_cards();

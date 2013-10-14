@@ -1,0 +1,27 @@
+/*    This is not a cpp file actually.In fact the reason that why this file
+ *  appears is just because when I want to write something I find I don't know
+ *  which part should do what.So the following is a example of how one complete
+ *  game is run.
+ *  1.Connection.The server should has a int value to record the number of people
+ *    connected to the server currently.If this value equals to six a new game
+ *    will start.So the mainwindow should have a function like sendStart(),If One
+ *    people click the button "link",It will send a signal "link" to the server.
+ *    And so the server should have a funtion like acceptStart(),to record the
+ *    information of the people connected in and decide if it should start a new
+ *    game.
+ *    But the problem is if one server is full of six people,it will stop to accept
+ *    new connection.So there will be no available server.So maybe we should have a
+ *    bool global value to record if there a available server if there is a "link"
+ *    signal sended.If not,it will create a new object of server to handle this request.
+ *  2.Init.If the server has accepted six request of connection,it will init the game.
+ *    First,It will init the pickupPiles and discardPiles.Then it will allocate the
+ *    team color and character to this six people.And then,it will allocate the initial
+ *    card to all the players.The first player is decided this time.Then,the game
+ *    circulation is started.
+ *  3.Game circulation:The server will receive many different signals from the local.
+ *    And it will send back instructions for action and GUI painting.The state of the
+ *    players will make two copies,one in servers and one in local.In serves,these data
+ *    is used to calculate,and these data will be used to paint in local.There will be
+ *    some difference between these two Players class,so we should use inheritance,to
+ *    construct two different class,LocalPlayer class and ServerPlayer class.
+ */

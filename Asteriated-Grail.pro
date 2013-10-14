@@ -24,3 +24,6 @@ HEADERS  += mainwindow.h \
     card.h
 
 FORMS    +=
+
+OTHER_FILES += \
+    RunExample.txt
