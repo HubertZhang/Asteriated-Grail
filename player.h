@@ -6,9 +6,10 @@
 class Player : public QObject
 {
     Q_OBJECT
+
 public:
     explicit Player(QObject *parent = 0);
-
+    void get_card(int);
 signals:
 
 public slots:
@@ -16,4 +17,11 @@ public slots:
 
 };
 
+struct Team
+{
+    int grail;
+    int morale;
+    Player* player[3];
+    Team();
+};
 #endif // PLAYER_H

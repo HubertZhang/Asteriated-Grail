@@ -5,9 +5,8 @@
 using namespace std;
 
 Server::Server(QObject *parent,int Number) :
-    QObject(parent)
+    QObject(parent),PlayerNumber(Number)
 {
-    this->PlayerNumber = Number;
     players = new Player[PlayerNumber];
     srand(time(0));
 }
@@ -25,7 +24,7 @@ void Server::Game()
             if(current_player==6)
                 current_player=0;
         }
-        catch
+        catch(GameTerminate a)
         {
             //...
         }
@@ -34,19 +33,26 @@ void Server::Game()
 
 void Server::init()
 {
-
     /*Arrenge Team*/
-    srand(time(0));
-    int team[2][PlayerNumber/2];
-    for (int i = 0; i<PlayerNumber;i++)
     {
-        *(team[0]+i) = i;
+        int temp[2][PlayerNumber/2];
+        for (int i = 0; i<PlayerNumber;i++)
+        {
+            *(temp[0]+i) = i;
+        }
+        random_shuffle(temp[0],temp[0]+PlayerNumber);
+        /*  number in team[0] means player is in red team,
+         *  number in team[0] means player is in blue team,
+         *  number in team[0][0] means player is the first player
+         */
+        for (int i = 0; i<PlayerNumber;i++)
+        {
+            team[0].player[i] = &players[temp[0][i]];
+            team[1].player[i] = &players[temp[1][i]];
+        }
     }
-    random_shuffle(team[0],team[0]+PlayerNumber);
-/*  number in team[0] means player is in red team,
- *  number in team[0] means player is in blue team,
- *  number in team[0][0] means player is the first player
- */
+
+
     /*Choose Role*/
 
     /*init Piles*/
@@ -56,7 +62,7 @@ void Server::init()
     EndOfDiscardPile = DiscardPile;
     NextCard = Pile;
     for(int i = 0; i<CARD_NUMBER; i++) Pile[i] = i;
-    random_shuffle(BeginOfPile,EndOfPile);
+    random_shuffle(Pile,EndOfPile);
 
     /*Deal Cards*/
     for (int i = 0; i<PlayerNumber; i++) deal_cards(i,4);
@@ -91,6 +97,10 @@ void Server::deal_cards(int id, int number)
     }
     else
     {
-        //deal cards
+        for(int i = 0; i<number; i++)
+        {
+            players[id].get_card(*NextCard);
+            NextCard++;
+        }
     }
 }

@@ -11,17 +11,15 @@
 #include <exception>
 #define CARD_NUMBER 150
 
-struct Team
+class GameTerminate
 {
-    int grail;
-    int morale;
-    Player* player[3];
+
 };
 
 class Server : public QObject
 {
     Q_OBJECT
-    static int PlayerNumber;
+    const int PlayerNumber;
 
     Card card[CARD_NUMBER];
 
@@ -34,7 +32,7 @@ class Server : public QObject
 
     int* Pile;
     int* DiscardPile;
-    int* NextCard;                       //current card
+    int* NextCard;                          //current card
     int* EndOfPile;                         //
     int* EndOfDiscardPile;                  //place the discard (point to an empty slot)
 
