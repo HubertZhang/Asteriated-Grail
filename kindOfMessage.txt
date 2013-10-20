@@ -1,0 +1,71 @@
+This part will list the information that will be send and
+received during the game. It's a bunch of function with
+the prefix of send and receive.But the kind of information
+that will be used is not so much.So will can add the kind as
+the first parameter of the send and receive funtion,and than
+we just need one send and one receive function in the server
+and client.
+And the function is as following:
+Server:
+sendMessage(int kind,int m1,int m2,int m3[12])//m3 have a default value of{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}
+The first parameter "kind" is the kind of the information.
+And m1,m2,m3 is the detailed message for this kind of action.
+And All the kind of information is as follows:
+Kind = 0, when the game start and allocate characters.m1,m2,m3
+represent the three characters that you can choosen from.
+Kind = 1, means it is your turn now. m1 = m2 = -1.m3:default.
+Kind = 2, ask if you want to be activated, m1 = m2 = -1.m3:default.
+Kind = 3, means you are attacked. m1 represent the character that uses this attack card,
+                                  m2 represent the number of the card.
+                                  m3 [0]  represent if this attack can be met.
+                                  So you should respond for this information.
+Kind = 4, means someone is attacked but not you.m1 represent the character that uses this attack card,
+                                                m2 represent the charater be attacked.
+                                                m3 [0] is the number of the card.
+                                                This message will call the GUI function of the game but not ask for your reply.
+Kind = 5, means you are aimed by a magic card. m1 represent the character that uses this card,
+                                               m2 represent the number of the card.
+                                               m3 :default.
+Kind = 6, means someone is attacked but not you.m1 represent the character that uses this magic card,
+                                                m2 represent the charater be aimed at.
+                                                m3 [0] is the number of the card.
+                                                It will alse call the GUI function only without asking for a reply.
+Kind = 7, means your amount of cure is changed. m1 represent the amount of cure that is changed,m2 = m3 = -1.
+Kind = 8, means someone's cure is changed but not you. m1 represent the character whose cure is changed.
+                                                       m2 represent the amount of cure.
+                                                       m3: default.
+Kind = 9, means someone discard some card  publicly to launch some skills.m1 represent the charater that launch this skills.
+                                                                          m2 = -1.
+                                                                          m3 stored the card that he exhibits.
+                                                                          This is for GUI function.
+Kind = 10, asks if you want to use your cure to offset some of the damage. m1 is the damage you are going to bear.
+                                                                           m2 = -1.
+                                                                           m3:default.
+Kind = 11, means you are harmed. m1 means the character that causes this damage.
+                                 m2 = -1.
+                                 m3 stored the new card that you should get.
+Kind = 12, means someone is harmed. m1 means the character that is harmed,
+                                    m2 means the damage source,
+                                    m3: default.
+This is for the game without charaters. And each character's skill will own a special kind.
+Server should send this information to all the player for the GUI function.
+And this is the duty of client function.We will refer to this later.
+Client:
+sendMessage(int kind,int m1,int m2,int m3[6])
+The kind of client sendMessage function is less than the server.(without character's skills)
+Kind = 0, means I choose a character.m1 is the character you choose.
+                                     m2 = -1,
+                                     m3:default.
+Kind = 1, means if I want to be activated, m1 is a bool value.(0/1)
+                                           m2 = -1,
+                                           m3:default.
+Kind = 2, represent attack: m1 is the character be attacked,
+                            m2 is the number of the card,
+                            m3: default.
+Kind = 3, represent magic:  m1 is the character aimed at,
+                            m2 is the number of the card,
+                            m3: default.
+Kind = 4, represent cure:   m1 is the amount of the cure be used.
+                            m2  = -1.
+                            m3 :default.
+And the recive and sendMessage function is one to one correspondance.
