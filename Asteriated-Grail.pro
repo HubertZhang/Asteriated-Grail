@@ -26,4 +26,6 @@ HEADERS  += mainwindow.h \
 FORMS    +=
 
 OTHER_FILES += \
-    RunExample.txt
+    RunExample.txt \
+    changefoethechapter.txt \
+    kindOfMessage.txt
