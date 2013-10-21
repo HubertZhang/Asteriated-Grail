@@ -4,7 +4,10 @@ Player::Player(QObject *parent) :
     QObject(parent)
 {
 }
-Player p[6];
+Player::~Player()
+{
+
+}
 void Player::activate()
 {
     return;
@@ -27,12 +30,10 @@ void Player::attack(int attackTarget, int card)
     p[nowCharacter].cardNumber --;
     if(p[attackTarget].beAttacked(card,1))
     {
-        int damageCard[15];
         if(p[attackTarget].cureNumber != 0)
         {
             int cureAmount = p[attackTarget].useCure(2);
             int realDamage = 2 - cureAmount;
-            damageCard[realDamage] = -1;
             p[attackTarget].bearDamage(realDamage);
         }
         else
@@ -166,8 +167,38 @@ void Player::magic(int magicTarget,int card)
         }
     }
     p[nowCharacter].cardNumber --;
-    if(card == weak || card == poison)
+    if(getKind(card) == weak || getKind(card) == poison)
     {
-
+        p[magicTarget].status[statusnmber] == getKind(card);
+        p[magicTarget].statusnumber ++;
+    }
+    if(getKind(card) == magicmissile)
+    {
+        p[magicTarget].beMagicMissileAttack(card,2);
+    }
+}
+void Player::beMagicMissileAttack(int card, int damage)
+{
+    sendMessage(youMagicMissile,this->order,card);
+    if(returnKind == noAccept)
+    {
+        if(this->cureNumber != 0)
+        {
+            int cureAmount = p[attackTarget].useCure(damage);
+            int realDamage = damage - cureAmount;
+            p[attackTarget].bearDamage(realDamage);
+        }
+        else
+        {
+            p[attackTarget].bearDamage(damage);
+        }
+    }
+    if(returnKind == accept)
+    {
+        p[attackTarget].beMagicMissileAttack(card,damage + 1);
+    }
+    if(returnKind == offset)
+    {
+        return;
     }
 }

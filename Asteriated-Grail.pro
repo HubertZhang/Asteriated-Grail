@@ -16,16 +16,21 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     server.cpp \
     player.cpp \
-    card.cpp
+    card.cpp \
+    cardList.cpp \
+    cardlist.cpp
 
 HEADERS  += mainwindow.h \
     server.h \
     player.h \
-    card.h
+    card.h \
+    cardList.h \
+    cardlist.h
 
 FORMS    +=
 
 OTHER_FILES += \
     RunExample.txt \
     changefoethechapter.txt \
-    kindOfMessage.txt
+    kindOfMessage.txt \
+    characterNum.txt
