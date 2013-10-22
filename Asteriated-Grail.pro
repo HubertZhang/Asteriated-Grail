@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-
+QT		 += network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Asteriated-Grail
@@ -18,14 +18,15 @@ SOURCES += main.cpp\
     player.cpp \
     card.cpp \
     cardList.cpp \
-    cardlist.cpp
+    team.cpp
 
 HEADERS  += mainwindow.h \
     server.h \
     player.h \
     card.h \
     cardList.h \
-    cardlist.h
+    team.h \
+    termination.h
 
 FORMS    +=
 

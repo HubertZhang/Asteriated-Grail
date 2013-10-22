@@ -10,11 +10,11 @@ public:
     CardList();
     ~CardList();
     void initCardList();
-    void getName(int cardNum);
-    void getType(int cardNum);
-    void getKind(int cardNum);
-    void getSkillOne(int cardNum);
-    void getSkillTwo(int cardNum);
+    int getName(int cardNum);
+    int getType(int cardNum);
+    int getKind(int cardNum);
+    int getSkillOne(int cardNum);
+    int getSkillTwo(int cardNum);
 };
 
 #endif // CARDLIST_H
