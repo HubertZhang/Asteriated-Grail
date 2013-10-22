@@ -6,22 +6,28 @@
 class Player : public QObject
 {
     Q_OBJECT
-
+private:
+    int order;//座位编号
+    int cardLimit;//手牌上限
+    int cardNumber;//手牌数量
+    int cureLimit;//治疗上限
+    int cureNumber;//治疗数量
+    int card[15];//手牌内容
+    int teamNumber;//队伍编号
+    int status[10];//状态栏
+    int statusnumber;//状态烂数量
 public:
-    explicit Player(QObject *parent = 0);
-    void get_card(int);
-signals:
-
-public slots:
-    void GameStart();
-
-};
-
-struct Team
-{
-    int grail;
-    int morale;
-    Player* player[3];
-    Team();
+    virtual void activate();//启动
+    virtual void attack(int attackTarget,int card);
+    virtual bool beAttacked(int card,int kindOfAttack);
+    virtual int useCure(int damage);
+    virtual void bearDamage(int damage);
+    virtual void magic(int magicTarget,int card);
+    virtual void acceptAttack(int attackTarget,int card);
+    virtual void discardCard();
+    virtual void beMagicMissileAttack(int card,int damage);
+    virtual void skillOne();
+    virtual void skillTwo();
+    virtual void skillThree();
 };
 #endif // PLAYER_H
