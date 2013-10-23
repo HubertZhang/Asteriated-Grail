@@ -47,6 +47,7 @@ Kind = 11, means you are harmed. m1 means the character that causes this damage.
 Kind = 12, means someone is harmed. m1 means the character that is harmed,
                                     m2 means the damage source,
                                     m3: default.
+Kind = 13,Discard card.
 This is for the game without charaters. And each character's skill will own a special kind.
 Server should send this information to all the player for the GUI function.
 And this is the duty of client function.We will refer to this later.

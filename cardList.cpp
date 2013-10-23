@@ -1,5 +1,4 @@
 #include "cardlist.h"
-
 CardList::CardList()
 {
 }
@@ -72,26 +71,26 @@ void CardList::initCardList()
     cardList[60].ckind = holy;    cardList[60].cname = light;   cardList[60].ctype = magic;  cardList[60].cnature = attack;    cardList[60].cskillone = 61;  cardList[60].cskilltwo = -1;
     cardList[61].ckind = magical; cardList[61].cname = thunder; cardList[61].ctype = attack; cardList[61].cnature = thunder;   cardList[61].cskillone = 45;  cardList[61].cskilltwo = 221;
     cardList[62].ckind = intone;  cardList[62].cname = water;   cardList[62].ctype = attack; cardList[62].cnature = water;     cardList[62].cskillone = 161; cardList[62].cskilltwo = 112;
-    cardList[63].ckind = blood;cardList[63].cname = fire;cardList[63].ctype = attack;cardList[63].cnature = fire;cardList[63].cskillone = 22;cardList[63].cskilltwo = 231;
-    cardList[64].ckind = skill;cardList[64].cname = poison;cardList[64].ctype = magic;cardList[64].cnature = thunder;cardList[64].cskillone = -1;cardList[64].cskilltwo = -1;
-    cardList[65].ckind = skill;cardList[65].cname = fire;cardList[65].ctype = attack;cardList[65].cnature = fire;cardList[65].cskillone = 12;cardList[65].cskilltwo = 31;
-    cardList[66].ckind = skill;cardList[66].cname = light;cardList[66].ctype = magic;cardList[66].cnature = light;cardList[66].cskillone = -1;cardList[66].cskilltwo = -1;
-    cardList[67].ckind = intone;cardList[67].cname = sheild;cardList[67].ctype = magic;cardList[67].cnature = wind;cardList[67].cskillone = -1;cardList[67].cskilltwo = -1;
-    cardList[68].ckind = holy;cardList[68].cname = dark;cardList[68].ctype = attack;cardList[68].cnature = dark;cardList[68].cskillone = -1;cardList[68].cskilltwo = -1;
-    cardList[69].ckind = holy;cardList[69].cname = fire;cardList[69].ctype = attack;cardList[69].cnature = fire;cardList[69].cskillone = 61;cardList[69].cskilltwo = 71;
-    cardList[70].ckind = intone;cardList[70].cname = sheild;cardList[70].ctype = magic;cardList[70].cnature = ground;cardList[70].cskillone = -1;cardList[70].cskilltwo = -1;
-    cardList[71].ckind = blood;cardList[71].cname = sheild;cardList[71].ctype = magic;cardList[71].cnature = wind;cardList[71].cskillone = -1;cardList[71].cskilltwo = -1;
-    cardList[72].ckind = holy;cardList[72].cname = thunder;cardList[72].ctype = attack;cardList[72].cnature = thunder;cardList[72].cskillone = 61;cardList[72].cskilltwo = 71;
-    cardList[73].ckind = holy;cardList[73].cname = thunder;cardList[73].ctype = attack;cardList[73].cnature = thunder;cardList[73].cskillone = 61;cardList[73].cskilltwo = 71;
-    cardList[74].ckind = holy;cardList[74].cname = poison;cardList[74].ctype = magic;cardList[74].cnature = wind;cardList[74].cskillone = -1;cardList[74].cskilltwo = -1;
-    cardList[75].ckind = holy;cardList[75].cname = wind;cardList[75].ctype = attack;cardList[75].cnature = wind;cardList[75].cskillone = 62;cardList[75].cskilltwo = 71;
-    cardList[76].ckind = holy;cardList[76].cname = wind;cardList[76].ctype = attack;cardList[76].cnature = wind;cardList[76].cskillone = 62;cardList[76].cskilltwo = 71;
-    cardList[77].ckind = holy;cardList[77].cname = fire;cardList[77].ctype = attack;cardList[77].cnature = fire;cardList[77].cskillone = 61;cardList[77].cskilltwo = 71;
-    cardList[78].ckind = skill;cardList[78].cname = light;cardList[78].ctype = magic;cardList[78].cnature = light;cardList[78].cskillone = -1;cardList[78].cskilltwo = -1;
-    cardList[79].ckind = intone;cardList[79].cname = water;cardList[79].ctype = attack;cardList[79].cnature = water;cardList[79].cskillone = 161;cardList[79].cskilltwo = 112;
-    cardList[80].ckind = blood;cardList[80].cname = water;cardList[80].ctype = attack;cardList[80].cnature = water;cardList[80].cskillone = 21;cardList[80].cskilltwo = 231;
-    cardList[81].ckind = blood;cardList[81].cname = water;cardList[81].ctype = attack;cardList[81].cnature = water;cardList[81].cskillone = 21;cardList[81].cskilltwo = 231;
-    cardList[82].ckind = blood;cardList[82].cname = water;cardList[82].ctype = attack;cardList[82].cnature = water;cardList[82].cskillone = 21;cardList[82].cskilltwo = 231;
+    cardList[63].ckind = blood;   cardList[63].cname = fire;cardList[63].ctype = attack;cardList[63].cnature = fire;cardList[63].cskillone = 22;cardList[63].cskilltwo = 231;
+    cardList[64].ckind = skill;   cardList[64].cname = poison;cardList[64].ctype = magic;cardList[64].cnature = thunder;cardList[64].cskillone = -1;cardList[64].cskilltwo = -1;
+    cardList[65].ckind = skill;   cardList[65].cname = fire;cardList[65].ctype = attack;cardList[65].cnature = fire;cardList[65].cskillone = 12;cardList[65].cskilltwo = 31;
+    cardList[66].ckind = skill;   cardList[66].cname = light;cardList[66].ctype = magic;cardList[66].cnature = light;cardList[66].cskillone = -1;cardList[66].cskilltwo = -1;
+    cardList[67].ckind = intone;  cardList[67].cname = sheild;cardList[67].ctype = magic;cardList[67].cnature = wind;cardList[67].cskillone = -1;cardList[67].cskilltwo = -1;
+    cardList[68].ckind = holy;    cardList[68].cname = dark;cardList[68].ctype = attack;cardList[68].cnature = dark;cardList[68].cskillone = -1;cardList[68].cskilltwo = -1;
+    cardList[69].ckind = holy;    cardList[69].cname = fire;cardList[69].ctype = attack;cardList[69].cnature = fire;cardList[69].cskillone = 61;cardList[69].cskilltwo = 71;
+    cardList[70].ckind = intone;  cardList[70].cname = sheild;cardList[70].ctype = magic;cardList[70].cnature = ground;cardList[70].cskillone = -1;cardList[70].cskilltwo = -1;
+    cardList[71].ckind = blood;   cardList[71].cname = sheild;cardList[71].ctype = magic;cardList[71].cnature = wind;cardList[71].cskillone = -1;cardList[71].cskilltwo = -1;
+    cardList[72].ckind = holy;    cardList[72].cname = thunder;cardList[72].ctype = attack;cardList[72].cnature = thunder;cardList[72].cskillone = 61;cardList[72].cskilltwo = 71;
+    cardList[73].ckind = holy;    cardList[73].cname = thunder;cardList[73].ctype = attack;cardList[73].cnature = thunder;cardList[73].cskillone = 61;cardList[73].cskilltwo = 71;
+    cardList[74].ckind = holy;    cardList[74].cname = poison;cardList[74].ctype = magic;cardList[74].cnature = wind;cardList[74].cskillone = -1;cardList[74].cskilltwo = -1;
+    cardList[75].ckind = holy;    cardList[75].cname = wind;cardList[75].ctype = attack;cardList[75].cnature = wind;cardList[75].cskillone = 62;cardList[75].cskilltwo = 71;
+    cardList[76].ckind = holy;    cardList[76].cname = wind;cardList[76].ctype = attack;cardList[76].cnature = wind;cardList[76].cskillone = 62;cardList[76].cskilltwo = 71;
+    cardList[77].ckind = holy;    cardList[77].cname = fire;cardList[77].ctype = attack;cardList[77].cnature = fire;cardList[77].cskillone = 61;cardList[77].cskilltwo = 71;
+    cardList[78].ckind = skill;   cardList[78].cname = light;cardList[78].ctype = magic;cardList[78].cnature = light;cardList[78].cskillone = -1;cardList[78].cskilltwo = -1;
+    cardList[79].ckind = intone;  cardList[79].cname = water;cardList[79].ctype = attack;cardList[79].cnature = water;cardList[79].cskillone = 161;cardList[79].cskilltwo = 112;
+    cardList[80].ckind = blood;   cardList[80].cname = water;cardList[80].ctype = attack;cardList[80].cnature = water;cardList[80].cskillone = 21;cardList[80].cskilltwo = 231;
+    cardList[81].ckind = blood;   cardList[81].cname = water;cardList[81].ctype = attack;cardList[81].cnature = water;cardList[81].cskillone = 21;cardList[81].cskilltwo = 231;
+    cardList[82].ckind = blood;   cardList[82].cname = water;cardList[82].ctype = attack;cardList[82].cnature = water;cardList[82].cskillone = 21;cardList[82].cskilltwo = 231;
     cardList[83].ckind = magical;cardList[83].cname = poison;cardList[83].ctype = magic;cardList[83].cnature = water;cardList[83].cskillone = -1;cardList[83].cskilltwo = -1;
     cardList[84].ckind = skill;cardList[84].cname = water;cardList[84].ctype = attack;cardList[84].cnature = water;cardList[84].cskillone = 12;cardList[84].cskilltwo = 31;
     cardList[85].ckind = skill;cardList[85].cname = water;cardList[85].ctype = attack;cardList[85].cnature = water;cardList[85].cskillone = 12;cardList[85].cskilltwo = 31;

@@ -1,4 +1,5 @@
 #include "server.h"
+#include <cardpile.h>
 #include <cstdlib>
 #include <ctime>
 #include <algorithm>
@@ -35,6 +36,8 @@ void Server::init()
 {
     /*Arrenge Team*/
     {
+        extern CardPile* getCardPile = new CardPile();
+        extern CardPile* discardCardPile = new CardPile();
         int temp[2][PlayerNumber/2];
         for (int i = 0; i<PlayerNumber;i++)
         {

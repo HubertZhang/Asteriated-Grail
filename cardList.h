@@ -1,9 +1,10 @@
 #ifndef CARDLIST_H
 #define CARDLIST_H
 #include "card.h"
-
+#include "cardNameSpace.h"
 class CardList
 {
+    Q_OBJECT
 private:
     Card cardList[150];
 public:

@@ -19,17 +19,7 @@ class GameTerminate
 class Server : public QObject
 {
     Q_OBJECT
-    const int PlayerNumber;
-
-    Card card[CARD_NUMBER];
-
-    Player* players;
-    Team team[2];
-    void shuffle_cards();
-    void deal_cards(int id,int number);
-    void init();
-    void playerturn(int t);
-
+private:
     int* Pile;
     int* DiscardPile;
     int* NextCard;                          //current card
@@ -37,12 +27,6 @@ class Server : public QObject
     int* EndOfDiscardPile;                  //place the discard (point to an empty slot)
 
 public:
-    explicit Server(QObject *parent = 0, int Number=4);
-    int NumberOfLeftCards;
-    void Game();
-signals:
-
-public slots:
 
 };
 

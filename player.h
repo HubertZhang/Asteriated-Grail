@@ -17,15 +17,22 @@ private:
     int status[10];//状态栏
     int statusnumber;//状态烂数量
 public:
+    bool sheildExist();
+    bool weakExist();
+    int poisonExist();
+    void destroySheild();
+    void destroyWeak();
+    void destroyPoison();
+    void addStatu(int card);
     virtual void activate();//启动
     virtual void attack(int attackTarget,int card);
-    virtual bool beAttacked(int card,int kindOfAttack);
+    virtual bool beAttacked(int card,int kindOfAttack,int attacker);
     virtual int useCure(int damage);
     virtual void bearDamage(int damage);
     virtual void magic(int magicTarget,int card);
     virtual void acceptAttack(int attackTarget,int card);
     virtual void discardCard();
-    virtual void beMagicMissileAttack(int card,int damage);
+    virtual void massileAttack(int card,int damage,int attacker);
     virtual void skillOne();
     virtual void skillTwo();
     virtual void skillThree();

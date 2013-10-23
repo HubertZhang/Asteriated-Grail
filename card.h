@@ -1,6 +1,6 @@
 #ifndef CARD_H
 #define CARD_H
-
+#include "cardList.h"
 #define WIND 0
 #define WATER 1
 #define FIRE 2
@@ -19,20 +19,11 @@
 #define INTONE 2
 #define HOLY 3
 #define PURPLE 4
-struct paintCard
-{
-    int cnumber;
-    int cstatus;
-    int ctype;
-    int ckind;
-    char* cname;
-    int* cskillone;
-    int* cskilltwo;
-};//This struct is used to send to local to help it paint the card.This struct include all the information needed to
-  //paint a special card.
 
 class Card
 {
+    Q_OBJECT
+    friend class CardList;
     int cnumber;             //each card will ba allocated with a specific number.
                              //This number is
     int cname;               //name of this card

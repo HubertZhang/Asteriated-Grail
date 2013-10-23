@@ -18,14 +18,20 @@ SOURCES += main.cpp\
     player.cpp \
     card.cpp \
     cardList.cpp \
-    cardlist.cpp
+    cardlist.cpp \
+    cardpile.cpp \
+    team.cpp
 
 HEADERS  += mainwindow.h \
     server.h \
     player.h \
     card.h \
     cardList.h \
-    cardlist.h
+    cardlist.h \
+    cardNameSpace.h \
+    playerNameSpace.h \
+    cardpile.h \
+    team.h
 
 FORMS    +=
 
