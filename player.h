@@ -6,7 +6,7 @@
 class Player : public QObject
 {
     Q_OBJECT
-private:
+protected:
     int order;//座位编号
     int cardLimit;//手牌上限
     int cardNumber;//手牌数量
@@ -16,6 +16,9 @@ private:
     int teamNumber;//队伍编号
     int status[10];//状态栏
     int statusnumber;//状态烂数量
+    int crystal;//水晶数量
+    int gem;//宝石数量
+    int stonelimit;//能量上限
 public:
     bool sheildExist();
     bool weakExist();
@@ -24,6 +27,9 @@ public:
     void destroyWeak();
     void destroyPoison();
     void addStatu(int card);
+    void buy();
+    void compose();
+    void extract();
     virtual void activate();//启动
     virtual void attack(int attackTarget,int card);
     virtual bool beAttacked(int card,int kindOfAttack,int attacker);
@@ -33,8 +39,6 @@ public:
     virtual void acceptAttack(int attackTarget,int card);
     virtual void discardCard();
     virtual void massileAttack(int card,int damage,int attacker);
-    virtual void skillOne();
-    virtual void skillTwo();
-    virtual void skillThree();
+    virtual void specialSkill();
 };
 #endif // PLAYER_H

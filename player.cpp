@@ -391,5 +391,5 @@ void Player::compose()
     }
     Team[this->teamNumber].grail ++;
     Team[(this->teamNumber + 1) % 2].morale --;
-     sendMessage(EXTRACTCARD,cardArray[3]);//Kind = 14;
+    sendMessage(EXTRACTCARD,cardArray[3]);//Kind = 14;
 }

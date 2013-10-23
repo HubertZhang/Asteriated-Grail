@@ -6,6 +6,8 @@
 #define SERVER_H
 #include "card.h"
 #include "player.h"
+#include "cardpile.h"
+#include "team.h"
 #include <QObject>
 #include <cstring>
 #include <exception>
@@ -20,14 +22,14 @@ class Server : public QObject
 {
     Q_OBJECT
 private:
-    int* Pile;
-    int* DiscardPile;
-    int* NextCard;                          //current card
-    int* EndOfPile;                         //
-    int* EndOfDiscardPile;                  //place the discard (point to an empty slot)
+    CardPile* extractPile;
+    CardPile* discardPile;
+    Player* player[6];
+    Team* team[2];
 
 public:
-
+    void gameCirculation();
+    void gameInit();
 };
 
 #endif // SERVER_H

@@ -1,5 +1,5 @@
 #include "team.h"
 
-team::team()
+Team::Team()
 {
 }

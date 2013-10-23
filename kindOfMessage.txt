@@ -48,6 +48,10 @@ Kind = 12, means someone is harmed. m1 means the character that is harmed,
                                     m2 means the damage source,
                                     m3: default.
 Kind = 13,Discard card.
+Kind = 14,Extract card without being damaged.
+Kind = 15,GEMORCYESTAL;
+Kind = 16,What do you want to extract?
+Kind = 17,What do you want to use to compose the grail?
 This is for the game without charaters. And each character's skill will own a special kind.
 Server should send this information to all the player for the GUI function.
 And this is the duty of client function.We will refer to this later.

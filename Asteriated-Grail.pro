@@ -37,6 +37,6 @@ FORMS    +=
 
 OTHER_FILES += \
     RunExample.txt \
-    changefoethechapter.txt \
     kindOfMessage.txt \
-    characterNum.txt
+    characterNum.txt \
+    changeforthechapter.txt

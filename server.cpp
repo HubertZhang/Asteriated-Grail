@@ -1,34 +1,52 @@
 #include "server.h"
-#include <cardpile.h>
+#include "cardpile.h"
 #include <cstdlib>
 #include <ctime>
 #include <algorithm>
+#include "cardList.h"
 using namespace std;
 
-Server::Server(QObject *parent,int Number) :
-    QObject(parent),PlayerNumber(Number)
+Server::Server(QObject *parent) :
+    QObject(parent)
 {
     players = new Player[PlayerNumber];
     srand(time(0));
 }
-
-void Server::Game()
+void Server::gameInit()
 {
-    init();
-    int current_player = 0;
-    while(1)
+     gamePile->initExtractPile();
+     team[0] = new Team(RED);
+     team[1] = new Team(BLUE);
+     for(int i = 0;i < 6;i ++)
+     {
+         //allocate character;
+         sendMessage();//Kind = 0;
+     }
+     //根据返回的character信息初始化Player[6];
+}
+
+void Server::gameCirculation()
+{
+    for(int i = 0;i <6 ;i++)
     {
-        try
+        sendMessage();//Kind = 1;it's your turn;
+        //Check for weak,poison,and some specail card(封印束缚，勇者挑衅等)
+        for(int j = player[i]->statusnumber;j != 0;j --)
         {
-            playerturn(current_player);
-            current_player++;
-            if(current_player==6)
-                current_player=0;
+            switch(CardList::getName(j))
+            {
+                case WEAK:
+                {
+                    sendMessage(WEAK);//Kind = 18;
+                    if(returnKind == ACCEPT)
+                    {
+
+                    }
+                }
+                case POISON
+            }
         }
-        catch(GameTerminate a)
-        {
-            //...
-        }
+        sendMessage();//Kind = 2;Special activity ?
     }
 }
 
@@ -36,8 +54,6 @@ void Server::init()
 {
     /*Arrenge Team*/
     {
-        extern CardPile* getCardPile = new CardPile();
-        extern CardPile* discardCardPile = new CardPile();
         int temp[2][PlayerNumber/2];
         for (int i = 0; i<PlayerNumber;i++)
         {
@@ -54,56 +70,5 @@ void Server::init()
             team[1].player[i] = &players[temp[1][i]];
         }
     }
-
-
-    /*Choose Role*/
-
-    /*init Piles*/
-    Pile = new int[CARD_NUMBER];
-    DiscardPile = new int[CARD_NUMBER];
-    EndOfPile = Pile+CARD_NUMBER;
-    EndOfDiscardPile = DiscardPile;
-    NextCard = Pile;
-    for(int i = 0; i<CARD_NUMBER; i++) Pile[i] = i;
-    random_shuffle(Pile,EndOfPile);
-
-    /*Deal Cards*/
-    for (int i = 0; i<PlayerNumber; i++) deal_cards(i,4);
-}
-
-void Server::shuffle_cards()
-{
-    /*  How to store cards?
-     *  How to know whether this card is used or still in Pile(Pai Ku)
-     *  How to only shuffle the cards in the discard pile(Qi Pai Dui)
-     */
-    int* temp = Pile;
-    Pile = DiscardPile;
-    DiscardPile = temp;
-
-    NextCard = Pile;
-    EndOfPile = EndOfDiscardPile;
-    EndOfDiscardPile = DiscardPile;
-    random_shuffle(Pile,EndOfPile);
-}
-
-void Server::deal_cards(int id, int number)
-{
-    /*  Use what to indentify players?*/
-    NumberOfLeftCards = NextCard-EndOfPile;
-    if (NumberOfLeftCards<number)
-    {
-        int temp = NumberOfLeftCards;
-        deal_cards(id,temp);
-        shuffle_cards();
-        deal_cards(id,number-temp);
-    }
-    else
-    {
-        for(int i = 0; i<number; i++)
-        {
-            players[id].get_card(*NextCard);
-            NextCard++;
-        }
-    }
+;
 }
