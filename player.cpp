@@ -6,6 +6,7 @@
 Player::Player(QObject *parent) :
     QObject(parent)
 {
+
 }
 Player::~Player()
 {
@@ -37,11 +38,11 @@ void Player::attack(int attackTarget, int card)
         {
             int cureAmount = p[attackTarget].useCure(2);
             int realDamage = 2 - cureAmount;
-            p[attackTarget].bearDamage(realDamage);
+            p[attackTarget].bearDamage(realDamage,ATTACK);
         }
         else
         {
-            p[attackTarget].bearDamage(2);
+            p[attackTarget].bearDamage(2,ATTACK);
         }
     }
 }
@@ -90,7 +91,7 @@ int Player::useCure(int damage)
     int cureAmount = returnAmount;
     return cureAmount;
 }
-void Player::bearDamage(int damage)
+void Player::bearDamage(int damage,int KindOfDamage)//The kind of Damage:Magic or Attack
 {
     int damageCard[15];
     for(int i = 0;i < damage;i++)
@@ -160,11 +161,11 @@ void Player::acceptAttack(int attackTarget, int card)
         {
             int cureAmount = p[attackTarget].useCure(2);
             int realDamage = 2 - cureAmount;
-            p[attackTarget].bearDamage(realDamage);
+            p[attackTarget].bearDamage(realDamage,ATTACK);
         }
         else
         {
-            p[attackTarget].bearDamage(2);
+            p[attackTarget].bearDamage(2,ATTACK);
         }
     }
     return;
@@ -209,11 +210,11 @@ void Player::massileAttack(int card, int damage,int attacker)
         {
             int cureAmount = p[attackTarget].useCure(damage);
             int realDamage = damage - cureAmount;
-            p[attackTarget].bearDamage(realDamage);
+            p[attackTarget].bearDamage(realDamage,MAGIC);
         }
         else
         {
-            p[attackTarget].bearDamage(damage);
+            p[attackTarget].bearDamage(damage,MAGIC);
         }
     }
     if(returnKind == ACCEPT)
@@ -280,7 +281,7 @@ void Player::destroyWeak()
     int findTheWeak = 0;
     for(int i = 0;i < this->statusnumber;i++)
     {
-        if(this->CardList::getName(status[i]) == WEAK)
+        if(CardList::getName(this->status[i]) == WEAK)
         {
             findTheWeak ++;
         }
@@ -289,23 +290,20 @@ void Player::destroyWeak()
     this->statusnumber --;
     return;
 }
-void Player::destroyPoison()
+void Player::destroyPoison()//若有多个poison,destroy 排在最后的poison.
 {
-     int temStatusArray[10];
-     int temNum = 0;
-     for(int i = 0;i < this->statusnumber;i++)
+     for(int i = this->statusnumber;i > 0;i --)
      {
-         if(CardList::getName(this->status[i]) == POISON)
+         if(CardList::getName(this->status[i - 1]) == POISON)
          {
-             continue;
+             for(int j = (i - 1);j < this->statusnumber - 1; j++)
+             {
+                 this->status[j] = this->status[j + 1];
+             }
+             break;
          }
-         temStatusArray[temNum] = this->status[i];
-         temNum ++;
      }
-     for(int i = 0;i < this->cardLimit;i++)
-     {
-         this->card[i] = temCardArray[i];
-     }
+     this->statusnumber --;
      return;
 }
 void Player::addStatu(int card)
@@ -392,4 +390,32 @@ void Player::compose()
     Team[this->teamNumber].grail ++;
     Team[(this->teamNumber + 1) % 2].morale --;
     sendMessage(EXTRACTCARD,cardArray[3]);//Kind = 14;
+}
+void Player::weakRespond()
+{
+    destroyWeak();
+    int cardArray[3];
+    for(int i = 0;i < 3;i ++)
+    {
+        cardArray[i] = CardPile.getCard();
+    }
+    sendMessage(EXTRACTCARD,cardArray[3]);//Kind = 14;
+    if(this->cardNumber < 4)
+    {
+        return;
+    }
+    this->discardCard(this->cardNumber - 3);
+}
+void Player::poisonRespond()
+{
+    destroyPoison();
+    if(this->cureNumber != 0)
+    {
+        sendMessage(ASKFORCURE,1);//Kind = 10;
+        if(returnValue = 1)
+        {
+            return;
+        }
+        bearDamage(1,MAGIC);
+    }
 }

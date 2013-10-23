@@ -11,7 +11,6 @@
 #include <QObject>
 #include <cstring>
 #include <exception>
-#define CARD_NUMBER 150
 
 class GameTerminate
 {
@@ -22,8 +21,7 @@ class Server : public QObject
 {
     Q_OBJECT
 private:
-    CardPile* extractPile;
-    CardPile* discardPile;
+    CardPile* gamePile;
     Player* player[6];
     Team* team[2];
 

@@ -10,5 +10,4 @@ const int MASSILE = 4;
 const int NOACCEPT = 0;
 const int ACCEPT = 1;
 const int OFFSET = 2;
-const int
 #endif // PLAYERNAMESPACE_H

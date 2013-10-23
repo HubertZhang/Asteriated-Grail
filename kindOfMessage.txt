@@ -11,10 +11,10 @@ sendMessage(int kind,int m1,int m2,int m3[12])//m3 have a default value of{-1,-1
 The first parameter "kind" is the kind of the information.
 And m1,m2,m3 is the detailed message for this kind of action.
 And All the kind of information is as follows:
-Kind = 0, when the game start and allocate characters.m1,m2,m3
-represent the three characters that you can choosen from.
+Kind = 0, when the game start and allocate Team
+
 Kind = 1, means it is your turn now. m1 = m2 = -1.m3:default.
-Kind = 2, ask if you want to be activated, m1 = m2 = -1.m3:default.
+Kind = 2, ask if you want to be activated,or do some special activity m1 = m2 = -1.m3:default.
 Kind = 3, means you are attacked. m1 represent the character that uses this attack card,
                                   m2 represent the number of the card.
                                   m3 [0]  represent if this attack can be met.
@@ -52,6 +52,8 @@ Kind = 14,Extract card without being damaged.
 Kind = 15,GEMORCYESTAL;
 Kind = 16,What do you want to extract?
 Kind = 17,What do you want to use to compose the grail?
+Kind = 18,weak,poison,or some special card respond.
+Kind = 19, allocate characters.m1,m2,m3,represent the three characters that you can choosen from.
 This is for the game without charaters. And each character's skill will own a special kind.
 Server should send this information to all the player for the GUI function.
 And this is the duty of client function.We will refer to this later.

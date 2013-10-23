@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "cardpile.h"
 #define CARDNUMBER 150
 //这个→ →是上英语课的时候写的所以bug很多算法很烂→ →
@@ -50,4 +51,8 @@ void CardPile::initExtractPile()
 void CardPile::putIntoPile(int* card,int* site)
 {
     *site = *card;
+}
+void CardPile::shuffleCard(int *start, int *end)
+{
+    random_shuffle(start,end);
 }

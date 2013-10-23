@@ -17,6 +17,10 @@ const int POISON = 7;
 const int WEAK = 8;
 const int SHEILD = 9;
 const int MASSILE = 10;
+const int FIVEBOUND = 11;
+const int PROVOKE = 12;
+const int POWERPRAY = 13;
+const int SPEEDPRAY = 14;
 const int ATTACK = 0;
 const int MAGIC = 1;
 #endif // NAMESPACE_H

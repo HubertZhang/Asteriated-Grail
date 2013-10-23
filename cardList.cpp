@@ -166,7 +166,29 @@ int CardList::getKind(int cardNum)
 }
 int CardList::getName(int cardNum)
 {
-    return cardList[cardNum].cname;
+    if(cardNum < 150)
+    {
+        return cardList[cardNum].cname;
+    }
+    switch (cardNum)
+    {
+        case 150:
+        {
+            return FIVEBOUND;//五系束缚
+        }
+        case 151:
+        {
+            return PROVOKE;//挑衅
+        }
+        case 152:
+        {
+            return POWERPRAY;//威力赐福
+        }
+        case 153:
+        {
+            return SPEEDPRAY;//迅捷赐福
+        }
+    }
 }
 int CardList::getType(int cardNum)
 {

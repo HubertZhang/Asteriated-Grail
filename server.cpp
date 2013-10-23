@@ -19,56 +19,90 @@ void Server::gameInit()
      team[1] = new Team(BLUE);
      for(int i = 0;i < 6;i ++)
      {
-         //allocate character;
+         //allocate Team
          sendMessage();//Kind = 0;
      }
+     for(int i = 0;i < 6;i ++)
+     {
+         //allocate character;
+         sendMessage();//Kind = 19;
+     }
      //根据返回的character信息初始化Player[6];
+     for(int i = 0;i < 6; i ++)
+     {
+         int initCard[4];
+         for(int j = 0;j < 4;j++)
+         {
+             initCard[j] = CardPile.getCard();
+         }
+         sendMessage(EXTRACTCARD,initCard[4]);//Kind = 14;
+     }
 }
 
 void Server::gameCirculation()
 {
     for(int i = 0;i <6 ;i++)
     {
+    NextOne:
         sendMessage();//Kind = 1;it's your turn;
         //Check for weak,poison,and some specail card(封印束缚，勇者挑衅等)
         for(int j = player[i]->statusnumber;j != 0;j --)
         {
-            switch(CardList::getName(j))
+            switch(CardList::getName(player[i]->status[j - 1]))
             {
                 case WEAK:
                 {
                     sendMessage(WEAK);//Kind = 18;
                     if(returnKind == ACCEPT)
                     {
-
+                        player[i]->weakRespond();
+                        break;
+                    }
+                    if(returnKind == NOACCEPT)
+                    {
+                        player[i]->destroyWeak();
+                        i ++;
+                        if(i == 5)
+                        {
+                            i = 0;
+                        }
+                        goto NextOne;
                     }
                 }
-                case POISON
+                case POISON:
+                {
+                    player[i]->poisonRespond();
+                    break;
+                }
+                case FIVEBOUND:
+                {
+
+                }
+                case PROVOKE:
+                {
+
+                }
+                default:
+                break;
             }
         }
-        sendMessage();//Kind = 2;Special activity ?
+        player[i]->activate();//Activate or specialActivity
+        //wait for information;
+        switch(returnInformation)
+        {
+            case ATTACK:
+            {
+                player[i]->attack(attackTarget,card,canBeAccept);
+            }
+            case MAGIC:
+            {
+                player[i]->magic(magicTarget,card);
+            }
+            case SPECIALMAGIC:
+            {
+                //special Magic
+            }
+        }
     }
 }
 
-void Server::init()
-{
-    /*Arrenge Team*/
-    {
-        int temp[2][PlayerNumber/2];
-        for (int i = 0; i<PlayerNumber;i++)
-        {
-            *(temp[0]+i) = i;
-        }
-        random_shuffle(temp[0],temp[0]+PlayerNumber);
-        /*  number in team[0] means player is in red team,
-         *  number in team[0] means player is in blue team,
-         *  number in team[0][0] means player is the first player
-         */
-        for (int i = 0; i<PlayerNumber;i++)
-        {
-            team[0].player[i] = &players[temp[0][i]];
-            team[1].player[i] = &players[temp[1][i]];
-        }
-    }
-;
-}

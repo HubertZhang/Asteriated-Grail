@@ -1,24 +1,6 @@
 #ifndef CARD_H
 #define CARD_H
 #include "cardList.h"
-#define WIND 0
-#define WATER 1
-#define FIRE 2
-#define GROUND 3
-#define THUNDER 4
-#define DARK 5
-#define WEAK 6
-#define POISON 7
-#define SHEILD 8
-#define BOMB 9
-#define LIGHT 10
-#define MAGIC 0
-#define ATTACK 1
-#define SKILL 0
-#define BLOOD 1
-#define INTONE 2
-#define HOLY 3
-#define PURPLE 4
 
 class Card
 {
