@@ -1,8 +1,10 @@
 #ifndef CARDPILE_H
 #define CARDPILE_H
+#include "server.h"
 //The cardPile class is used to init the extractPile and the discardPile
 class CardPile
 {
+    friend class Server;
 private:
     int* extractPile;
     int* discardPile;

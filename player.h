@@ -34,13 +34,13 @@ public:
     void weakRespond();
     void poisonRespond();
     virtual void activate();//启动
-    virtual void attack(int attackTarget,int card);
-    virtual bool beAttacked(int card,int kindOfAttack,int attacker);
+    virtual void attack(int attackTarget,int card,bool canBeAccept);
+    virtual bool beAttacked(int card,int kindOfAttack,int attacker,bool canBeAccept);
     virtual int useCure(int damage);
     virtual void bearDamage(int damage,int KindOfDamage);
     virtual void magic(int magicTarget,int card);
-    virtual void acceptAttack(int attackTarget,int card);
-    virtual void discardCard();
+    virtual void acceptAttack(int attackTarget,int card,bool canBeAccept);
+    virtual void discardCard(int amount);
     virtual void massileAttack(int card,int damage,int attacker);
     virtual void specialSkill();
 };

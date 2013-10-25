@@ -5,6 +5,7 @@
 class CardList
 {
     Q_OBJECT
+    friend class player;
 private:
     Card cardList[150];
 public:

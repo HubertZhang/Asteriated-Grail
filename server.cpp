@@ -9,8 +9,7 @@ using namespace std;
 Server::Server(QObject *parent) :
     QObject(parent)
 {
-    players = new Player[PlayerNumber];
-    srand(time(0));
+    srand(unsigned(time(0));
 }
 void Server::gameInit()
 {
@@ -33,7 +32,7 @@ void Server::gameInit()
          int initCard[4];
          for(int j = 0;j < 4;j++)
          {
-             initCard[j] = CardPile.getCard();
+             initCard[j] = CardPile::getCard();
          }
          sendMessage(EXTRACTCARD,initCard[4]);//Kind = 14;
      }
