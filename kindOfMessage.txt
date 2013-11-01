@@ -54,6 +54,7 @@ Kind = 16,What do you want to extract?
 Kind = 17,What do you want to use to compose the grail?
 Kind = 18,weak,poison,or some special card respond.
 Kind = 19, allocate characters.m1,m2,m3,represent the three characters that you can choosen from.
+Kind = 20,Massile
 This is for the game without charaters. And each character's skill will own a special kind.
 Server should send this information to all the player for the GUI function.
 And this is the duty of client function.We will refer to this later.

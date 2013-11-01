@@ -1,6 +1,7 @@
 #include "player.h"
 #include "cardpile.h"
 #include "cardList.h"
+#include "team.h"
 //这一个cpp里面有大量的"."要被替换为"->"
 //→ →我不是故意的
 Player::Player(QObject *parent) :
@@ -8,6 +9,8 @@ Player::Player(QObject *parent) :
 {
 
 }
+Player* p[6];
+Team* team[2];
 Player::~Player()
 {
 
@@ -16,9 +19,8 @@ void Player::activate()
 {
     return;
 }
-void Player::attack(int attackTarget, int card)
+void Player::attack(int attackTarget,int card,bool canBeAccept)//canBeAccept = 0:此攻击不可应战
 {
-    putIntoDiscardPile(card);
     bool findTheCard = false;
     for(int i = 0;i < this->cardNumber;i++)
     {
@@ -32,25 +34,26 @@ void Player::attack(int attackTarget, int card)
         }
     }
     this->cardNumber --;
-    if(p[attackTarget].beAttacked(card,1,this->order))
+    if(p[attackTarget]->beAttacked(card,1,this->order,canBeAccept))
     {
-        if(p[attackTarget].cureNumber != 0)
+        if(p[attackTarget]->cureNumber != 0)
         {
-            int cureAmount = p[attackTarget].useCure(2);
+            int cureAmount = p[attackTarget]->useCure(2);
             int realDamage = 2 - cureAmount;
-            p[attackTarget].bearDamage(realDamage,ATTACK);
+            if(realDamage != 0)
+            {
+                p[attackTarget]->bearDamage(realDamage,ATTACK);
+            }
         }
         else
         {
-            p[attackTarget].bearDamage(2,ATTACK);
+            p[attackTarget]->bearDamage(2,ATTACK);
         }
     }
 }
-bool Player::beAttacked(int card,int KindOfAttack,int attacker)
+bool Player::beAttacked(int card,int KindOfAttack,int attacker,bool canBeAccept)
 {
-    sendMessage(ATTACKED,this->order,attacker,card);//Kind = 3,you are attacked.this->order is the parameter
-                                                    //to decide the people to receive this information,but this
-                                                    //information will not be send out.
+    sendMessage(ATTACKED,attacker,card,canBeAccept);//Kind = 3,you are attacked.
     if(returnKind == NOACCEPT) //returnKind: NOACCEPT,ACCEPT,OFFSET.
                                //NOACCEPT means he hit "取消"
                                //but the attack can be offseted by sheild.But not light.
@@ -62,32 +65,35 @@ bool Player::beAttacked(int card,int KindOfAttack,int attacker)
         }
         if(KindOfAttack == 1)
         {
-            if(team[(this->teamNumber + 1)%2].stone != 5)
+            if(team[(this->teamNumber + 1)%2]->stone != 5)
             {
-                team[(this->teamNumber + 1)%2].gem ++;
-                team[(this->teamNumber + 1)%2].stone ++;
+                team[(this->teamNumber + 1)%2]->gem ++;
+                team[(this->teamNumber + 1)%2]->stone ++;
             }
         }
-        if(team[(this->teamNumber + 1)%2].stone != 5)
+        if(KindOfAttack == 0)
         {
-            team[(this->teamNumber + 1)%2].cystal ++;
-            team[(this->teamNumber + 1)%2].stone ++;
+            if(team[(this->teamNumber + 1)%2]->stone != 5)
+            {
+                team[(this->teamNumber + 1)%2]->crystal ++;
+                team[(this->teamNumber + 1)%2]->stone ++;
+            }
         }
         return true;
     }
     if(returnKind == ACCEPT)
     {
-        this->acceptAttack(attackTarget,card);
+        this->acceptAttack(attackTarget,card,canBeAccept);
         return false;
     }
-    if(returnKind == OFFSET)
+    if(returnKind == OFFSET)//light
     {
         return false;
     }
 }
 int Player::useCure(int damage)
 {
-    sendMessage(ASKFORCURE,this->order,damage);
+    sendMessage(ASKFORCURE,damage);//Kind = 10;
     int cureAmount = returnAmount;
     return cureAmount;
 }
@@ -96,7 +102,7 @@ void Player::bearDamage(int damage,int KindOfDamage)//The kind of Damage:Magic o
     int damageCard[15];
     for(int i = 0;i < damage;i++)
     {
-        damageCard[i] = getCard();
+        damageCard[i] = CardPile::getCard();
     }
     sendMessage(EXTRACTCARD,damageCard[15]);//Kind = 11,EXTRACTCARD
     for(int i = 0;i < damage;i++)
@@ -136,12 +142,11 @@ void Player::discardCard(int amount)//→ →我不是故意把弃牌算法写�
         this->card[i] = temCardArray[i];
     }
     this->cardNumber = this->cardLimit;
-    team[this->teamNumber].morale -= amount;
+    team[this->teamNumber]->morale -= amount;
     return;
 }
-void Player::acceptAttack(int attackTarget, int card)
+void Player::acceptAttack(int attackTarget,int card,bool canBeAccept)
 {
-    putIntoDiscardPile(card);
     bool findTheCard = false;
     for(int i = 0;i < this->cardNumber;i++)
     {
@@ -155,24 +160,26 @@ void Player::acceptAttack(int attackTarget, int card)
         }
     }
     this->cardNumber --;
-    if(p[attackTarget].beAttacked(card,0,this->order))
+    if(p[attackTarget]->beAttacked(card,0,this->order,canBeAccept))
     {
-        if(p[attackTarget].cureNumber != 0)
+        if(p[attackTarget]->cureNumber != 0)
         {
-            int cureAmount = p[attackTarget].useCure(2);
+            int cureAmount = p[attackTarget]->useCure(2);
             int realDamage = 2 - cureAmount;
-            p[attackTarget].bearDamage(realDamage,ATTACK);
+            if(realDamage != 0)
+            {
+                p[attackTarget]->bearDamage(realDamage,ATTACK);
+            }
         }
         else
         {
-            p[attackTarget].bearDamage(2,ATTACK);
+            p[attackTarget]->bearDamage(2,ATTACK);
         }
     }
     return;
 }
 void Player::magic(int magicTarget,int card)
 {
-    putIntoDiscardPile(card);
     bool findTheCard = false;
     for(int i = 0;i < this->cardNumber;i++)
     {
@@ -186,19 +193,19 @@ void Player::magic(int magicTarget,int card)
         }
     }
     this->cardNumber --;
-    if(getKind(card) == weak || getKind(card) == poison)
+    if(CardList::getKind(card) == WEAK || CardList::getKind(card) == POISON)
     {
-        p[magicTarget].status[statusnmber] == getKind(card);
-        p[magicTarget].statusnumber ++;
+        p[magicTarget]->status[statusnmber] == CardList::getKind(card);
+        p[magicTarget]->statusnumber ++;
     }
-    if(getKind(card) == magicmissile)
+    if(getKind(card) == MASSILE)
     {
-        p[magicTarget].massileAttack(card,2,this->order);
+        p[magicTarget]->massileAttack(card,2,this->order);
     }
 }
 void Player::massileAttack(int card, int damage,int attacker)
 {
-    sendMessage(MASSILE,this->order,card,attacker);
+    sendMessage(MASSILE,card,attacker);//Kind = 20;
     if(returnKind == NOACCEPT)
     {
         if(this->sheildExist())
@@ -210,11 +217,14 @@ void Player::massileAttack(int card, int damage,int attacker)
         {
             int cureAmount = p[attackTarget].useCure(damage);
             int realDamage = damage - cureAmount;
-            p[attackTarget].bearDamage(realDamage,MAGIC);
+            if(realDamage != 0)
+            {
+                p[attackTarget]->bearDamage(realDamage,MAGIC);
+            }
         }
         else
         {
-            p[attackTarget].bearDamage(damage,MAGIC);
+            p[attackTarget]->bearDamage(damage,MAGIC);
         }
     }
     if(returnKind == ACCEPT)
@@ -248,7 +258,7 @@ bool Player::weakExist()
     }
     return false;
 }
-bool Player::poisonExist()
+int Player::poisonExist()
 {
     int poisonNum = 0;
     {
@@ -262,7 +272,7 @@ bool Player::poisonExist()
         return poisonNum;
     }
 }
-void Player::destroySheild()
+void Player::destroySheild()//已经有盾的时候才可以调用
 {
     int findTheSheild = 0;
     for(int i = 0;i < this->statusnumber;i++)
@@ -276,7 +286,7 @@ void Player::destroySheild()
     this->statusnumber --;
     return;
 }
-void Player::destroyWeak()
+void Player::destroyWeak()//已经有虚弱的时候才可以调用
 {
     int findTheWeak = 0;
     for(int i = 0;i < this->statusnumber;i++)
@@ -308,21 +318,21 @@ void Player::destroyPoison()//若有多个poison,destroy 排在最后的poison.
 }
 void Player::addStatu(int card)
 {
-    this->statusnumber ++;
     this->status[this->statusnumber] = card;
+    this->statusnumber ++;
 }
 void Player::buy()
 {
     int cardArray[3];
     for(int i = 0;i < 3;i++)
     {
-        cardArray = getCard();
+        cardArray[i] = CardPile::getCard();
     }
-    if(team[this->teamNumber].stone < 4)
+    if(team[this->teamNumber]->stone < 4)
     {
-        team[this->teamNumber].gem ++;
-        team[this->teamNumber].crystal ++;
-        team[this->teamNumber].stone += 2;
+        team[this->teamNumber]->gem ++;
+        team[this->teamNumber]->crystal ++;
+        team[this->teamNumber]->stone += 2;
         sendMessage(EXTRACTCARD,cardArray[3]);//Kind = 14;
         return;
     }
@@ -336,13 +346,13 @@ void Player::buy()
         sendMessage(GEMORCYSTAL);//Kind = 15;
         if(returnKind == CRYSTAL)
         {
-            Team[this->teamNumber].crystal ++;
-            Team[this->teamNumber].stone ++;
+            team[this->teamNumber]->crystal ++;
+            team[this->teamNumber]->stone ++;
         }
         if(returnKind == GEM)
         {
-            Team[this->teamNumber].gem ++;
-            Team[this->teamNumber].stone ++;
+            team[this->teamNumber]->gem ++;
+            team[this->teamNumber]->stone ++;
         }
         sendMessage(EXTRACTCARD,cardArray[3]);//Kind = 14;
         return;
@@ -350,45 +360,45 @@ void Player::buy()
 }
 void Player::extract()
 {
-    if(Team[this->teamNumber].stone == 1)
+    if(team[this->teamNumber]->stone == 1)
     {
-        Team[this->teamNumber].stone --;
-        if(Team[this->teamNumber].gem == 1)
+        team[this->teamNumber]->stone --;
+        if(team[this->teamNumber]->gem == 1)
         {
-            Team[this->teamNumber].gem --;
+            team[this->teamNumber]->gem --;
             this->gem ++;
             return;
         }
-        Team[this->teamNumber].cystal --;
+        team[this->teamNumber]->cystal --;
         this->crystal ++;
         return;
     }
     sendMessage(EXTRACT);//return: int = the number of gem * 10 + the number of cystal
-    Team[this->teamNumber].stone -= returnValue / 10 +returnValue % 10;
-    Team[this->teamNumber].gem -= returnValue / 10;
-    Team[this->teamNumber].crystal -= returnValue % 10;
+    team[this->teamNumber]->stone -= returnValue / 10 +returnValue % 10;
+    team[this->teamNumber]->gem -= returnValue / 10;
+    team[this->teamNumber]->crystal -= returnValue % 10;
     this->gem += returnValue / 10;
     this->crystal += returnValue % 10;
     return;
 }
 void Player::compose()
 {
-    if(Team[this->teamNumber].stone == 3)
+    if(team[this->teamNumber]->stone == 3)
     {
-        Team[this->teamNumber].stone == 0;
-        Team[this->teamNumber].gem == 0;
-        Team[this->teamNumber].crystal == 0;
+        team[this->teamNumber]->stone == 0;
+        team[this->teamNumber]->gem == 0;
+        team[this->teamNumber]->crystal == 0;
     }
     sendMessage(COMPOSE);//return: int = the number of gem * 10 + the number of cystal
-    Team[this->teamNumber].stone -= 3;
-    Team[this->teamNumber].gem -= returnValue / 10;
-    Team[this->teamNumber].crystal -= returnValue % 10;
+    team[this->teamNumber]->stone -= 3;
+    team[this->teamNumber]->gem -= returnValue / 10;
+    team[this->teamNumber]->crystal -= returnValue % 10;
     for(int i = 0;i < 3;i++)
     {
-        cardArray = getCard();
+        cardArray = CardList::getCard();
     }
-    Team[this->teamNumber].grail ++;
-    Team[(this->teamNumber + 1) % 2].morale --;
+    team[this->teamNumber]->grail ++;
+    team[(this->teamNumber + 1) % 2]->morale --;
     sendMessage(EXTRACTCARD,cardArray[3]);//Kind = 14;
 }
 void Player::weakRespond()
@@ -397,7 +407,7 @@ void Player::weakRespond()
     int cardArray[3];
     for(int i = 0;i < 3;i ++)
     {
-        cardArray[i] = CardPile.getCard();
+        cardArray[i] = CardPile::getCard();
     }
     sendMessage(EXTRACTCARD,cardArray[3]);//Kind = 14;
     if(this->cardNumber < 4)
