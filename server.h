@@ -4,11 +4,17 @@
  */
 #ifndef SERVER_H
 #define SERVER_H
-#include "player.h"
 #include "card.h"
+#include "player.h"
 #include <QObject>
-
+#include <cstring>
+#include <exception>
 #define CARD_NUMBER 150
+
+class GameTerminate
+{
+
+};
 
 class Server : public QObject
 {
@@ -17,11 +23,13 @@ class Server : public QObject
 
     Card card[CARD_NUMBER];
 
-
-
+    Player* players;
+    Team team[2];
+    void shuffle_cards();
+    void deal_cards(int id,int number);
     void init();
+    void playerturn(int t);
 
-    void shuffleCards();
     int* Pile;
     int* DiscardPile;
     int* NextCard;                          //current card
@@ -29,16 +37,9 @@ class Server : public QObject
     int* EndOfDiscardPile;                  //place the discard (point to an empty slot)
 
 public:
-    Team* team;
-    Player* players;
-    int NumberOfLeftCards;
-
     explicit Server(QObject *parent = 0, int Number=4);
-
-    void Game();  
-
-    void dealCards(int id,int number);
-    void fold(int idOfCard);
+    int NumberOfLeftCards;
+    void Game();
 signals:
 
 public slots:

@@ -14,13 +14,15 @@ Server::Server(QObject *parent,int Number) :
 void Server::Game()
 {
     init();
+    int current_player = 0;
     while(1)
     {
-        for(int i = 0; i<PlayerNumber/2; i++)
         try
         {
-            team[0].player[i]->start();
-            team[1].player[i]->start();
+            playerturn(current_player);
+            current_player++;
+            if(current_player==6)
+                current_player=0;
         }
         catch(GameTerminate a)
         {
@@ -37,19 +39,16 @@ void Server::init()
         for (int i = 0; i<PlayerNumber;i++)
         {
             *(temp[0]+i) = i;
-            players[i].order = i;
         }
         random_shuffle(temp[0],temp[0]+PlayerNumber);
         /*  number in team[0] means player is in red team,
-         *  number in team[1] means player is in blue team,
+         *  number in team[0] means player is in blue team,
          *  number in team[0][0] means player is the first player
          */
         for (int i = 0; i<PlayerNumber;i++)
         {
             team[0].player[i] = &players[temp[0][i]];
-            team[0].player[i]->teamNumber = 0;
             team[1].player[i] = &players[temp[1][i]];
-            team[1].player[i]->teamNumber = 1;
         }
     }
 
@@ -66,10 +65,10 @@ void Server::init()
     random_shuffle(Pile,EndOfPile);
 
     /*Deal Cards*/
-    for (int i = 0; i<PlayerNumber; i++) dealCards(i,4);
+    for (int i = 0; i<PlayerNumber; i++) deal_cards(i,4);
 }
 
-void Server::shuffleCards()
+void Server::shuffle_cards()
 {
     /*  How to store cards?
      *  How to know whether this card is used or still in Pile(Pai Ku)
@@ -85,29 +84,23 @@ void Server::shuffleCards()
     random_shuffle(Pile,EndOfPile);
 }
 
-void Server::dealCards(int id, int number)
+void Server::deal_cards(int id, int number)
 {
     /*  Use what to indentify players?*/
     NumberOfLeftCards = NextCard-EndOfPile;
     if (NumberOfLeftCards<number)
     {
         int temp = NumberOfLeftCards;
-        dealCards(id,temp);
-        shuffleCards();
-        dealCards(id,number-temp);
+        deal_cards(id,temp);
+        shuffle_cards();
+        deal_cards(id,number-temp);
     }
     else
     {
         for(int i = 0; i<number; i++)
         {
-            players[id].getCard(*NextCard);
+            players[id].get_card(*NextCard);
             NextCard++;
         }
     }
-}
-
-void Server::fold(int idOfCard)
-{
-    *EndOfDiscardPile = idOfCard;
-    EndOfDiscardPile++;
 }
