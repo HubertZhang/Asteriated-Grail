@@ -33,4 +33,9 @@ FORMS    +=
 OTHER_FILES += \
     RunExample.txt \
     changefoethechapter.txt \
+<<<<<<< HEAD
     kindOfMessage.txt
+=======
+    kindOfMessage.txt \
+    characterNum.txt
+>>>>>>> origin/Hubert
