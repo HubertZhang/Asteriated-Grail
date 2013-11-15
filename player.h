@@ -5,59 +5,78 @@
 #include <QTcpSocket>
 #include "team.h"
 #include "termination.h"
-enum messageType{TurnBegin,AttackHappen,TakeDamage,Discard,TurnEnd};
-enum actionType{Attack,Magic,Purchase,Refine,Fusion};
-enum reactionType{AcceptAttack,HeadOn};
-
+enum messageType{TurnBegin,BeforeAction,ActionType,AttackHappen,Activated,AttackRespond,WeakRespond,CureRespond,Show,GetCard,
+                 EnergyChange,CardChange,CureChange,StatusDecrease,StatusIncrease,TurnEnd};
+enum actionType{Attack,Magic,Purchase,Refine,Fusion,Activate,AcceptAttack,HeadOn,Light,Accept,NoAccept};
+//enum reactionType{AcceptAttack,HeadOn,Light,Accept,NoAccept};
 class Server;
 class Player : public QObject
 {
     Q_OBJECT
-private:
+protected:
     Server* server;
     Team* thisTeam;
     QTcpSocket client;
     set<int> card;//手牌内容
-public:
     int order;//座位编号
     int cardLimit;//手牌上限
     int cardNumber;//手牌数量
     int cureLimit;//治疗上限
     int cureNumber;//治疗数量
     int teamNumber;//队伍编号
-    int status[10];//状态栏
-    int statusnumber;//状态烂数量
     int energyGem;
     int energyCrystal;
+    int stonelimit;//能量上限
+    int status[10];//状态栏
+    int statusnumber;//状态数量
+    int theShield;//盾圣
+    int character;//人物
 
-    void start();
-    void BroadCast(messageType a,int origin,int target,...);
-    void sendMessage(messageType a,int,int,int* =NULL);
-    void foldCard(int idOfCard);
-    void getCard(int idOfCard);//
+public:
+
+    Player(Server* server,int order,int teamNumber,int character=0);
+//----------传输信息--------------------------------
+    int sendMessageBuffer[20];
+    int receiveMessageBuffer[20];
+    //void BroadCast(messageType a,int origin,int target,...);
+    void BroadCast();
+    void sendMessage();
+    //void sendMessage(messageType a,int,int,int* =NULL);
     actionType receive(int*);
-
-    virtual void activate();//启动
-
-
+//----------行动阶段流程------------------------------
+    void start();
+    virtual void handleStatus(); //判定阶段（天使等人物重载）
+    void beforeAction();//特殊行动阶段或启动
+//---------基本操作-----------------------------------
+    bool shieldExist();
+    bool cureExist();
+    void destroySheild();
+    void destroyStatus(int cardname,int order);
+    void weakRespond(int,int);
+    void poisonRespond(int,int);//中毒需要知道造成伤害的人
+    void addStatus(int cardUsed);
+    void foldCard(int* idOfCard,int amount=1,bool canBeSee=true);//弃牌
+    void getCard(int amount);//摸牌
+    //加治疗，减治疗函数
+//---------特殊行动------------------------------------
     virtual void purchase();
-    virtual void refine(int gem,int crystal);
+    virtual void refine();
     virtual void fusion();
+//---------普通攻击或普通法术或人物特殊技能----------------
+    virtual void activate();//启动
+    virtual void attack();//攻击行动
+    virtual void magic();//法术行动
+    virtual void normalAttack();//普通攻击
+    virtual void normalMagic();//普通法术
+    virtual void headOn(int chainLength);//应战
+    virtual void beMagicMissileAttack(int cardUsed,int damage);//魔弹
+//---------伤害时间轴-----------------------
+    virtual bool beAttacked(int attacker, int cardUsed, int chainLength, bool canBeAccept);//伤害时间轴第二阶段：判定阶段
+    virtual void countDamage(int damage);//伤害时间轴第三阶段：伤害结算阶段
+    virtual int useCure(int damage);//伤害时间轴第四阶段：治疗抵御阶段
+    virtual void takeDamage(int damage);//伤害时间轴第五+六阶段前部分：实际受到伤害阶段，摸牌
+    //需要知道是攻击还是法术伤害
+    virtual void Discards(int amount);//伤害时间轴第六阶段：承受伤害阶段
 
-    virtual void attack(int attackTarget, int cardUsed, int chainLength);
-    virtual bool canBeAttacked();
-    virtual bool beAttacked(int cardUsed, int chainLength);
-
-    virtual int useCure(int damage);
-    virtual void takeDamage(int damage);
-    //virtual void magic(int magicTarget,int card);
-    //virtual void acceptAttack(int attackTarget,int card);
-    virtual void Discards(int amount);
-    //virtual void beMagicMissileAttack(int card,int damage);
-    //virtual void skillOne();
-    //virtual void skillTwo();
-    //virtual void skillThree();
-
-    Player();
 };
 #endif // PLAYER_H

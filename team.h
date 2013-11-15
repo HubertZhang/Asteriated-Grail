@@ -4,7 +4,6 @@
 #include <set>
 using std::set;
 
-class Player;
 enum Stone{Gem,Crystal};
 
 class Team
@@ -14,13 +13,14 @@ class Team
     int gem;
     int morale;
     int grail;
-public:
     int team;
+public:
     Team();
-    Player* player[3];
     void getStone(Stone a);
+    void lossStone(Stone a);
     void lossMorale(int);
     void getGrail();
+    void BroadCast();//改变士气，星石等时广播
 };
 
 #endif // TEAM_H

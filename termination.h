@@ -7,19 +7,19 @@ class ActionIllegal{};
 class GameTerminate
 {
 public:
-    GameTerminate(int winner);
+    GameTerminate(/*int winner*/){}
 };
 
 class LostAllMorale : public GameTerminate
 {
 public:
-    LostAllMorale(int team);
+    LostAllMorale(int team){}
 };
 
 class GrailFinished : public GameTerminate
 {
 public:
-    GrailFinished(int team);
+    GrailFinished(int team){}
 };
 
 #endif // TERMINATION_H

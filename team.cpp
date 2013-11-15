@@ -18,17 +18,37 @@ void Team::getStone(Stone a)
         }
         else crystal++;
     }
-    else return;
+    BroadCast();//改变星石数量
+    return;
+}
+
+void Team::lossStone(Stone a)
+{
+    stone--;
+    if (a == Gem)
+    {
+        gem--;
+    }
+    else crystal--;
+    BroadCast();
+    return;
 }
 
 void Team::lossMorale(int lostNumberOfCard)
 {
     morale-=lostNumberOfCard;
+    BroadCast();//改变士气数量
     if(morale<=0) throw LostAllMorale(team);
 }
 
 void Team::getGrail()
 {
     grail++;
+    BroadCast();//改变星杯数量
     if(grail == 5) throw GrailFinished(team);
+}
+
+void Team::BroadCast()
+{
+
 }

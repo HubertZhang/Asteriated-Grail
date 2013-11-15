@@ -1,12 +1,12 @@
 #include "cardList.h"
+#include"card.h"
 
 CardList::CardList()
 {
+    cardList = new Card[150];
+    initCardList();
 }
-CardList::~CardList()
-{
 
-}
 void CardList::initCardList()
 {
     cardList[0].cnature = ground;		cardList[0].ctype = attack;		cardList[0].cname = groundAttack;
@@ -309,7 +309,6 @@ void CardList::initCardList()
     cardList[148].ckind = magical;		cardList[148].cskillone = -1;		cardList[148].cskilltwo = -1;
     cardList[149].cnature = light;		cardList[149].ctype = magic;		cardList[149].cname = holyLight;
     cardList[149].ckind = magical;		cardList[149].cskillone = -1;		cardList[149].cskilltwo = -1;
-
 }
 int CardList::getKind(int cardNum)
 {

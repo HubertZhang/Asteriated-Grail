@@ -1,20 +1,20 @@
 #ifndef CARDLIST_H
 #define CARDLIST_H
-#include "card.h"
 
+class Card;
 class CardList
 {
 private:
-    Card cardList[150];
+    Card *cardList;
+    void initCardList();
 public:
     CardList();
-    ~CardList();
-    void initCardList();
+    ~CardList(){}
     int getName(int cardNum);
     int getType(int cardNum);
     int getKind(int cardNum);
     int getSkillOne(int cardNum);
     int getSkillTwo(int cardNum);
 };
-
+//CardList cardlist;
 #endif // CARDLIST_H

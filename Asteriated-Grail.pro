@@ -18,6 +18,7 @@ SOURCES += main.cpp\
     player.cpp \
     card.cpp \
     cardList.cpp \
+    cardpile.cpp \
     team.cpp
 
 HEADERS  += mainwindow.h \
@@ -26,6 +27,7 @@ HEADERS  += mainwindow.h \
     card.h \
     cardList.h \
     team.h \
+    cardpile.h \
     termination.h
 
 FORMS    +=
@@ -33,9 +35,5 @@ FORMS    +=
 OTHER_FILES += \
     RunExample.txt \
     changefoethechapter.txt \
-<<<<<<< HEAD
-    kindOfMessage.txt
-=======
     kindOfMessage.txt \
     characterNum.txt
->>>>>>> origin/Hubert

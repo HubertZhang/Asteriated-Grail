@@ -7,38 +7,35 @@
 #include "player.h"
 #include "card.h"
 #include <QObject>
+#include "cardpile.h"
+#include "team.h"
+#include <cstring>
+#include <exception>
 
 #define CARD_NUMBER 150
+enum messageType1{ArrangeTeam,ArrangeCharacter,BroadCastCharacter};
 
 class Server : public QObject
 {
     Q_OBJECT
     const int PlayerNumber;
-
-    Card card[CARD_NUMBER];
-
-
+//    Card card[CARD_NUMBER];
 
     void init();
+    void allocateCharacter(int order,int character,int teamnumber);
 
-    void shuffleCards();
-    int* Pile;
-    int* DiscardPile;
-    int* NextCard;                          //current card
-    int* EndOfPile;                         //
-    int* EndOfDiscardPile;                  //place the discard (point to an empty slot)
-
+    void BroadCast();
+    void sendMessage();
 public:
-    Team* team;
-    Player* players;
-    int NumberOfLeftCards;
+    Team team[2];
+    Player* players[6];
+//    int NumberOfLeftCards;
+    CardPile* gamePile;
+    explicit Server(QObject *parent = 0, int Number=6);
 
-    explicit Server(QObject *parent = 0, int Number=4);
-
-    void Game();  
-
-    void dealCards(int id,int number);
-    void fold(int idOfCard);
+    void Game();
+//  void dealCards(int id,int number);
+//  void fold(int idOfCard);
 signals:
 
 public slots:
