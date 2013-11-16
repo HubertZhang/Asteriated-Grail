@@ -6,7 +6,7 @@
 #include "team.h"
 #include "termination.h"
 enum messageType{TurnBegin,BeforeAction,ActionType,AttackHappen,Activated,AttackRespond,WeakRespond,CureRespond,Show,GetCard,
-                 EnergyChange,CardChange,CureChange,StatusDecrease,StatusIncrease,TurnEnd};
+                 EnergyChange,CardChange,CureChange,StatusDecrease,StatusIncrease,AskRespond,TurnEnd};
 enum actionType{Attack,Magic,Purchase,Refine,Fusion,Activate,AcceptAttack,HeadOn,Light,Accept,NoAccept};
 //enum reactionType{AcceptAttack,HeadOn,Light,Accept,NoAccept};
 class Server;
@@ -34,7 +34,7 @@ protected:
 
 public:
 
-    Player(Server* server,int order,int teamNumber,int character=0);
+    Player(/*QObject *parent = 0,*/ Server* server,int order,int teamNumber,int character=0);
 //----------传输信息--------------------------------
     int sendMessageBuffer[20];
     int receiveMessageBuffer[20];
@@ -47,6 +47,7 @@ public:
     void start();
     virtual void handleStatus(); //判定阶段（天使等人物重载）
     void beforeAction();//特殊行动阶段或启动
+    virtual void end();
 //---------基本操作-----------------------------------
     bool shieldExist();
     bool cureExist();
@@ -64,8 +65,8 @@ public:
     virtual void fusion();
 //---------普通攻击或普通法术或人物特殊技能----------------
     virtual void activate();//启动
-    virtual void attack();//攻击行动
-    virtual void magic();//法术行动
+    virtual void attackAction();//攻击行动
+    virtual void magicAction();//法术行动
     virtual void normalAttack();//普通攻击
     virtual void normalMagic();//普通法术
     virtual void headOn(int chainLength);//应战

@@ -11,20 +11,18 @@ void Player::BroadCast()
 {
 
 }
-
 void Player::sendMessage()
 {
 
 }
-
 actionType Player::receive(int* a)
 {
       return Attack;
 }
 
 
-Player::Player(Server* p,int order,int teamnumber,int character)
-    :server(p),order(order),teamNumber(teamnumber),character(character)
+Player::Player(/*QObject *parent = 0,*/ Server* p,int order,int teamnumber,int character)
+    :/*QObject(parent),*/ server(p),order(order),teamNumber(teamnumber),character(character)
 {
     cardLimit = 6;
     cardNumber = card.size();
@@ -70,11 +68,11 @@ void Player::start()
         actionType returnAcction = receive(receiveMessageBuffer);
         if (returnAcction == Attack)
         {
-            attack();
+            attackAction();
         }
         else if (returnAcction == Magic)
         {
-            magic();
+            magicAction();
         }
 
         }
@@ -89,6 +87,7 @@ void Player::start()
 
     }
 
+    end();
     //receiveMessageBuffer[0] = TurnEnd;
     //BroadCast(TurnEnd,order,order);
     //BroadCast();
@@ -168,7 +167,11 @@ void Player::activate()
     BroadCast();
     return;
 }
-
+void Player::end()
+{
+    receiveMessageBuffer[0] = TurnEnd;
+    BroadCast();
+}
 void Player::foldCard(int* idOfCard,int amount,bool canBeSee)
 {
     for (int i=0; i<amount; i++)
@@ -333,8 +336,8 @@ void Player::fusion()
 
     getCard(3);
 }
-
-void Player::attack()
+//-----------感觉没有用-----------------------
+void Player::attackAction()
 {
     if (receiveMessageBuffer[0] == 0)
     {
@@ -345,7 +348,8 @@ void Player::attack()
         //?????????
     }
 }
-void Player::magic()
+//-----------------------------------------------
+void Player::magicAction()
 {
     if (receiveMessageBuffer[0] == 0)
     {
@@ -379,8 +383,15 @@ void Player::normalAttack()
 
     if(server->players[attackTarget]->beAttacked(cardUsed,order,1,canBeAccept))
     {
-        (server->team[teamNumber]).getStone(Gem);
-        server->players[attackTarget]->countDamage(2);
+        if(server->players[attackTarget]->shieldExist())//If there is a shield...
+        {
+            server->players[attackTarget]->destroySheild();
+        }
+        else
+        {
+           (server->team[teamNumber]).getStone(Gem);
+           server->players[attackTarget]->countDamage(2);
+        }
     }
     //Is there any one have a skill after his attack missed?
 }
@@ -482,8 +493,15 @@ void Player::headOn(int chainLength)
     BroadCast();
     if(server->players[attackTarget]->beAttacked(order,cardUsed,chainLength,canBeAccept))
     {
-        (server->team[teamNumber]).getStone(Crystal);
-        server->players[attackTarget]->countDamage(2);
+        if(server->players[attackTarget]->shieldExist())//If there is a shield...
+        {
+            server->players[attackTarget]->destroySheild();
+        }
+        else
+        {
+          (server->team[teamNumber]).getStone(Crystal);
+          server->players[attackTarget]->countDamage(2);
+        }
     }
 }
 void Player::beMagicMissileAttack(int cardUsed, int damage)
@@ -537,11 +555,6 @@ bool Player::beAttacked(int attacker,int cardUsed,int chainLength,bool canBeAcce
     {
     case AcceptAttack:
     {
-        if(this->shieldExist())//If there is a shield...
-        {
-            this->destroySheild();
-            return false;
-        }
         return true;
     }
     case HeadOn:

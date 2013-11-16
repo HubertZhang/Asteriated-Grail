@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     card.cpp \
     cardList.cpp \
     cardpile.cpp \
-    team.cpp
+    team.cpp \
+    blademaster.cpp
 
 HEADERS  += mainwindow.h \
     server.h \
@@ -28,7 +29,8 @@ HEADERS  += mainwindow.h \
     cardList.h \
     team.h \
     cardpile.h \
-    termination.h
+    termination.h \
+    blademaster.h
 
 FORMS    +=
 
