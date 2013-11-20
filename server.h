@@ -15,31 +15,38 @@
 #define CARD_NUMBER 150
 enum messageType1{ArrangeTeam,ArrangeCharacter,BroadCastCharacter};
 
+class textGUI;
 class Server : public QObject
 {
     Q_OBJECT
     const int PlayerNumber;
 //    Card card[CARD_NUMBER];
-
-    void init();
+    //void init(){}
     void allocateCharacter(int order,int character,int teamnumber);
-
-    void BroadCast();
-    void sendMessage();
+    //void BroadCast();
+    //void sendMessage();
 public:
-    Team team[2];
+    Team* team[2];
     Player* players[6];
-//    int NumberOfLeftCards;
+//  int NumberOfLeftCards;
     CardPile* gamePile;
     explicit Server(QObject *parent = 0, int Number=6);
-
-    void Game();
+   // void Game();
 //  void dealCards(int id,int number);
 //  void fold(int idOfCard);
+
+
+//--------------测试---------------------------
+    void init(textGUI*);
+    textGUI *textg;
+    void BroadCast();
+    void sendMessage();
+
 signals:
 
 public slots:
-
+void Game();
+//--------------------------------------------
 };
 
 #endif // SERVER_H

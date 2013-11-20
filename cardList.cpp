@@ -330,3 +330,52 @@ int CardList::getSkillTwo(int cardNum)
 {
     return cardList[cardNum].cskilltwo;
 }
+
+//测试-------------------------
+QString CardList::getQName(int cardNum)
+{
+    QString s;
+    switch(cardList[cardNum].cname)
+    {
+    case groundAttack:
+        s.sprintf("地系%d ",cardNum);
+        break;
+    case waterAttack:
+        s.sprintf("水系%d ",cardNum);
+        break;
+    case fireAttack:
+        s.sprintf("火系%d ",cardNum);
+        break;
+    case windAttack:
+        s.sprintf("风系%d ",cardNum);
+        break;
+    case thunderAttack:
+        s.sprintf("雷系%d ",cardNum);
+        break;
+    case darkAttack:
+        s.sprintf("暗灭%d ",cardNum);
+        break;
+    case poison:
+        s.sprintf("中毒%d ",cardNum);
+        break;
+    case weak:
+        s.sprintf("虚弱%d ",cardNum);
+        break;
+    case missile:
+        s.sprintf("魔弹%d ",cardNum);
+        break;
+    case shield:
+        s.sprintf("圣盾%d ",cardNum);
+        break;
+    case holyLight:
+        s.sprintf("圣光%d ",cardNum);
+        break;
+    default:
+        break;
+    }
+    QString s1;
+    s1.sprintf("技(%d,%d)",getSkillOne(cardNum),getSkillTwo(cardNum));
+    s =s + s1;
+    return s;
+}
+//----------------------------

@@ -53,9 +53,10 @@ void Blademaster::normalAttack()
     attackTime++;
     int attackTarget = receiveMessageBuffer[1];
     int cardUsed = receiveMessageBuffer[2];
-    bool canattack = canAttack();
 
     foldCard(&cardUsed);
+    bool canattack = canAttack();
+
 
     //-------------------烈风技------------------------------------------------
     if (cardlist.getSkillOne(cardUsed) == 11 ||cardlist.getSkillTwo(cardUsed) == 11)
@@ -67,7 +68,8 @@ void Blademaster::normalAttack()
         sendMessageBuffer[2] = 2;
         sendMessage();
 
-        if (receive(receiveMessageBuffer))
+        receive();
+        if (receiveMessageBuffer[0])
         {
             skill = 1;
         }
@@ -82,10 +84,11 @@ void Blademaster::normalAttack()
            sendMessageBuffer[1] = 1;
            sendMessageBuffer[2] = 3;
            sendMessage();
-        if (receive(receiveMessageBuffer))
-        {
-            skill = 2;
-        }
+           receive();
+           if (receiveMessageBuffer[0])
+           {
+               skill = 2;
+           }
         }
     }
     //------------------------------------------------------------------------------
@@ -112,7 +115,7 @@ void Blademaster::normalAttack()
         }
         else
         {
-            (server->team[teamNumber]).getStone(Gem);
+            (server->team[teamNumber])->getStone(Gem);
             server->players[attackTarget]->countDamage(2);
         }
     }
@@ -124,7 +127,7 @@ void Blademaster::normalAttack()
         }
         else
         {
-            (server->team[teamNumber]).getStone(Gem);
+            (server->team[teamNumber])->getStone(Gem);
             server->players[attackTarget]->countDamage(2);
         }
     }
@@ -153,7 +156,7 @@ void Blademaster::normalAttack()
         if (i >= 1)
         {
             sendMessage();
-            receive(receiveMessageBuffer);
+            receive();//是否发动技能
 
             switch (receiveMessageBuffer[0])
             {

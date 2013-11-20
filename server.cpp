@@ -3,11 +3,18 @@
 #include <ctime>
 #include <algorithm>
 #include "player.h"
+#include"textgui.h"
+#include"team.h"
+#include <QApplication>
 using namespace std;
 
 void Server::BroadCast()
 {
+    QString s = "*************************************************";
+    textg->textbrowser->append(s);
 
+    s = "游戏 begin";
+    textg->textbrowser->append(s);
 }
 
 void Server::sendMessage()
@@ -18,32 +25,47 @@ void Server::sendMessage()
 Server::Server(QObject *parent,int Number) :
     QObject(parent),PlayerNumber(Number)
 {
+    //创建队伍
+    /*
+    team[0] = new Team(this,0);
+    team[1] = new Team(this,1);
+    */
     gamePile = new CardPile;
+    //init();
     srand(time(0));
 }
 
+
 void Server::Game()
 {
-    init();
     int gameround = 1;
+    BroadCast();
+    try
+    {
     while(1)
     {
-        BroadCast();
+        //BroadCast();
         for(int i = 0; i<PlayerNumber; i++)
-        try
         {
             players[i]->start();
+            //QCoreApplication::processEvents();
         }
-        catch(GameTerminate a)
-        {
-            //...
-        }
+         QCoreApplication::processEvents();
         gameround++;
+        if (gameround == 10) break;
     }
+    }
+    catch(...)//GameTerminate a
+    {
+        //...
+    }
+    //BroadCast();
+
     for (int i=0; i<PlayerNumber; i++)
     {
         delete []players[i];
     }
+
 }
 
 void Server::allocateCharacter(int order,int character,int teamnumber)
@@ -57,8 +79,11 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
     }
 }
 
-void Server::init()
+void Server::init(textGUI *a)
 {
+    textg = a;
+    team[0] = new Team(this,0);
+    team[1] = new Team(this,1);
     /*Allocate Order*/
         //int client[PlayerNumber]={0,1,2,3,4,5};
         //random_shuffle(client,client+PlayerNumber);
@@ -77,8 +102,9 @@ void Server::init()
          *  player[0] is the first player
          */
 
+   /*Broadcast Team*/
+        /*
         int sendMessageBuffer[20];
-
         int j=0;
         for (int i=0;i<PlayerNumber;i++)
         {
@@ -94,14 +120,17 @@ void Server::init()
         sendMessageBuffer[1] = arrangeteam[i];
         sendMessage();//向玩家发送
         }
+       */
 
     /*Choose Role*/
+
         int character[31];
         for (int i=0; i<31; i++)
         {
             character[i] = i+1;
-        }
+        }        
         random_shuffle(character,character+31);
+        /*
         for(int i=0; i<PlayerNumber;i++)
         {
             sendMessageBuffer[0] = ArrangeCharacter;
@@ -111,11 +140,16 @@ void Server::init()
             sendMessage();
         }
         //receive();
+        */
+
+    /*Allocate Character*/
         for (int i=0; i<PlayerNumber; i++)
         {
             allocateCharacter(i,character[i],arrangeteam[i]/*,client[i]*/);
         }
 
+    /*Broadcast Character*/
+        /*
         sendMessageBuffer[0] = BroadCastCharacter;
         for (int i=0; i<PlayerNumber;i++)
         {
@@ -125,6 +159,7 @@ void Server::init()
         {
             sendMessage();
         }
+        */
     /*Deal Cards*/
         for (int i = 0; i<PlayerNumber; i++)
         {
@@ -138,6 +173,7 @@ void Server::init()
             sendMessage();
             */
         }
+
         delete []arrangeteam;
 }
 

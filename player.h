@@ -5,11 +5,20 @@
 #include <QTcpSocket>
 #include "team.h"
 #include "termination.h"
+#include <set>
+using std::set;
+
 enum messageType{TurnBegin,BeforeAction,ActionType,AttackHappen,Activated,AttackRespond,WeakRespond,CureRespond,Show,GetCard,
                  EnergyChange,CardChange,CureChange,StatusDecrease,StatusIncrease,AskRespond,TurnEnd};
-enum actionType{Attack,Magic,Purchase,Refine,Fusion,Activate,AcceptAttack,HeadOn,Light,Accept,NoAccept};
+enum actionType{Attack,Magic};
+enum beforeactionType{aaa,Activate,Purchase,Fusion,Refine};
+enum returnType{NoAccept,Accept};
+enum returnactionType{AcceptAttack,HeadOn,Light};
 //enum reactionType{AcceptAttack,HeadOn,Light,Accept,NoAccept};
 class Server;
+//测试-------------
+class textGUI;
+//----------------------
 class Player : public QObject
 {
     Q_OBJECT
@@ -29,20 +38,20 @@ protected:
     int stonelimit;//能量上限
     int status[10];//状态栏
     int statusnumber;//状态数量
-    int theShield;//盾圣
     int character;//人物
-
+    bool getmessage;
 public:
-
+    int theShield;//盾圣
     Player(/*QObject *parent = 0,*/ Server* server,int order,int teamNumber,int character=0);
 //----------传输信息--------------------------------
     int sendMessageBuffer[20];
     int receiveMessageBuffer[20];
     //void BroadCast(messageType a,int origin,int target,...);
-    void BroadCast();
-    void sendMessage();
+    //void BroadCast();
+    //void sendMessage();
     //void sendMessage(messageType a,int,int,int* =NULL);
-    actionType receive(int*);
+    //actionType receive(int*);
+    void receive();
 //----------行动阶段流程------------------------------
     void start();
     virtual void handleStatus(); //判定阶段（天使等人物重载）
@@ -79,5 +88,11 @@ public:
     //需要知道是攻击还是法术伤害
     virtual void Discards(int amount);//伤害时间轴第六阶段：承受伤害阶段
 
+    //测试程序：
+    //void hehe(){}
+    public slots:
+    void getMessage();
+    void BroadCast();
+    void sendMessage();
 };
 #endif // PLAYER_H

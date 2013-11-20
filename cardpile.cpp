@@ -1,11 +1,11 @@
+#include <ctime>
 #include <algorithm>
 #include "cardpile.h"
 using namespace std;
 #define CARDNUMBER 150
-//这个→ →是上英语课的时候写的所以bug很多算法很烂→ →
-//只是架构不要在意。。。
 CardPile::CardPile()
 {    
+    srand(time(0));
     extractPile = new int[CARDNUMBER];
     discardPile = new int[CARDNUMBER];
     endOfExtractPile = extractPile+CARDNUMBER;
@@ -17,7 +17,6 @@ CardPile::CardPile()
     }
 
     random_shuffle(extractPile,endOfExtractPile);
-
     nextCard = extractPile;
 }
 

@@ -1,6 +1,6 @@
 #ifndef CARDLIST_H
 #define CARDLIST_H
-
+#include<QString>
 class Card;
 class CardList
 {
@@ -15,6 +15,9 @@ public:
     int getKind(int cardNum);
     int getSkillOne(int cardNum);
     int getSkillTwo(int cardNum);
+    //测试-------------------------
+    QString getQName(int cardNum);
+    //----------------------------
 };
 //CardList cardlist;
 #endif // CARDLIST_H
