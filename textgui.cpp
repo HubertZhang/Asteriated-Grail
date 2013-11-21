@@ -78,7 +78,7 @@ textGUI::textGUI(QWidget *parent,Server *a) :
         s.sprintf("玩家%d",i);
         player[i][0] = new QLabel(s,this);
         player[i][0]-> resize(90,30);
-        player[i][1] = new QLabel("team",this);
+        player[i][1] = new QLabel("队伍",this);
         player[i][1]-> resize(40,30);
         player[i][2] = new QLabel("宝石",this);
         player[i][2]-> resize(40,30);
@@ -86,6 +86,9 @@ textGUI::textGUI(QWidget *parent,Server *a) :
         player[i][3]-> resize(40,30);
         player[i][4] = new QLabel("治疗",this);
         player[i][4]-> resize(40,30);
+
+        character[i] = new QLabel(this);
+        character[i]->resize(40,30);
 
         card[i] = new QLabel("卡牌",this);
         card[i]->resize(40,40);
@@ -114,10 +117,11 @@ textGUI::textGUI(QWidget *parent,Server *a) :
         playercrystal[i]->move(280,120+200*i);
         playercure[i]->move(360,120+200*i);
         player[i][0]-> move(10,120+200*i);
-        player[i][1]-> move(80,120+200*i);
+        player[i][1]-> move(90,120+200*i);
         player[i][2]-> move(170,120+200*i);
         player[i][3]->move(250,120+200*i);
         player[i][4]->move(330,120+200*i);
+        character[i]->move(50,120+200*i);
         card[i]->move(10,190+200*i);
         status[i]->move(10,150+200*i);
         playerteam[i]->move(120,120+200*i);
@@ -135,10 +139,11 @@ textGUI::textGUI(QWidget *parent,Server *a) :
         playercrystal[i]->move(1140,120+200*(i-3));
         playercure[i]->move(1220,120+200*(i-3));
         player[i][0]-> move(870,120+200*(i-3));
-        player[i][1]->move(940,120+200*(i-3));
+        player[i][1]->move(950,120+200*(i-3));
         player[i][2]-> move(1030,120+200*(i-3));
         player[i][3]->move(1110,120+200*(i-3));
-        player[i][4]->move(1180,120+200*(i-3));
+        player[i][4]->move(1190,120+200*(i-3));
+        character[i]->move(910,120+200*(i-3));
         card[i]->move(870,190+200*(i-3));
         status[i]->move(870,150+200*(i-3));
         playerteam[i]->move(980,120+200*(i-3));

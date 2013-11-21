@@ -3,6 +3,7 @@
 #include <ctime>
 #include <algorithm>
 #include "player.h"
+#include"blademaster.h"
 #include"textgui.h"
 #include"team.h"
 #include <QApplication>
@@ -39,7 +40,8 @@ Server::Server(QObject *parent,int Number) :
 void Server::Game()
 {
     int gameround = 1;
-    BroadCast();
+    //sendMessageBuffer[0] =
+    //BroadCast();
     try
     {
     while(1)
@@ -72,10 +74,14 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
 {
     switch(character)
     {
-        default:
-        {
-           players[order] = new Player(this,order,teamnumber,character);
-        }
+    case blademaster:
+    {
+        players[order] = new Blademaster(this,order,teamnumber,character);
+    }
+    default:
+    {
+        players[order] = new Player(this,order,teamnumber,character);
+    }
     }
 }
 
@@ -104,7 +110,6 @@ void Server::init(textGUI *a)
 
    /*Broadcast Team*/
         /*
-        int sendMessageBuffer[20];
         int j=0;
         for (int i=0;i<PlayerNumber;i++)
         {

@@ -23,9 +23,10 @@ void Player::getMessage()
         if (s[i] != ',')
         {
             int k=0;
-            while (s[i+k] != ',' && s[i+k] != '\0')
+            while (s[i] != ',' && s[i] != '\0')
             {
                 k++;
+                i++;
             }
             int ss = 0;
             for (int t=0; t<k; t++)
@@ -35,10 +36,14 @@ void Player::getMessage()
                 {
                     sum = sum *10;
                 }
-                ss = ss + int((s[i+t]-'0')*sum);
+                ss = ss + int((s[i+t-k]-'0')*sum);
             }
             receiveMessageBuffer[j] = ss;
             j++;
+        }
+        if (s[i]=='\0')
+        {
+            break;
         }
         i++;
     }
@@ -91,7 +96,7 @@ void Player::sendMessage()
     case GetCard:
     {
         QString s;
-        s.sprintf("玩家%d 获得%d张卡牌 ",order,sendMessageBuffer[1]);
+        s.sprintf("玩家%d 获得%d张牌 ",order,sendMessageBuffer[1]);
         server->textg->textbrowser->append(s);
         break;
         /*
@@ -181,7 +186,7 @@ void Player::BroadCast()
         s = s + cardlist.getQName(sendMessageBuffer[1]);
         s = s + "移除";
         server->textg->textbrowser->append(s);
-        int i;
+        int i=0;
         for (i=0; i<statusnumber; i++)
         {
             QString s1 = cardlist.getQName(status[i]);
@@ -295,6 +300,7 @@ Player::Player(/*QObject *parent = 0,*/ Server* p,int order1,int teamnumber,int 
     QString s;
     s.sprintf("%d",teamnumber);
     server->textg->playerteam[order]->setText(s);
+    server->textg->character[order]->setText("");
 
  //--------------------------
 }
@@ -447,8 +453,8 @@ void Player::foldCard(int* idOfCard,int amount,bool canBeSee)
 {
     for (int i=0; i<amount; i++)
     {
-        card.erase(*(idOfCard+i));
-        server->gamePile->putIntoPile(*(idOfCard+i));
+        card.erase(idOfCard[i]);
+        server->gamePile->putIntoPile(idOfCard[i]);
     }
     cardNumber = this->card.size();
 
@@ -522,7 +528,7 @@ bool Player::shieldExist()
 }
 void Player::destroySheild()
 {
-    for (int i=0; i<statusnumber-1; i++)
+    for (int i=0; i<statusnumber; i++)
     {
         if (status[i] == theShield)
         {
@@ -541,7 +547,7 @@ void Player::destroyStatus(int card, int order)
         status[i] = status[i+1];
     }
 
-    status[statusnumber-1] = 0;
+    status[statusnumber-1] = -1;
     statusnumber--;
 
     sendMessageBuffer[0] = StatusDecrease;
@@ -735,7 +741,7 @@ void Player::normalMagic()
     {
         card.erase(cardUsed);
         cardNumber = this->card.size();
-        server->players[magicTarget]->theShield = cardname;
+        server->players[magicTarget]->theShield = cardUsed;
         server->players[magicTarget]->addStatus(cardUsed);
 
         sendMessageBuffer[0] = CardChange;
@@ -944,7 +950,9 @@ void Player::Discards(int amount)
     //}
     //catch...
     //----测试------------
-    server->textg->textbrowser->append("请选择牌号");
+    QString s;
+    s.sprintf("请选择弃牌牌号(%d)",amount);
+    server->textg->textbrowser->append(s);
     getmessage = false;
     //--------------------------------
     receive();

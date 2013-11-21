@@ -29,6 +29,7 @@ public:
     QLabel *status[6];
     QLabel *player[6][5];
     QLabel *team[2][5];
+    QLabel *character[6];
     //QLabel *cure[6];
     QTextBrowser *playercure[6];
     QTextBrowser *playerteam[6];
