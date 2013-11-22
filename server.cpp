@@ -77,10 +77,12 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
     case blademaster:
     {
         players[order] = new Blademaster(this,order,teamnumber,character);
+        break;
     }
     default:
     {
         players[order] = new Player(this,order,teamnumber,character);
+        break;
     }
     }
 }
@@ -132,9 +134,10 @@ void Server::init(textGUI *a)
         int character[31];
         for (int i=0; i<31; i++)
         {
-            character[i] = i+1;
-        }        
-        random_shuffle(character,character+31);
+            character[i] = 1;
+        }
+        //character[1] = blademaster;
+        //random_shuffle(character,character+31);
         /*
         for(int i=0; i<PlayerNumber;i++)
         {

@@ -123,7 +123,7 @@ void Player::sendMessage()
     }
     case WeakRespond:
     {
-        server->textg->textbrowser->append("你被虚弱了,请选择:");
+        server->textg->textbrowser->append("你被虚弱,请选择:");
         server->textg->textbrowser->append("0:跳过回合,1:摸三张牌");
         break;
     }
@@ -266,7 +266,7 @@ void Player::end()
     }
     getmessage = false;
     //receiveMessageBuffer[0] = TurnEnd;
-    BroadCast();
+    //BroadCast();
 }
 //----------------------------------------------------------
 /*
@@ -354,7 +354,7 @@ void Player::start()
 
     }
 
-    //end();
+    end();
     //receiveMessageBuffer[0] = TurnEnd;
     //BroadCast(TurnEnd,order,order);
     //BroadCast();

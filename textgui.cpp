@@ -8,7 +8,7 @@ textGUI::textGUI(QWidget *parent,Server *a) :
     QWidget(parent),server(a)
 {
     pushbutton = new QPushButton("确定",this);
-    begin = new QPushButton("begin",this);
+   // begin = new QPushButton("begin",this);
     textbrowser = new QTextBrowser(this);
     lineEdit= new QLineEdit(this);
     pushbutton->move(810,615);
@@ -17,8 +17,8 @@ textGUI::textGUI(QWidget *parent,Server *a) :
     textbrowser->resize(350,450);
     lineEdit->move(510,615);
     lineEdit->resize(300,30);
-    begin->resize(50,30);
-    begin->move(810,650);
+   // begin->resize(50,30);
+   // begin->move(810,650);
 //-----------队伍-------------------------
     for (int i=0; i<2; i++)
     {
@@ -194,7 +194,7 @@ void textGUI::tconnect()
     {
        connect(pushbutton,SIGNAL(clicked()),server->players[i],SLOT(getMessage()));
     }
-    connect(begin,SIGNAL(clicked()),server,SLOT(Game()));
+    //connect(begin,SIGNAL(clicked()),server,SLOT(Game()));
 }
 
 /*
