@@ -4,8 +4,10 @@
 #include <algorithm>
 #include "player.h"
 #include"blademaster.h"
+#include"archer.h"
 #include"textgui.h"
 #include"team.h"
+#include"berserker.h"
 #include <QApplication>
 using namespace std;
 
@@ -79,6 +81,16 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
         players[order] = new Blademaster(this,order,teamnumber,character);
         break;
     }
+    case berserker:
+    {
+        players[order] = new Berserker(this,order,teamnumber,character);
+        break;
+    }
+    case archer:
+    {
+        players[order] = new Archer(this,order,teamnumber,character);
+        break;
+    }
     default:
     {
         players[order] = new Player(this,order,teamnumber,character);
@@ -134,8 +146,14 @@ void Server::init(textGUI *a)
         int character[31];
         for (int i=0; i<31; i++)
         {
-            character[i] = 1;
+            character[i] = 3;
         }
+        character[0] = 3 ;
+        character[1] = 3 ;
+        character[2] = 3 ;
+        character[3] = 3 ;
+        character[4] = 2 ;
+        character[5] = 1 ;
         //character[1] = blademaster;
         //random_shuffle(character,character+31);
         /*

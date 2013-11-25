@@ -96,7 +96,7 @@ void Blademaster::normalAttack()
         sendMessageBuffer[1] = 1;
         sendMessageBuffer[2] = 2;
 
-        blademasterSendMessage();
+        sendMessage();
         //测试----------------------------
         getmessage = false;
         //--------------------------------
@@ -127,7 +127,7 @@ void Blademaster::normalAttack()
     {
         server->textg->textbrowser->append("圣剑!!");
         (server->team[teamNumber])->getStone(Gem);
-        server->players[attackTarget]->countDamage(2);
+        server->players[attackTarget]->countDamage(2,Attack);
     }
     else if(server->players[attackTarget]->beAttacked(cardUsed,order,1,canBeAccept))
     {
@@ -138,7 +138,7 @@ void Blademaster::normalAttack()
         else
         {
             (server->team[teamNumber])->getStone(Gem);
-            server->players[attackTarget]->countDamage(2);
+            server->players[attackTarget]->countDamage(2,Attack);
         }
     }
 //-----------------结束前---------------------------------------------
@@ -166,7 +166,7 @@ void Blademaster::normalAttack()
         if (i >= 1)
         {
             sendMessageBuffer[0] = AskRespond;
-            blademasterSendMessage();
+            sendMessage();
             //测试----------------------------
             getmessage = false;
             //--------------------------------

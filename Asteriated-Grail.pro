@@ -21,7 +21,10 @@ SOURCES += main.cpp\
     cardpile.cpp \
     team.cpp \
     blademaster.cpp \
-    textgui.cpp
+    textgui.cpp \
+    berserker.cpp \
+    archer.cpp \
+    sealmaid.cpp
 
 HEADERS  += mainwindow.h \
     server.h \
@@ -32,7 +35,10 @@ HEADERS  += mainwindow.h \
     cardpile.h \
     termination.h \
     blademaster.h \
-    textgui.h
+    textgui.h \
+    berserker.h \
+    archer.h \
+    sealmaid.h
 
 FORMS    +=
 

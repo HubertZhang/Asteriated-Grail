@@ -21,7 +21,6 @@ public:
     void end();
     void normalAttack();
 
-    void blademasterSendMessage();
 signals:
 
 public slots:

@@ -141,6 +141,17 @@ void Player::sendMessage()
         server->textg->textbrowser->append("请选择使用治疗数:");
         break;
     }
+    case  AskRespond:
+    {
+        for (int i=0; i<sendMessageBuffer[1]; i++)
+        {
+            QString s;
+            s.sprintf("你是否use %d技",sendMessageBuffer[i+2]);
+            server->textg->textbrowser->append(s);
+        }
+        server->textg->textbrowser->append("选择技能号");
+        break;
+    }
     default:
         break;
 
@@ -233,6 +244,23 @@ void Player::BroadCast()
         server->textg->textbrowser->append(s);
         break;
     }
+    case DrawPicture:
+    {
+        QString s;
+        s.sprintf("玩家%d->",order);
+        for (int i=0; i<sendMessageBuffer[1]; i++)
+        {
+          QString s1;
+          s1.sprintf("玩家%d ",sendMessageBuffer[i+3]);
+          s = s + s1;
+        }
+        for (int i=0; i<sendMessageBuffer[2];i++)
+        {
+        s = s + cardlist.getQName(sendMessageBuffer[i+3+sendMessageBuffer[1]]);
+        }
+        server->textg->textbrowser->append(s);
+        break;
+    }
     case CureChange:
     {
         QString s;
@@ -287,6 +315,7 @@ Player::Player(/*QObject *parent = 0,*/ Server* p,int order1,int teamnumber,int 
     stonelimit = 3;
     theShield = 0;
     statusnumber = 0;
+    activation = 0;
     getmessage = false;
     for (int i=0; i<20; i++)
     {
@@ -314,9 +343,11 @@ void Player::start()
     //sendMessage();//回合开始
 
     try{
-
     handleStatus();
+   // if ((cardLimit-cardNumber)>=3 || activation != 0)
+   // {
     beforeAction();
+   // }
     //int receiveMessageBuffer[20];
 
     int i = 1;
@@ -397,7 +428,6 @@ void Player::handleStatus()
 }
 void Player::beforeAction()
 {
-
     //int receiveMessageBuffer[20];
     sendMessageBuffer[0] = BeforeAction;
     sendMessage();
@@ -570,7 +600,7 @@ void Player::weakRespond(int card,int order)
     int returnKind = receiveMessageBuffer[0];
     if(returnKind == Accept)//ACCEPT
     {
-        takeDamage(3);
+        takeDamage(3,2);
     }
     if(returnKind == NoAccept)
     {
@@ -581,7 +611,7 @@ void Player::weakRespond(int card,int order)
 void Player::poisonRespond(int card,int order)
 {
     destroyStatus(card,order);
-    countDamage(1);
+    countDamage(1,Magic);
 }
 
 void Player::purchase()
@@ -677,7 +707,7 @@ void Player::normalAttack()
     int cardUsed = receiveMessageBuffer[2];
     //assert(this->card.find(cardUsed)!=this->card.end());
     //if(!server->players[attackTarget].canBeAttacked()) throw ActionIllegal();
-
+    int damage = 2;
     foldCard(&cardUsed,1,false);
     //暗灭无法应战，需要吗？
     bool canBeAccept;
@@ -701,7 +731,7 @@ void Player::normalAttack()
         else
         {
            (server->team[teamNumber])->getStone(Gem);
-           server->players[attackTarget]->countDamage(2);
+           server->players[attackTarget]->countDamage(damage,Attack);
         }
     }
     //Is there any one have a skill after his attack missed?
@@ -790,6 +820,7 @@ void Player::headOn(int chainLength)
 {
     int attackTarget = receiveMessageBuffer[1];
     int cardUsed = receiveMessageBuffer[2];
+    int damage = 2;
 
     foldCard(&cardUsed,1,false);
     bool canBeAccept;
@@ -803,6 +834,9 @@ void Player::headOn(int chainLength)
     sendMessageBuffer[2] = cardUsed;
     //BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
     BroadCast();
+
+    emit miss(order);
+
     if(server->players[attackTarget]->beAttacked(order,cardUsed,chainLength,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist())//If there is a shield...
@@ -812,7 +846,7 @@ void Player::headOn(int chainLength)
         else
         {
           (server->team[teamNumber])->getStone(Crystal);
-          server->players[attackTarget]->countDamage(2);
+          server->players[attackTarget]->countDamage(damage,Accept);
         }
     }
 }
@@ -839,7 +873,7 @@ void Player::beMagicMissileAttack(int cardUsed, int damage)
 
         else
         {
-            countDamage(damage);
+            countDamage(damage,Magic);
         }
     }
     if(reaction == HeadOn)
@@ -890,22 +924,23 @@ bool Player::beAttacked(int attacker,int cardUsed,int chainLength,bool canBeAcce
     {
         int cardUsed = receiveMessageBuffer[1];
         foldCard(&cardUsed);
+        emit miss(order);
         //BroadCast();//改变手牌数量，展示圣光
         return false;
     }
     }
 }
-void Player::countDamage(int damage)
+void Player::countDamage(int damage,int kind)
 {
     if(cureExist())
     {
         int realDamage = damage - useCure(damage);
         if (realDamage > 0)
-        takeDamage(realDamage);
+        takeDamage(realDamage,kind);
     }
     else
     {
-        takeDamage(damage);
+        takeDamage(damage,kind);
     }
 }
 int Player::useCure(int damage)
@@ -921,13 +956,14 @@ int Player::useCure(int damage)
     //--------------------------------
     receive();
     int returnAmount = receiveMessageBuffer[0];
+    cureNumber = cureNumber - returnAmount;
     sendMessageBuffer[0] = CureChange;
     sendMessageBuffer[1] = returnAmount;
     BroadCast();//改变治疗数量
 
     return returnAmount;
 }
-void Player::takeDamage(int damage)
+void Player::takeDamage(int damage,int kind)
 {
     //BroadCast(TakeDamage,order,order);
     //server->dealCards(order,damage);
@@ -935,10 +971,10 @@ void Player::takeDamage(int damage)
 
     if(cardNumber > cardLimit)
     {
-        Discards(cardNumber-cardLimit);
+        Discards(cardNumber-cardLimit,kind);
     }
 }
-void Player::Discards(int amount)
+void Player::Discards(int amount,int kind)
 {
     //BroadCast(Discard,order,order,amount);
     //try...
@@ -949,7 +985,8 @@ void Player::Discards(int amount)
         //if(card.find(receiveMessageBuffer[i])==card.end()) throw ActionIllegal;
     //}
     //catch...
-    //----测试------------
+
+    //----测试------------------
     QString s;
     s.sprintf("请选择弃牌牌号(%d)",amount);
     server->textg->textbrowser->append(s);
