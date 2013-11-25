@@ -279,7 +279,7 @@ void Player::receive()
     //t.start();
     while(1)
     {
-        Sleep(100);
+        //Sleep(100);
         QCoreApplication::processEvents();
         if (getmessage)
         break;

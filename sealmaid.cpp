@@ -107,16 +107,16 @@ void Sealmaid::magicThree()
     }
     if (cardlist.getName(statusTake) == )
 
-    int order;
+    int k;
     for (int i=0; i<server->players[magicTarget]->statusNumber; i++)
     {
         if (server->players[magicTarget]->status[i] == statusTake)
         {
-            order = i;
+            k = i;
             break;
         }
     }
-    for (int i = order; i < server->players[magicTarget]->statusnumber-1;  i++)
+    for (int i = k; i < server->players[magicTarget]->statusnumber-1;  i++)
     {
         server->players[magicTarget]->status[i] = server->players[magicTarget]->status[i+1];
     }
@@ -135,11 +135,11 @@ void Sealmaid::magicThree()
 
         cardNumber = card.size();
         sendMessageBuffer[0] = GetCard;
-        sendMessageBuffer[1] = amount;
+        sendMessageBuffer[1] = 1;
         sendMessage();
 
         sendMessageBuffer[0] = CardChange;
-        sendMessageBuffer[1] = amount;
+        sendMessageBuffer[1] = 1;
         BroadCast();//改变手牌数量
     //---------------------------------------------
 
