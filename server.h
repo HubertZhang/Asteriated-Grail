@@ -11,7 +11,7 @@
 #include "team.h"
 #include <cstring>
 #include <exception>
-
+#include "AGServer.h"
 #define CARD_NUMBER 150
 enum messageType1{ArrangeTeam,ArrangeCharacter,BroadCastCharacter};
 enum character{normal,blademaster};
@@ -38,7 +38,10 @@ public:
     textGUI *textg;
     void BroadCast();
     void sendMessage();
-
+    AGServer* NetworkServer;
+public slots:
+    void getMessage();
+    void receiveReady();
 signals:
 
 public slots:

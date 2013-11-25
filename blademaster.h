@@ -1,6 +1,6 @@
 #ifndef BLADEMASTER_H
 #define BLADEMASTER_H
-#include"Player.h"
+#include"player.h"
 
 class Blademaster : public Player
 {

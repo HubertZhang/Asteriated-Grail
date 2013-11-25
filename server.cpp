@@ -8,6 +8,24 @@
 #include"team.h"
 #include <QApplication>
 using namespace std;
+void Server::getMessage()
+{
+    std::cout << "here"<<std::endl;
+    NetworkServer->recieve(0);
+    connect(NetworkServer,SIGNAL(receiveReady()),this,SLOT(receiveReady()));
+}
+void Server::receiveReady()
+{
+    disconnect(NetworkServer,SIGNAL(receiveReady()),this,SLOT(receiveReady()));
+    for(int i = 0; i<NetworkServer->buf[0].size();i++)
+    {
+        for(int j = 0; j<6; j++)
+        {
+            players[j]->receiveMessageBuffer[i]=NetworkServer->buf[0][i];
+            players[j]->getmessage=true;
+        }
+    }
+}
 
 void Server::BroadCast()
 {

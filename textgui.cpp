@@ -190,10 +190,12 @@ textGUI::textGUI(QWidget *parent,Server *a) :
 */
 void textGUI::tconnect()
 {
-    for (int i=0; i<6; i++)
-    {
-       connect(pushbutton,SIGNAL(clicked()),server->players[i],SLOT(getMessage()));
-    }
+//    for (int i=0; i<6; i++)
+//    {
+//       connect(pushbutton,SIGNAL(clicked()),server->players[i],SLOT(getMessage()));
+//    }
+    std::cout << "here1"<<std::endl;
+    connect(pushbutton,SIGNAL(clicked()),server,SLOT(getMessage()));
     //connect(begin,SIGNAL(clicked()),server,SLOT(Game()));
 }
 
