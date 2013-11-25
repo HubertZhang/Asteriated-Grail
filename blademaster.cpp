@@ -13,18 +13,7 @@ extern CardList cardlist;
    4【剑影】：【能量】×1 （【攻击行动】结束时发动）额外+1【攻击行动】。
 
 */
-//-------测试------------------
-void Blademaster::blademasterSendMessage()
-{
-    for (int i=0; i<sendMessageBuffer[1]; i++)
-    {
-        QString s;
-        s.sprintf("你是否use %d技",sendMessageBuffer[i+2]);
-        server->textg->textbrowser->append(s);
-    }
-    server->textg->textbrowser->append("选择技能号(目标,卡牌)");
-}
-//----------------------------
+
 
 Blademaster::Blademaster(/*QObject *parent*/Server* server,int order,int teamNumber,int character) :
     Player(server,order,teamNumber,character)

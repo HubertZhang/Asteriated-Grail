@@ -33,8 +33,8 @@ protected:
     int energyGem;
     int energyCrystal;
     int stonelimit;//能量上限
-    int status[10];//状态栏
-    int statusnumber;//状态数量
+    //int status[10];//状态栏
+    //int statusnumber;//状态数量
     int character;//人物
     int activation;
     bool getmessage;
