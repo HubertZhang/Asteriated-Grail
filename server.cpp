@@ -10,9 +10,12 @@
 using namespace std;
 void Server::getMessage()
 {
-    std::cout << "here"<<std::endl;
-    NetworkServer->recieve(0);
+    std::cout << "here2"<<std::endl;
+    NetworkServer->m_iosev.reset();
     connect(NetworkServer,SIGNAL(receiveReady()),this,SLOT(receiveReady()));
+    NetworkServer->recieve(0);
+
+    NetworkServer->m_iosev.run();
 }
 void Server::receiveReady()
 {

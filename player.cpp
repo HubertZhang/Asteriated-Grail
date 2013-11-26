@@ -247,11 +247,10 @@ void Player::BroadCast()
 }
 void Player::receive()
 {
-    //QTimer t;
-    //t.start();
     while(1)
     {
-        //Sleep(100);
+        //sleep(1);
+        //std::cout << "1";
         QCoreApplication::processEvents();
         if (getmessage)
         break;

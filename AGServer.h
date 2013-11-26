@@ -24,7 +24,7 @@ class AGServer :public QObject
 {
     Q_OBJECT
 private:
-    io_service &m_iosev;
+
     tcp::endpoint clientAddr[6];
     ip::tcp::acceptor m_acceptor;
     ip::tcp::acceptor** m_pacceptor;
@@ -34,6 +34,7 @@ private:
     void readHandler(boost::shared_ptr<tcp::socket> psocket, boost::system::error_code ec,size_t bytesArrived);
     void writeHandler(error_code ec, size_t bytes_transferred);
 public:
+    io_service &m_iosev;
     AGServer(io_service &iosev);
 
     void setup(int* listeningPort);

@@ -38,6 +38,7 @@ public:
     textGUI *textg;
     void BroadCast();
     void sendMessage();
+    io_service* iosev;
     AGServer* NetworkServer;
 public slots:
     void getMessage();
