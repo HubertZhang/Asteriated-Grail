@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Asteriated-Grail
 TEMPLATE = app
-QMAKE_LFLAGS += -lboost_system-mt
+
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -21,9 +21,7 @@ SOURCES += main.cpp\
     cardpile.cpp \
     team.cpp \
     blademaster.cpp \
-    textgui.cpp \
-    AGServer.cpp \
-    AGClient.cpp
+    textgui.cpp
 
 HEADERS  += mainwindow.h \
     server.h \
@@ -34,9 +32,7 @@ HEADERS  += mainwindow.h \
     cardpile.h \
     termination.h \
     blademaster.h \
-    textgui.h \
-    AGServer.h \
-    AGClient.h
+    textgui.h
 
 FORMS    +=
 
