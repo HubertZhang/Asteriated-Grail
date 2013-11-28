@@ -13,6 +13,15 @@
 #include <QApplication>
 using namespace std;
 
+void Server::messageReceived(int id, std::vector<int> message)
+{
+    for(int i = 0; i< message.size();i++)
+    {
+        players[id]->receiveMessageBuffer[i] = message[i];
+    }
+    players[id]->getmessage = true;
+}
+
 void Server::BroadCast()
 {
     QString s = "*************************************************";
@@ -38,6 +47,9 @@ Server::Server(QObject *parent,int Number) :
     gamePile = new CardPile;
     //init();
     srand(time(0));
+    connectionBuilt = false;
+    connect(&networkServer,SIGNAL(messageRecieved(int, std::vector<int>)),this,SLOT(messageReceived(int, std::vector<int>)));
+    connect(&networkServer,SIGNAL(connectionBuilt()),this,SLOT(connectionFinished()));
 }
 
 
@@ -119,6 +131,12 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
 
 void Server::init(textGUI *a)
 {
+    while(1)
+    {
+        QCoreApplication::processEvents();
+        if (connectionBuilt)
+        break;
+    }
     textg = a;
     team[0] = new Team(this,0);
     team[1] = new Team(this,1);

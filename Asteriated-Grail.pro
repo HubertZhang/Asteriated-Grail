@@ -22,6 +22,7 @@ SOURCES += main.cpp\
     team.cpp \
     blademaster.cpp \
     textgui.cpp \
+    agserver.cpp \
     berserker.cpp \
     archer.cpp \
     sealer.cpp \
@@ -37,6 +38,7 @@ HEADERS  += mainwindow.h \
     termination.h \
     blademaster.h \
     textgui.h \
+    agserver.h \
     berserker.h \
     archer.h \
     sealer.h \
