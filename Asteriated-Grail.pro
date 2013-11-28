@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     cardpile.cpp \
     team.cpp \
     blademaster.cpp \
-    textgui.cpp
+    textgui.cpp \
+    agserver.cpp
 
 HEADERS  += mainwindow.h \
     server.h \
@@ -32,7 +33,8 @@ HEADERS  += mainwindow.h \
     cardpile.h \
     termination.h \
     blademaster.h \
-    textgui.h
+    textgui.h \
+    agserver.h
 
 FORMS    +=
 
