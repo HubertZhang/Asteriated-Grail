@@ -5,6 +5,8 @@
 #include "player.h"
 #include"blademaster.h"
 #include"archer.h"
+#include"sealer.h"
+#include"assassin.h"
 #include"textgui.h"
 #include"team.h"
 #include"berserker.h"
@@ -39,8 +41,14 @@ Server::Server(QObject *parent,int Number) :
 }
 
 
+
 void Server::Game()
 {
+    for (int i=0; i<6; i++)
+    {
+        players[i]->characterConnect();
+    }
+
     int gameround = 1;
     //sendMessageBuffer[0] =
     //BroadCast();
@@ -89,6 +97,16 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
     case archer:
     {
         players[order] = new Archer(this,order,teamnumber,character);
+        break;
+    }
+    case sealer:
+    {
+        players[order] = new Sealer(this,order,teamnumber,character);
+        break;
+    }
+    case assassin:
+    {
+        players[order] = new Assassin(this,order,teamnumber,character);
         break;
     }
     default:
@@ -148,12 +166,12 @@ void Server::init(textGUI *a)
         {
             character[i] = 3;
         }
-        character[0] = 3 ;
-        character[1] = 3 ;
-        character[2] = 3 ;
-        character[3] = 3 ;
-        character[4] = 2 ;
-        character[5] = 1 ;
+        character[0] = 5 ;
+        character[1] = 5 ;
+        character[2] = 5 ;
+        character[3] = 5 ;
+        character[4] = 5 ;
+        character[5] = 5 ;
         //character[1] = blademaster;
         //random_shuffle(character,character+31);
         /*

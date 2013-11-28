@@ -14,7 +14,7 @@
 
 #define CARD_NUMBER 150
 enum messageType1{ArrangeTeam,ArrangeCharacter,BroadCastCharacter};
-enum character{normal,blademaster,berserker,archer};
+enum character{normal,blademaster,berserker,archer,sealer,assassin};
 class textGUI;
 class Server : public QObject
 {
@@ -30,7 +30,7 @@ public:
     Player* players[6];
     CardPile* gamePile;
     explicit Server(QObject *parent = 0, int Number=6);
-   // void Game();
+    void Game();
     int sendMessageBuffer[20];
 
 //--------------测试---------------------------
@@ -42,7 +42,6 @@ public:
 signals:
 
 public slots:
-void Game();
 //--------------------------------------------
 };
 

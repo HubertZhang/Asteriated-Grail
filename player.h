@@ -9,7 +9,7 @@
 using std::set;
 
 enum messageType{TurnBegin,BeforeAction,ActionType,AttackHappen,DrawPicture,Activated,AttackRespond,
-                 WeakRespond,CureRespond,Show,GetCard,EnergyChange,CardChange,CureChange,
+                 WeakRespond,CureRespond,Show,GetCard,EnergyChange,CardChange,CureChange,CardLimitChange,
                  StatusDecrease,StatusIncrease,AskRespond,TurnEnd};
 enum actionType{Attack,Magic};
 enum beforeactionType{aaa,Activate,Purchase,Fusion,Refine};
@@ -33,14 +33,14 @@ protected:
     int energyGem;
     int energyCrystal;
     int stonelimit;//能量上限
-    //int status[10];//状态栏
-    //int statusnumber;//状态数量
+    int status[10];//状态栏
+    int statusnumber;//状态数量
     int character;//人物
     int activation;
     bool getmessage;
 public:
-    int status[10];//状态栏
-    int statusnumber;//状态数量
+    //int status[10];//状态栏
+    //int statusnumber;//状态数量
     int theShield;//盾圣
     int cureLimit;//治疗上限
     int cureNumber;//治疗数量
@@ -59,13 +59,14 @@ public:
 //----------行动阶段流程------------------------------
     void start();
     virtual void handleStatus(); //判定阶段（天使等人物重载）
-    void beforeAction();//特殊行动阶段或启动
+    virtual void beforeAction();//特殊行动阶段或启动
     virtual void end();
 //---------基本操作-----------------------------------
     bool shieldExist();
     bool cureExist();
     void destroySheild();
     void destroyStatus(int cardname,int order);
+    void destroyStatus(int cardname);
     void weakRespond(int,int);
     void poisonRespond(int,int);//中毒需要知道造成伤害的人
     void addStatus(int cardUsed);
@@ -91,8 +92,12 @@ public:
     virtual void takeDamage(int damage,int kind);//伤害时间轴第五+六阶段前部分：实际受到伤害阶段，摸牌
     virtual void Discards(int amount,int kind);//伤害时间轴第六阶段：承受伤害阶段
 
+    virtual void characterConnect(){}
     signals:
-    void miss(int);
+    void miss(int);//弓之女神
+    void decreasestatus(int,int);//封印师
+    void fold(int,int);//封印师
+    void beweak(int,int);//封印师
 //测试程序：
     public slots:
     void getMessage();

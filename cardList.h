@@ -13,6 +13,7 @@ public:
     int getName(int cardNum);
     int getType(int cardNum);
     int getKind(int cardNum);
+    int getNature(int cardNum);
     int getSkillOne(int cardNum);
     int getSkillTwo(int cardNum);
     //测试-------------------------

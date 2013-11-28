@@ -180,6 +180,11 @@ void Player::BroadCast()
             s = s + s1;
         }
         server->textg->textbrowser->append(s);
+
+        for (int i=0; i<sendMessageBuffer[1]; i++)
+        {
+         emit fold(order,sendMessageBuffer[i+2]);
+        }
         break;
     }
     case StatusIncrease:
@@ -188,6 +193,7 @@ void Player::BroadCast()
         s.sprintf("玩家%d添加",sendMessageBuffer[2],sendMessageBuffer[1]);
         s = s + cardlist.getQName(sendMessageBuffer[1]);
         server->textg->textbrowser->append(s);
+
         break;
     }
     case StatusDecrease:
@@ -197,6 +203,9 @@ void Player::BroadCast()
         s = s + cardlist.getQName(sendMessageBuffer[1]);
         s = s + "移除";
         server->textg->textbrowser->append(s);
+
+        emit decreasestatus(order,sendMessageBuffer[1]);
+
         int i=0;
         for (i=0; i<statusnumber; i++)
         {
@@ -242,6 +251,11 @@ void Player::BroadCast()
         s = s + s1;
         s = s + cardlist.getQName(sendMessageBuffer[2]);
         server->textg->textbrowser->append(s);
+
+        //for (int i=0; i<sendMessageBuffer[1]; i++)
+       // {
+         emit fold(order,sendMessageBuffer[2]);
+        //}
         break;
     }
     case DrawPicture:
@@ -259,6 +273,11 @@ void Player::BroadCast()
         s = s + cardlist.getQName(sendMessageBuffer[i+3+sendMessageBuffer[1]]);
         }
         server->textg->textbrowser->append(s);
+
+        for (int i=0; i<sendMessageBuffer[2]; i++)
+        {
+         emit fold(order,sendMessageBuffer[i+3+sendMessageBuffer[1]]);
+        }
         break;
     }
     case CureChange:
@@ -266,6 +285,13 @@ void Player::BroadCast()
         QString s;
         s.sprintf("%d",cureNumber);
         server->textg->playercure[order]->setText(s);
+        break;
+    }
+    case Activated:
+    {
+        QString s;
+        s.sprintf("玩家%d 启动: ",order);
+        server->textg->textbrowser->append(s);
         break;
     }
     default:
@@ -279,7 +305,7 @@ void Player::receive()
     //t.start();
     while(1)
     {
-        //Sleep(100);
+        Sleep(100);
         QCoreApplication::processEvents();
         if (getmessage)
         break;
@@ -411,11 +437,32 @@ void Player::handleStatus()
                 poisonRespond(status[j - 1],j-1);
                 break;
             }
-            /*
-            case FIVEBOUND:
+
+            case -1://FIVEBOUND:
             {
-                break;
+                destroyStatus(status[j - 1],j-1);
+                // server->gamePile->putIntoPile(card);
+                sendMessageBuffer[0] = WeakRespond;
+                sendMessage();
+                //actionType returnKind = receive(receiveMessageBuffer);
+                //测试----------------------------
+                getmessage = false;
+                //--------------------------------
+                receive();
+                int returnKind = receiveMessageBuffer[0];
+                if(returnKind == Accept)//ACCEPT
+                {
+                    emit beweak(order,Accept);
+                }
+                else if(returnKind == NoAccept)
+                {
+                    emit beweak(order,NoAccept);
+                    throw(1);
+                   //跳至下一个玩家
+                }
+                 break;
             }
+            /*
             case PROVOKE:
             {
                 break;
@@ -468,7 +515,7 @@ void Player::beforeAction()
 void Player::activate()
 {
     sendMessageBuffer[0] = Activated;
-    //sendMessageBuffer[1] = order;
+    sendMessageBuffer[1] = order;
     BroadCast();
     return;
 }
@@ -530,17 +577,20 @@ void Player::addStatus (int cardUsed)
 {
     status[statusnumber] = cardUsed;
     statusnumber ++;
+    //server->textg->textbrowser->append("1111");
     //------测试------------
-    int j;
-    for (int i=0,j=0; i<statusnumber; i++,j++)
+    int j=0;
+    for (; j<statusnumber; j++)
     {
-        QString s1 = cardlist.getQName(status[i]);
+        QString s1 = cardlist.getQName(status[j]);
         //s.sprintf("%d",status[i]);
+        //server->textg->textbrowser->append("2222");
         server->textg->playerstatus[order][j]->setText(s1);
     }
     for (;j<6;j++)
     server->textg->playerstatus[order][j]->clear();
     //-------------------------------
+    //server->textg->textbrowser->append("3333");
 }
 bool Player::cureExist()
 {
@@ -563,6 +613,7 @@ void Player::destroySheild()
         if (status[i] == theShield)
         {
             destroyStatus(theShield,i);
+            server->gamePile->putIntoPile(theShield);
             break;
         }
     }
@@ -570,7 +621,6 @@ void Player::destroySheild()
 }
 void Player::destroyStatus(int card, int order)
 {
-    server->gamePile->putIntoPile(card);
 
     for (int i = order; i < statusnumber-1;  i++)
     {
@@ -586,9 +636,21 @@ void Player::destroyStatus(int card, int order)
 
     return;
 }
+void Player::destroyStatus(int cardname)
+{
+    for (int i=0; i<statusnumber; i++)
+    {
+        if (status[i] == cardname)
+        {
+            destroyStatus(cardname,i);
+            break;
+        }
+    }
+}
 void Player::weakRespond(int card,int order)
 {
     destroyStatus(card,order);
+    server->gamePile->putIntoPile(card);
     //sendMessage(WEAK);//Kind = 18;
     sendMessageBuffer[0] = WeakRespond;
     sendMessage();
@@ -611,6 +673,7 @@ void Player::weakRespond(int card,int order)
 void Player::poisonRespond(int card,int order)
 {
     destroyStatus(card,order);
+    server->gamePile->putIntoPile(card);
     countDamage(1,Magic);
 }
 
@@ -722,7 +785,7 @@ void Player::normalAttack()
     sendMessageBuffer[2] = cardUsed;
     BroadCast();
 
-    if(server->players[attackTarget]->beAttacked(cardUsed,order,1,canBeAccept))
+    if(server->players[attackTarget]->beAttacked(order,cardUsed,1,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist())//If there is a shield...
         {
@@ -846,7 +909,7 @@ void Player::headOn(int chainLength)
         else
         {
           (server->team[teamNumber])->getStone(Crystal);
-          server->players[attackTarget]->countDamage(damage,Accept);
+          server->players[attackTarget]->countDamage(damage,Attack);
         }
     }
 }

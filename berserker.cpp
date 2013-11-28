@@ -118,7 +118,7 @@ void Berserker::normalAttack()
         server->players[attackTarget]->countDamage(damage,Attack);
     }
 
-    else if(server->players[attackTarget]->beAttacked(cardUsed,order,1,canBeAccept))
+    else if(server->players[attackTarget]->beAttacked(order,cardUsed,1,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist())//If there is a shield...
         {

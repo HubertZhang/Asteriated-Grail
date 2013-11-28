@@ -13,6 +13,7 @@ public:
     Archer(Server* server,int order,int teamNumber,int character);
     void magicAction();
     void normalAttack();
+    void headOn(int);
     void end();
 
 signals:

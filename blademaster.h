@@ -20,6 +20,7 @@ public:
     //void attack();
     void end();
     void normalAttack();
+    void headOn(int);
 
 signals:
 

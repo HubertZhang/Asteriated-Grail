@@ -194,6 +194,7 @@ void textGUI::tconnect()
     {
        connect(pushbutton,SIGNAL(clicked()),server->players[i],SLOT(getMessage()));
     }
+
     //connect(begin,SIGNAL(clicked()),server,SLOT(Game()));
 }
 

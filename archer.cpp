@@ -74,9 +74,8 @@ void Archer::normalAttack()
     {
         damage = damage -1;
         server->players[attackTarget]->countDamage(damage,Attack);
-
     }
-    else if(server->players[attackTarget]->beAttacked(cardUsed,order,1,canBeAccept))
+    else if(server->players[attackTarget]->beAttacked(order,cardUsed,1,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist())//If there is a shield...
         {
@@ -209,4 +208,70 @@ void Archer::skillone(int order)
          target = -1;
     }
 }
+
+
+void Archer::headOn(int chainLength)
+{
+    int attackTarget = receiveMessageBuffer[1];
+    int cardUsed = receiveMessageBuffer[2];
+    int damage = 2;
+
+    foldCard(&cardUsed,1,false);
+    bool canBeAccept;
+    if (cardlist.getName(cardUsed) == darkAttack)
+        canBeAccept = false;
+    else
+        canBeAccept = true;
+
+    //------------------精准射击------------------------------------------------
+    if (cardlist.getSkillOne(cardUsed) == 11 ||cardlist.getSkillTwo(cardUsed) == 11)
+    {
+        if (server->players[attackTarget]->shieldExist())
+        {
+        sendMessageBuffer[0] = AskRespond;
+        sendMessageBuffer[1] = 1;
+        sendMessageBuffer[2] = 2;
+
+        sendMessage();
+        //测试----------------------------
+        getmessage = false;
+        //--------------------------------
+        receive();
+        if (receiveMessageBuffer[0])
+        {
+            server->textg->textbrowser->append("你响应了精准射击");
+            skill = 3;
+        }
+        }
+    }
+
+    sendMessageBuffer[0] = AttackHappen;
+    sendMessageBuffer[1] = attackTarget;
+    sendMessageBuffer[2] = cardUsed;
+    //BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
+    BroadCast();
+
+    emit miss(order);
+
+    if(skill == 3)
+    {
+        damage = damage -1;
+        server->players[attackTarget]->countDamage(damage,Attack);
+    }
+    else if(server->players[attackTarget]->beAttacked(order,cardUsed,chainLength,canBeAccept))
+    {
+        if(server->players[attackTarget]->shieldExist())//If there is a shield...
+        {
+            server->players[attackTarget]->destroySheild();
+        }
+        else
+        {
+          (server->team[teamNumber])->getStone(Crystal);
+          server->players[attackTarget]->countDamage(damage,Accept);
+        }
+    }
+
+    skill = 0;
+}
+
 

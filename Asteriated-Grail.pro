@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     textgui.cpp \
     berserker.cpp \
     archer.cpp \
-    sealmaid.cpp
+    sealer.cpp \
+    assassin.cpp
 
 HEADERS  += mainwindow.h \
     server.h \
@@ -38,7 +39,8 @@ HEADERS  += mainwindow.h \
     textgui.h \
     berserker.h \
     archer.h \
-    sealmaid.h
+    sealer.h \
+    assassin.h
 
 FORMS    +=
 
