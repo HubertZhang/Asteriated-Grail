@@ -5,7 +5,7 @@
 #include"cardpile.h"
 #include"textgui.h"
 #include<QString>
-#include<Windows.h>
+//#include<Windows.h>
 #include <QApplication>
 #include<QTimer>
 #include<string>
@@ -251,7 +251,7 @@ void Player::receive()
     //t.start();
     while(1)
     {
-        Sleep(100);
+        //sleep(1);
         QCoreApplication::processEvents();
         if (getmessage)
         break;

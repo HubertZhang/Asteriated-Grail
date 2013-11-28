@@ -11,7 +11,7 @@
 #include "team.h"
 #include <cstring>
 #include <exception>
-
+#include "agserver.h"
 #define CARD_NUMBER 150
 enum messageType1{ArrangeTeam,ArrangeCharacter,BroadCastCharacter};
 enum character{normal,blademaster};
@@ -32,7 +32,7 @@ public:
     explicit Server(QObject *parent = 0, int Number=6);
    // void Game();
     int sendMessageBuffer[20];
-
+    AGServer networkServer;
 //--------------测试---------------------------
     void init(textGUI*);
     textGUI *textg;
@@ -42,6 +42,7 @@ public:
 signals:
 
 public slots:
+    void messageReceived(int id,std::vector<int> message);
 void Game();
 //--------------------------------------------
 };

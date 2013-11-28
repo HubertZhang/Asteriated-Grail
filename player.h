@@ -39,11 +39,12 @@ protected:
     int status[10];//状态栏
     int statusnumber;//状态数量
     int character;//人物
-    bool getmessage;
+
 public:
     int theShield;//盾圣
     Player(/*QObject *parent = 0,*/ Server* server,int order,int teamNumber,int character=0);
 //----------传输信息--------------------------------
+    bool getmessage;
     int sendMessageBuffer[20];
     int receiveMessageBuffer[20];
     //void BroadCast(messageType a,int origin,int target,...);
