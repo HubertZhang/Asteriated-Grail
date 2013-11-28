@@ -316,7 +316,15 @@ int CardList::getKind(int cardNum)
 }
 int CardList::getName(int cardNum)
 {
+    if (cardNum <= 149)
     return cardList[cardNum].cname;
+    else return -1;
+}
+int CardList::getNature(int cardNum)
+{
+    if (cardNum <= 149)
+    return cardList[cardNum].cnature;
+    else return -1;
 }
 int CardList::getType(int cardNum)
 {
@@ -335,6 +343,9 @@ int CardList::getSkillTwo(int cardNum)
 QString CardList::getQName(int cardNum)
 {
     QString s;
+
+    if (cardNum == 150)
+        return "封印束缚";
     switch(cardList[cardNum].cname)
     {
     case groundAttack:

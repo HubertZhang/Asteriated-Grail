@@ -4,8 +4,12 @@
 #include <algorithm>
 #include "player.h"
 #include"blademaster.h"
+#include"archer.h"
+#include"sealer.h"
+#include"assassin.h"
 #include"textgui.h"
 #include"team.h"
+#include"berserker.h"
 #include <QApplication>
 using namespace std;
 
@@ -47,8 +51,14 @@ Server::Server(QObject *parent,int Number) :
 }
 
 
+
 void Server::Game()
 {
+    for (int i=0; i<6; i++)
+    {
+        players[i]->characterConnect();
+    }
+
     int gameround = 1;
     //sendMessageBuffer[0] =
     //BroadCast();
@@ -87,6 +97,26 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
     case blademaster:
     {
         players[order] = new Blademaster(this,order,teamnumber,character);
+        break;
+    }
+    case berserker:
+    {
+        players[order] = new Berserker(this,order,teamnumber,character);
+        break;
+    }
+    case archer:
+    {
+        players[order] = new Archer(this,order,teamnumber,character);
+        break;
+    }
+    case sealer:
+    {
+        players[order] = new Sealer(this,order,teamnumber,character);
+        break;
+    }
+    case assassin:
+    {
+        players[order] = new Assassin(this,order,teamnumber,character);
         break;
     }
     default:
@@ -144,8 +174,14 @@ void Server::init(textGUI *a)
         int character[31];
         for (int i=0; i<31; i++)
         {
-            character[i] = 1;
+            character[i] = 3;
         }
+        character[0] = 5 ;
+        character[1] = 5 ;
+        character[2] = 5 ;
+        character[3] = 5 ;
+        character[4] = 5 ;
+        character[5] = 5 ;
         //character[1] = blademaster;
         //random_shuffle(character,character+31);
         /*

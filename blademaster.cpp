@@ -13,18 +13,7 @@ extern CardList cardlist;
    4【剑影】：【能量】×1 （【攻击行动】结束时发动）额外+1【攻击行动】。
 
 */
-//-------测试------------------
-void Blademaster::blademasterSendMessage()
-{
-    for (int i=0; i<sendMessageBuffer[1]; i++)
-    {
-        QString s;
-        s.sprintf("你是否use %d技",sendMessageBuffer[i+2]);
-        server->textg->textbrowser->append(s);
-    }
-    server->textg->textbrowser->append("选择技能号(目标,卡牌)");
-}
-//----------------------------
+
 
 Blademaster::Blademaster(/*QObject *parent*/Server* server,int order,int teamNumber,int character) :
     Player(server,order,teamNumber,character)
@@ -96,7 +85,7 @@ void Blademaster::normalAttack()
         sendMessageBuffer[1] = 1;
         sendMessageBuffer[2] = 2;
 
-        blademasterSendMessage();
+        sendMessage();
         //测试----------------------------
         getmessage = false;
         //--------------------------------
@@ -127,9 +116,9 @@ void Blademaster::normalAttack()
     {
         server->textg->textbrowser->append("圣剑!!");
         (server->team[teamNumber])->getStone(Gem);
-        server->players[attackTarget]->countDamage(2);
+        server->players[attackTarget]->countDamage(2,Attack);
     }
-    else if(server->players[attackTarget]->beAttacked(cardUsed,order,1,canBeAccept))
+    else if(server->players[attackTarget]->beAttacked(order,cardUsed,1,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist() && skill != 2)//If there is a shield...
         {
@@ -138,7 +127,7 @@ void Blademaster::normalAttack()
         else
         {
             (server->team[teamNumber])->getStone(Gem);
-            server->players[attackTarget]->countDamage(2);
+            server->players[attackTarget]->countDamage(2,Attack);
         }
     }
 //-----------------结束前---------------------------------------------
@@ -166,7 +155,7 @@ void Blademaster::normalAttack()
         if (i >= 1)
         {
             sendMessageBuffer[0] = AskRespond;
-            blademasterSendMessage();
+            sendMessage();
             //测试----------------------------
             getmessage = false;
             //--------------------------------
@@ -212,4 +201,68 @@ void Blademaster::normalAttack()
         }
     }
 
+}
+
+void Blademaster::headOn(int chainLength)
+{
+    int attackTarget = receiveMessageBuffer[1];
+    int cardUsed = receiveMessageBuffer[2];
+    int damage = 2;
+
+    foldCard(&cardUsed,1,false);
+    bool canBeAccept;
+    if (cardlist.getName(cardUsed) == darkAttack)
+        canBeAccept = false;
+    else
+        canBeAccept = true;
+
+    //-------------------烈风技------------------------------------------------
+    if (cardlist.getSkillOne(cardUsed) == 11 ||cardlist.getSkillTwo(cardUsed) == 11)
+    {
+        if (server->players[attackTarget]->shieldExist())
+        {
+        sendMessageBuffer[0] = AskRespond;
+        sendMessageBuffer[1] = 1;
+        sendMessageBuffer[2] = 2;
+
+        sendMessage();
+        //测试----------------------------
+        getmessage = false;
+        //--------------------------------
+        receive();
+        if (receiveMessageBuffer[0])
+        {
+            server->textg->textbrowser->append("你响应了烈风技");
+            skill = 2;
+        }
+        }
+    }
+
+    //------------烈风技--------------------------
+    if(skill == 2)
+        canBeAccept = false;
+    //------------------------------------------
+
+    sendMessageBuffer[0] = AttackHappen;
+    sendMessageBuffer[1] = attackTarget;
+    sendMessageBuffer[2] = cardUsed;
+    //BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
+    BroadCast();
+
+    emit miss(order);
+
+    if(server->players[attackTarget]->beAttacked(order,cardUsed,chainLength,canBeAccept))
+    {
+        if(server->players[attackTarget]->shieldExist()&& skill != 2)//If there is a shield...
+        {
+            server->players[attackTarget]->destroySheild();
+        }
+        else
+        {
+          (server->team[teamNumber])->getStone(Crystal);
+          server->players[attackTarget]->countDamage(damage,Accept);
+        }
+    }
+
+    skill = 0;
 }
