@@ -18,7 +18,7 @@ void AGSocket::readMessage()
     QDataStream socketIn(this);
     socketIn.setVersion(QDataStream::Qt_5_0);
     while (1) {
-        std::cout <<this->bytesAvailable()<< "Signal1\n";
+        qDebug() <<this->bytesAvailable()<< "Signal1\n";
         int messageLength= 0;
         if (bytesAvailable() < (int)sizeof(int)) return;
         socketIn >> messageLength;
@@ -54,6 +54,7 @@ void AGServer::incomingConnection(qintptr socketDescriptor)
     connect(tempSocket,SIGNAL(disconnected()),tempSocket,SLOT(deleteLater()));
     connect(tempSocket,SIGNAL(readyRead()),tempSocket,SLOT(readMessage()));
     connect(tempSocket,SIGNAL(readFinished(int,std::vector<int>)),this,SLOT(readFinished(int,std::vector<int>)));
+    qDebug()<< socketList.size() <<"th Client connected, ip is" << tempSocket->peerAddress().toString().toStdString() << endl;
 }
 
 void AGServer::sendMessage(int id,vector<int> message)
