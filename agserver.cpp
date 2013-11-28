@@ -53,7 +53,7 @@ void AGServer::incomingConnection(qintptr socketDescriptor)
     connect(tempSocket,SIGNAL(socketError()),this,SLOT(onDisconnected()));
     connect(tempSocket,SIGNAL(disconnected()),tempSocket,SLOT(deleteLater()));
     connect(tempSocket,SIGNAL(readyRead()),tempSocket,SLOT(readMessage()));
-    connect(tempSocket,SIGNAL(readFinished(int,QString)),this,SLOT(readFinished(int,QString)));
+    connect(tempSocket,SIGNAL(readFinished(int,std::vector<int>)),this,SLOT(readFinished(int,std::vector<int>)));
 }
 
 void AGServer::sendMessage(int id,vector<int> message)
