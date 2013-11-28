@@ -156,6 +156,14 @@ void Player::sendMessage()
         break;
 
     }
+    int i=0;
+    vector<int> tempMessage;
+    while(sendMessageBuffer[i]!=-1){
+        tempMessage.push_back(sendMessageBuffer[i]);
+        sendMessageBuffer[i] = -1;
+        i++;
+    }
+    server->networkServer.sendMessage(order,tempMessage);
 }
 void Player::BroadCast()
 {
@@ -297,7 +305,14 @@ void Player::BroadCast()
     default:
      break;
     }
-
+    int i=0;
+    vector<int> tempMessage;
+    while(sendMessageBuffer[i]!=-1){
+        tempMessage.push_back(sendMessageBuffer[i]);
+        sendMessageBuffer[i] = -1;
+        i++;
+    }
+    server->networkServer.sendMessage(-1,tempMessage);
 }
 void Player::receive()
 {

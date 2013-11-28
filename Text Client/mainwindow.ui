@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>432</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -55,6 +55,19 @@
      <string>Please input IP address:</string>
     </property>
    </widget>
+   <widget class="QLabel" name="infoLabel">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>200</y>
+      <width>351</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -62,7 +75,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>17</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

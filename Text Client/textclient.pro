@@ -8,9 +8,9 @@ QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = textclient6
+TARGET = textclient
 TEMPLATE = app
-QMAKE_LFLAGS += -lboost_system-mt
+
 
 SOURCES += main.cpp\
         mainwindow.cpp \

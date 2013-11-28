@@ -25,6 +25,7 @@ class Server : public QObject
     void allocateCharacter(int order,int character,int teamnumber);
     //void BroadCast();
     //void sendMessage();
+    bool connectionBuilt;
 public:
     Team* team[2];
     Player* players[6];
@@ -43,6 +44,7 @@ signals:
 
 public slots:
     void messageReceived(int id,std::vector<int> message);
+    void connectionFinished(){connectionBuilt = true;}
 //--------------------------------------------
 };
 

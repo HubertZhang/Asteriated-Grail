@@ -20,6 +20,8 @@ public:
 public slots:
     void begin();
     void sendMessage();
+    void socketConnected();
+    void displayMessage(std::vector<int> message);
 private:
     Ui::MainWindow *ui;
 };

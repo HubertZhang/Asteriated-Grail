@@ -7,7 +7,6 @@
 
 #include <vector>
 
-
 using std::vector;
 class AGClient: public QTcpSocket
 {

@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->lineEdit,SIGNAL(returnPressed()),ui->pushButton,SLOT(click()));
     connect(ui->pushButton, SIGNAL(clicked()),this,SLOT(begin()));
+
 }
 
 void MainWindow::begin()
@@ -15,8 +16,28 @@ void MainWindow::begin()
     disconnect(ui->pushButton, SIGNAL(clicked()),this,SLOT(begin()));
     NetworkClient.setup((char*)ui->lineEdit->text().toStdString().c_str());
     ui->lineEdit->clear();
-    ui->label->setText(QString("Send"));
+
     connect(ui->pushButton, SIGNAL(clicked()),this,SLOT(sendMessage()));
+    connect(&NetworkClient,SIGNAL(connected()),this,SLOT(socketConnected()));
+    ui->pushButton->setEnabled(true);
+}
+void MainWindow::socketConnected()
+{
+    ui->infoLabel->setText(QString("Connected"));
+    ui->pushButton->setText(QString("Send"));
+    ui->label->setText(QString("Please input message:"));
+    ui->pushButton->setEnabled(true);
+    connect(&NetworkClient,SIGNAL(readFinished(std::vector<int>)),this,SLOT(displayMessage(std::vector<int>)));
+}
+void MainWindow::displayMessage(std::vector<int> message)
+{
+    QString temp;
+    for(int i = 0; i<message.size();i++)
+    {
+        temp+=QString::number(message[i]);
+        temp+=QString(" ");
+    }
+    ui->infoLabel->setText(temp);
 }
 
 void MainWindow::sendMessage()

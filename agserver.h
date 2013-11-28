@@ -41,6 +41,7 @@ class AGServer: public QTcpServer
 signals:
     void serverError();
     void messageRecieved(int id, std::vector<int> message);
+    void connectionBuilt();
 public slots:
     void onDisconnected(){emit serverError();}
     void readFinished(int id, std::vector<int> message){emit messageRecieved(id, message);}

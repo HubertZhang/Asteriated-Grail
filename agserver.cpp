@@ -54,7 +54,8 @@ void AGServer::incomingConnection(qintptr socketDescriptor)
     connect(tempSocket,SIGNAL(disconnected()),tempSocket,SLOT(deleteLater()));
     connect(tempSocket,SIGNAL(readyRead()),tempSocket,SLOT(readMessage()));
     connect(tempSocket,SIGNAL(readFinished(int,std::vector<int>)),this,SLOT(readFinished(int,std::vector<int>)));
-    qDebug()<< socketList.size() <<"th Client connected, ip is" << tempSocket->peerAddress().toString().toStdString() << endl;
+    qDebug()<< socketList.size() <<"th Client connected, ip is" << tempSocket->peerAddress().toString() << endl;
+    if(socketList.size()==playerNum) emit connectionBuilt();
 }
 
 void AGServer::sendMessage(int id,vector<int> message)
