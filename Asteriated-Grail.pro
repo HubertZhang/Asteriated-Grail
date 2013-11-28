@@ -22,14 +22,11 @@ SOURCES += main.cpp\
     team.cpp \
     blademaster.cpp \
     textgui.cpp \
-<<<<<<< HEAD
-    agserver.cpp
-=======
+    agserver.cpp \
     berserker.cpp \
     archer.cpp \
     sealer.cpp \
     assassin.cpp
->>>>>>> hqs
 
 HEADERS  += mainwindow.h \
     server.h \
@@ -41,14 +38,11 @@ HEADERS  += mainwindow.h \
     termination.h \
     blademaster.h \
     textgui.h \
-<<<<<<< HEAD
-    agserver.h
-=======
+    agserver.h \
     berserker.h \
     archer.h \
     sealer.h \
     assassin.h
->>>>>>> hqs
 
 FORMS    +=
 

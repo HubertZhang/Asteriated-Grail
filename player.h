@@ -36,12 +36,7 @@ protected:
     int status[10];//状态栏
     int statusnumber;//状态数量
     int character;//人物
-<<<<<<< HEAD
-
-=======
     int activation;
-    bool getmessage;
->>>>>>> hqs
 public:
     //int status[10];//状态栏
     //int statusnumber;//状态数量

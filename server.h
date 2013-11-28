@@ -42,11 +42,7 @@ public:
 signals:
 
 public slots:
-<<<<<<< HEAD
     void messageReceived(int id,std::vector<int> message);
-void Game();
-=======
->>>>>>> hqs
 //--------------------------------------------
 };
 
