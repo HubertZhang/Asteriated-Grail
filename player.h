@@ -72,6 +72,8 @@ public:
     void addStatus(int cardUsed);
     void foldCard(int* idOfCard,int amount=1,bool canBeSee=true);//弃牌
     void getCard(int amount);//摸牌
+    void increaseCure(int amount,bool limit=true);
+    void decreaseCure(int amount);
     //加治疗，减治疗函数
 //---------特殊行动------------------------------------
     virtual void purchase();

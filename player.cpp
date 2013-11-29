@@ -5,7 +5,7 @@
 #include"cardpile.h"
 #include"textgui.h"
 #include<QString>
-//#include<Windows.h>
+#include<Windows.h>
 #include <QApplication>
 #include<QTimer>
 #include<string>
@@ -316,11 +316,12 @@ void Player::BroadCast()
 }
 void Player::receive()
 {
+    getmessage = false;
     //QTimer t;
     //t.start();
     while(1)
     {
-        //sleep(1);
+        Sleep(100);
         QCoreApplication::processEvents();
         if (getmessage)
         break;
@@ -691,6 +692,41 @@ void Player::poisonRespond(int card,int order)
     server->gamePile->putIntoPile(card);
     countDamage(1,Magic);
 }
+void Player::increaseCure(int amount,bool limit)
+{
+    if (limit)
+    {
+        if (cureLimit < cureNumber + amount)
+        {
+            cureNumber = cureLimit;
+            sendMessageBuffer[0] = CureChange;
+            sendMessageBuffer[1] = cureLimit-cureNumber;
+            BroadCast();//改变治疗数量
+        }
+        else
+        {
+            cureNumber = cureNumber + amount;
+            sendMessageBuffer[0] = CureChange;
+            sendMessageBuffer[1] = amount;
+            BroadCast();//改变治疗数量
+        }
+    }
+    else
+    {
+        cureNumber = cureNumber + amount;
+        sendMessageBuffer[0] = CureChange;
+        sendMessageBuffer[1] = amount;
+        BroadCast();//改变治疗数量
+    }
+}
+void Player::decreaseCure(int amount)
+{
+    cureNumber = cureNumber - amount;
+    sendMessageBuffer[0] = CureChange;
+    sendMessageBuffer[1] = -amount;
+    BroadCast();//改变治疗数量
+}
+
 
 void Player::purchase()
 {
@@ -1034,10 +1070,7 @@ int Player::useCure(int damage)
     //--------------------------------
     receive();
     int returnAmount = receiveMessageBuffer[0];
-    cureNumber = cureNumber - returnAmount;
-    sendMessageBuffer[0] = CureChange;
-    sendMessageBuffer[1] = returnAmount;
-    BroadCast();//改变治疗数量
+    decreaseCure(returnAmount);
 
     return returnAmount;
 }

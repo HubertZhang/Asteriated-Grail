@@ -7,6 +7,7 @@
 #include"archer.h"
 #include"sealer.h"
 #include"assassin.h"
+#include"saintess.h"
 #include"textgui.h"
 #include"team.h"
 #include"berserker.h"
@@ -119,6 +120,11 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
     case assassin:
     {
         players[order] = new Assassin(this,order,teamnumber,character);
+        break;
+    }
+    case saintess:
+    {
+        players[order] = new Saintess(this,order,teamnumber,character);
         break;
     }
     default:

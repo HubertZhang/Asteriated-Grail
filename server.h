@@ -15,7 +15,7 @@
 #include "chatserver.h"
 #define CARD_NUMBER 150
 enum messageType1{ArrangeTeam,ArrangeCharacter,BroadCastCharacter};
-enum character{normal,blademaster,berserker,archer,sealer,assassin};
+enum character{normal,blademaster,berserker,archer,sealer,assassin,saintess};
 class textGUI;
 class Server : public QObject
 {
