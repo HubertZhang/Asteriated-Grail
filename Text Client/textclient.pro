@@ -14,9 +14,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    AGClient.cpp
+    AGClient.cpp \
+    agchatclient.cpp
 
 HEADERS  += mainwindow.h \
-    AGClient.h
+    AGClient.h \
+    agchatclient.h
 
 FORMS    += mainwindow.ui

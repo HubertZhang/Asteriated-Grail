@@ -13,14 +13,17 @@ class AGClient: public QTcpSocket
     Q_OBJECT
 signals:
     void socketError();
+    void idReceived(int id);
     void readFinished(std::vector<int> message);
 private slots:
     void readMessage();
+    void getId();
     void onDisconnected(){emit socketError();}
 public:
     AGClient(QWidget *parent = 0);
     void setup(char* ip = NULL, int port = 10000);
     void sendMessage(vector<int> message);
+    int id;
 };
 
 #endif // AGCLIENT_H

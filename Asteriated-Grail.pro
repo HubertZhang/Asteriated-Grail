@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     berserker.cpp \
     archer.cpp \
     sealer.cpp \
-    assassin.cpp
+    assassin.cpp \
+    chatserver.cpp
 
 HEADERS  += mainwindow.h \
     server.h \
@@ -42,7 +43,8 @@ HEADERS  += mainwindow.h \
     berserker.h \
     archer.h \
     sealer.h \
-    assassin.h
+    assassin.h \
+    chatserver.h
 
 FORMS    +=
 

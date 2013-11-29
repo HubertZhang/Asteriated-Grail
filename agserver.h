@@ -6,8 +6,8 @@
 //
 //
 
-#ifndef __Test1__AGServe__
-#define __Test1__AGServe__
+#ifndef __AGServer_h__
+#define __AGServer_h__
 #include <iostream>
 #include <QtWidgets>
 #include <QtNetwork/QTcpSocket>
@@ -56,4 +56,4 @@ private:
     QList<int> socketDescriptorList;
 };
 
-#endif /* defined(__Test1__AGServe__) */
+#endif /* defined(__AGServer_h__) */

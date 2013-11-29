@@ -12,6 +12,7 @@
 #include <cstring>
 #include <exception>
 #include "agserver.h"
+#include "chatserver.h"
 #define CARD_NUMBER 150
 enum messageType1{ArrangeTeam,ArrangeCharacter,BroadCastCharacter};
 enum character{normal,blademaster,berserker,archer,sealer,assassin};
@@ -34,6 +35,7 @@ public:
     void Game();
     int sendMessageBuffer[20];
     AGServer networkServer;
+    AGChatServer chatServer;
 //--------------测试---------------------------
     void init(textGUI*);
     textGUI *textg;

@@ -9,7 +9,25 @@
 
 AGClient::AGClient(QWidget *parent):QTcpSocket(parent)
 {
-    connect(this,SIGNAL(readyRead()),this,SLOT(readMessage()));
+    connect(this,SIGNAL(readyRead()),this,SLOT(getId()));
+}
+
+void AGClient::getId()
+{
+    QDataStream socketIn(this);
+    socketIn.setVersion(QDataStream::Qt_5_0);
+    while (1) {
+        std::cout <<this->bytesAvailable()<< "Signal1\n";
+        if (bytesAvailable() < (int)sizeof(int)) return;
+        int num;
+        socketIn >> num;
+        socketIn >> id;
+        std::cout <<id<< "Signal2\n";
+        disconnect(this,SIGNAL(readyRead()),this,SLOT(getId()));
+        connect(this,SIGNAL(readyRead()),this,SLOT(readMessage()));
+        emit idReceived(id);
+        return;
+    }
 }
 
 void AGClient::readMessage()
