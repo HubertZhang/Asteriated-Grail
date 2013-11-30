@@ -156,13 +156,9 @@ void Assassin::normalAttack()
 void Assassin::activate()
 {
     activation = 1;
-    cardLimit--;
+    changeCardLimit(-1);
 
     sendMessageBuffer[0] = Activated;
-    BroadCast();
-
-    sendMessageBuffer[0] = CardLimitChange;
-    sendMessageBuffer[1] = -1;
     BroadCast();
 
     energyGem--;
@@ -177,15 +173,10 @@ void Assassin::beforeAction()
     if (activation == 1)
     {
         activation = 0;
-        cardLimit++;
+        changeCardLimit(1);
 
         sendMessageBuffer[0] = Activated;
         sendMessageBuffer[1] = order;
-        BroadCast();
-
-        sendMessageBuffer[0] = CardLimitChange;
-        sendMessageBuffer[1] = order;
-        sendMessageBuffer[2] = 1;
         BroadCast();
     }
 

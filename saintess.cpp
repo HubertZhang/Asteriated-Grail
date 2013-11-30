@@ -124,14 +124,15 @@ void Saintess::headOn(int chainLength)
 void Saintess::activate()
 {
     activation = 1;
-    cardLimit++;
 
     sendMessageBuffer[0] = Activated;
     BroadCast();
 
     sendMessageBuffer[0] = CardLimitChange;
-    sendMessageBuffer[1] = 1;
+    sendMessageBuffer[1] = 7 - cardLimit;
     BroadCast();
+
+    cardLimit = 7;
 
     energyGem--;
     sendMessageBuffer[0] = EnergyChange;
@@ -139,6 +140,20 @@ void Saintess::activate()
     sendMessageBuffer[2] = 0;
     BroadCast();
 }
+
+void Saintess::changeCardLimit(int amount)
+{
+    if (activation != 1)
+    {
+        cardLimit = cardLimit + amount;
+
+        sendMessageBuffer[0] = CardLimitChange;
+        sendMessageBuffer[1] = amount;
+        BroadCast();
+    }
+
+}
+
 
 void Saintess::magicAction()
 {
@@ -161,20 +176,6 @@ void Saintess::magicAction()
         server->textg->textbrowser->append("你发动了圣疗");
         magicThree();
     }
-
-    sendMessageBuffer[0] = AskRespond;
-    sendMessageBuffer[1] = 1;
-    sendMessageBuffer[2] = 1;
-
-    sendMessage();
-
-    receive();
-
-    if (receiveMessageBuffer[0])
-    {
-    server->textg->textbrowser->append("额外攻击");
-    normalAttack();
-    }
 }
 
 void Saintess::magicOne()//治疗术
@@ -190,7 +191,7 @@ void Saintess::magicOne()//治疗术
    // BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
     BroadCast();
 
-    server->players[magicTarget]->increaseCure(1);
+    server->players[magicTarget]->increaseCure(2);
 }
 
 void Saintess::magicTwo()//治愈之光
@@ -208,7 +209,7 @@ void Saintess::magicTwo()//治愈之光
     {
         sendMessageBuffer[3+i] = receiveMessageBuffer[4+i];
     }
-    sendMessageBuffer[4+i] = cardUsed;
+    sendMessageBuffer[3+i] = cardUsed;
     BroadCast();
 
     for (i=0; i<targetnumber; i++)
@@ -254,7 +255,7 @@ void Saintess::magicThree()//圣疗
     int returnAcction = receiveMessageBuffer[0];
     if (returnAcction == Attack)
     {
-        attackAction();
+        normalAttack();
     }
     else if (returnAcction == Magic)
     {

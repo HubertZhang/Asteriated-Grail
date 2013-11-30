@@ -19,7 +19,7 @@ public:
     void characterConnect();
 
 public slots:
-    void skillone(int order,int);
+    void skillone(int order, int, int w);
     void skilltwo(int order,int);
     void skillthree(int order,int);
 };

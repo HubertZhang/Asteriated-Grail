@@ -13,6 +13,7 @@ public:
     void normalAttack();
     void headOn(int);
     void activate();
+    void changeCardLimit(int);
 };
 
 #endif // SAINTESS_H

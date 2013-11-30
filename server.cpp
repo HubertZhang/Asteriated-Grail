@@ -139,7 +139,7 @@ void Server::init(textGUI *a)
 {
     while(1)
     {
-        QCoreApplication::processEvents();
+         QCoreApplication::processEvents();
         if (connectionBuilt)
         break;
     }
@@ -190,12 +190,12 @@ void Server::init(textGUI *a)
         {
             character[i] = 3;
         }
-        character[0] = 5 ;
-        character[1] = 5 ;
-        character[2] = 5 ;
-        character[3] = 5 ;
-        character[4] = 5 ;
-        character[5] = 5 ;
+        character[0] = 6 ;
+        character[1] = 6 ;
+        character[2] = 6 ;
+        character[3] = 6 ;
+        character[4] = 6 ;
+        character[5] = 6 ;
         //character[1] = blademaster;
         //random_shuffle(character,character+31);
         /*

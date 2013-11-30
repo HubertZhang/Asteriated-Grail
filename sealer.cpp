@@ -101,7 +101,7 @@ void Sealer::magicTwo()
     //int cardUsed = receiveMessageBuffer[3];
     server->players[magicTarget]->addStatus(150);
 
-    connect(server->players[magicTarget],SIGNAL(beweak(int,int)),this,SLOT(skillone(int,int)));
+    connect(server->players[magicTarget],SIGNAL(beweak(int,int,int)),this,SLOT(skillone(int,int,int)));
 
     sendMessageBuffer[0] = DrawPicture;
     sendMessageBuffer[1] = 1;
@@ -174,21 +174,40 @@ void Sealer::magicThree()
 
 }
 
-void Sealer::skillone(int target,int accepttype)
+void Sealer::skillone(int target,int accepttype,int w)
 {
-    if (accepttype == Accept)
+    if (w != -1)
     {
-        if (number<=2)
+        server->players[target]->destroyStatus(150);
+        server->players[target]->destroyStatus(w);
+        if (accepttype == Accept)
         {
-            server->players[target]->takeDamage(number+2,2);
-        }
-        else
-        {
-            server->players[target]->takeDamage(4,2);
+            if (number<=2)
+            {
+                server->players[target]->takeDamage(number+5,2);
+            }
+            else
+            {
+                server->players[target]->takeDamage(7,2);
+            }
         }
     }
-
-    disconnect(server->players[target],SIGNAL(beweak(int,int)),this,SLOT(skillone(int,int)));
+    else
+    {
+        server->players[target]->destroyStatus(150);
+        if (accepttype == Accept)
+        {
+            if (number<=2)
+            {
+                server->players[target]->takeDamage(number+2,2);
+            }
+            else
+            {
+                server->players[target]->takeDamage(4,2);
+            }
+        }
+    }
+    disconnect(server->players[target],SIGNAL(beweak(int,int,int)),this,SLOT(skillone(int,int,int)));
 }
 
 void Sealer::skilltwo(int player,int card)//弃牌与五行封印

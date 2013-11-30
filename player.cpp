@@ -152,6 +152,15 @@ void Player::sendMessage()
         server->textg->textbrowser->append("选择技能号");
         break;
     }
+    case SpecialAsk:
+    {
+        if (sendMessageBuffer[1] == 2)
+        {
+          server->textg->textbrowser->append("五系封印!");
+          server->textg->textbrowser->append("0:跳过回合,1:摸三张牌");
+        }
+        break;
+    }
     default:
         break;
 
@@ -284,7 +293,7 @@ void Player::BroadCast()
 
         for (int i=0; i<sendMessageBuffer[2]; i++)
         {
-         emit fold(order,sendMessageBuffer[i+3+sendMessageBuffer[1]]);
+          emit fold(order,sendMessageBuffer[i+3+sendMessageBuffer[1]]);
         }
         break;
     }
@@ -299,6 +308,13 @@ void Player::BroadCast()
     {
         QString s;
         s.sprintf("玩家%d 启动: ",order);
+        server->textg->textbrowser->append(s);
+        break;
+    }
+    case CardLimitChange:
+    {
+        QString s;
+        s.sprintf("玩家%d 手牌上限变化 ",order);
         server->textg->textbrowser->append(s);
         break;
     }
@@ -408,7 +424,7 @@ void Player::start()
         int returnAcction = receiveMessageBuffer[0];
         if (returnAcction == Attack)
         {
-            attackAction();
+            normalAttack();
         }
         else if (returnAcction == Magic)
         {
@@ -434,60 +450,67 @@ void Player::start()
 }
 void Player::handleStatus()
 {
-    //Kind = 1;it's your turn;
-    //int receiveMessageBuffer[20];
-
+    int w = -1;
+    int f = -1;
+    int o = 0;
     //Check for weak,poison,and some specail card(封印束缚，勇者挑衅等)
-    for(int j = statusnumber;j != 0;j --)
+    for (int j = statusnumber; j != 0; j--)
     {
-        int cardname = cardlist.getName(status[j - 1]);
-        switch(cardname)
-        {
-            case weak:
-            {
-                weakRespond(status[j - 1],j-1);
-                break;
-            }
-            case poison:
-            {
-                poisonRespond(status[j - 1],j-1);
-                break;
-            }
+       int cardname = cardlist.getName(status[j-1]);
+       switch(cardname)
+       {
+           case weak:
+           {
+               w = status[j-1];
+               o = j-1;
+               break;
+           }
+           case poison:
+           {
+               poisonRespond(status[j - 1],j-1);
+               break;
+           }
 
-            case -1://FIVEBOUND:
-            {
-                destroyStatus(status[j - 1],j-1);
-                // server->gamePile->putIntoPile(card);
-                sendMessageBuffer[0] = WeakRespond;
-                sendMessage();
-                //actionType returnKind = receive(receiveMessageBuffer);
-                //测试----------------------------
-                getmessage = false;
-                //--------------------------------
-                receive();
-                int returnKind = receiveMessageBuffer[0];
-                if(returnKind == Accept)//ACCEPT
-                {
-                    emit beweak(order,Accept);
-                }
-                else if(returnKind == NoAccept)
-                {
-                    emit beweak(order,NoAccept);
-                    throw(1);
-                   //跳至下一个玩家
-                }
-                 break;
-            }
+           case -1://FIVEBOUND:
+           {
+               f = 150;
+                break;
+           }
+       }
+     }
+
+    if (f == 150)
+       {
+
+           // server->gamePile->putIntoPile(card);
+           sendMessageBuffer[0] = SpecialAsk;
+           sendMessageBuffer[1] = 2;
+           sendMessage();
+           system("pause");
+           receive();
+           int returnKind = receiveMessageBuffer[0];
+           if(returnKind == Accept)//ACCEPT
+           {
+               emit beweak(order,Accept,w);
+           }
+           else if(returnKind == NoAccept)
+           {
+               emit beweak(order,NoAccept,w);
+               throw(1);
+              //跳至下一个玩家
+           }
+       }
+    else if (w != -1)
+       {
+           weakRespond(w,o);
+       }
+
             /*
             case PROVOKE:
             {
                 break;
             }
             */
-            default:
-            break;
-        }
-    }
 }
 void Player::beforeAction()
 {
@@ -726,7 +749,13 @@ void Player::decreaseCure(int amount)
     sendMessageBuffer[1] = -amount;
     BroadCast();//改变治疗数量
 }
-
+void Player::changeCardLimit(int amount)
+{
+    cardLimit = cardLimit + amount;
+    sendMessageBuffer[0] = CardLimitChange;
+    sendMessageBuffer[1] = amount;
+    BroadCast();
+}
 
 void Player::purchase()
 {
@@ -791,19 +820,7 @@ void Player::fusion()
 
     getCard(3);
 }
-//-----------感觉没有用-----------------------
-void Player::attackAction()
-{
-    //if (receiveMessageBuffer[1] == 0)
-    //{
-         normalAttack();
-    //}
-    //else
-    //{
-        //?????????
-    //}
-}
-//-----------------------------------------------
+
 void Player::magicAction()
 {
     if (receiveMessageBuffer[1] == 0)
@@ -856,11 +873,6 @@ void Player::normalMagic()
     int magicTarget = receiveMessageBuffer[2];
     int cardUsed = receiveMessageBuffer[3];
 
-    sendMessageBuffer[0] = AttackHappen;
-    sendMessageBuffer[1] = magicTarget;
-    sendMessageBuffer[2] = cardUsed;
-   // BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
-    BroadCast();
     int cardname = cardlist.getName(cardUsed);
     switch (cardname) {
     case weak:
@@ -872,6 +884,12 @@ void Player::normalMagic()
 
         sendMessageBuffer[0] = CardChange;
         sendMessageBuffer[1] = -1;
+        BroadCast();
+
+        sendMessageBuffer[0] = AttackHappen;
+        sendMessageBuffer[1] = magicTarget;
+        sendMessageBuffer[2] = cardUsed;
+       // BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
         BroadCast();
 
         sendMessageBuffer[0] = StatusIncrease;
@@ -902,7 +920,23 @@ void Player::normalMagic()
     case missile:
     {
         foldCard(&cardUsed);
-        server->players[magicTarget]->beMagicMissileAttack(cardUsed,2);
+        int target;
+
+        for (int i=1; i<6; i++)
+        {
+            if (server->players[(order+i)%6]->teamNumber!= teamNumber)
+            {
+                target = (order+i)%6;
+                break;
+            }
+        }
+
+        sendMessageBuffer[0] = AttackHappen;
+        sendMessageBuffer[1] = target;
+        sendMessageBuffer[2] = cardUsed;
+       // BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
+        BroadCast();
+        server->players[target]->beMagicMissileAttack(cardUsed,2);
         break;
     }
     default:
@@ -992,9 +1026,25 @@ void Player::beMagicMissileAttack(int cardUsed, int damage)
     }
     if(reaction == HeadOn)
     {
-        int target = receiveMessageBuffer[1];
-        int cardUsed1 = receiveMessageBuffer[2];
+        int cardUsed1 = receiveMessageBuffer[1];
         foldCard(&cardUsed1);
+
+        int target;
+        for (int i=1; i<6; i++)
+        {
+            if (server->players[(order+i)%6]->teamNumber!= teamNumber)
+            {
+                target = (order+i)%6;
+                break;
+            }
+        }
+
+        sendMessageBuffer[0] = AttackHappen;
+        sendMessageBuffer[1] = target;
+        sendMessageBuffer[2] = cardUsed1;
+       // BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
+        BroadCast();
+
         server->players[target]->beMagicMissileAttack(cardUsed1,damage+1);
         return ;
     }

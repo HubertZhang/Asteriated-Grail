@@ -10,7 +10,7 @@ using std::set;
 
 enum messageType{TurnBegin,BeforeAction,ActionType,AttackHappen,DrawPicture,Activated,AttackRespond,
                  WeakRespond,CureRespond,Show,GetCard,EnergyChange,CardChange,CureChange,CardLimitChange,
-                 StatusDecrease,StatusIncrease,AskRespond,TurnEnd};
+                 StatusDecrease,StatusIncrease,AskRespond,SpecialAsk,TurnEnd};
 enum actionType{Attack,Magic};
 enum beforeactionType{aaa,Activate,Purchase,Fusion,Refine};
 enum returnType{NoAccept,Accept};
@@ -29,7 +29,6 @@ protected:
     QTcpSocket client;
     set<int> card;//手牌内容
     int order;//座位编号
-    int teamNumber;//队伍编号
     int energyGem;
     int energyCrystal;
     int stonelimit;//能量上限
@@ -40,6 +39,7 @@ protected:
 public:
     //int status[10];//状态栏
     //int statusnumber;//状态数量
+    int teamNumber;//队伍编号
     int theShield;//盾圣
     int cureLimit;//治疗上限
     int cureNumber;//治疗数量
@@ -74,6 +74,7 @@ public:
     void getCard(int amount);//摸牌
     void increaseCure(int amount,bool limit=true);
     void decreaseCure(int amount);
+    virtual void changeCardLimit(int amount);
     //加治疗，减治疗函数
 //---------特殊行动------------------------------------
     virtual void purchase();
@@ -81,9 +82,8 @@ public:
     virtual void fusion();
 //---------普通攻击或普通法术或人物特殊技能----------------
     virtual void activate();//启动
-    virtual void attackAction();//攻击行动
     virtual void magicAction();//法术行动
-    virtual void normalAttack();//普通攻击
+    virtual void normalAttack();//攻击行动
     virtual void normalMagic();//普通法术
     virtual void headOn(int chainLength);//应战
     virtual void beMagicMissileAttack(int cardUsed,int damage);//魔弹
@@ -99,7 +99,7 @@ public:
     void miss(int);//弓之女神
     void decreasestatus(int,int);//封印师
     void fold(int,int);//封印师
-    void beweak(int,int);//封印师
+    void beweak(int,int,int);//封印师
 //测试程序：
     public slots:
     void getMessage();
