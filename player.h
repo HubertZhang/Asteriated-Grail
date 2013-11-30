@@ -8,11 +8,11 @@
 #include <set>
 using std::set;
 
-enum messageType{TurnBegin,BeforeAction,ActionType,AttackHappen,DrawPicture,Activated,AttackRespond,
-                 WeakRespond,CureRespond,Show,GetCard,EnergyChange,CardChange,CureChange,CardLimitChange,
+enum messageType{TurnBegin,BeforeAction,ActionType,AttackHappen,AdditionalAction,DrawPicture,Activated,AttackRespond,
+                 WeakRespond,CureRespond,Show,GetCard,FoldCard,EnergyChange,CardChange,CureChange,CardLimitChange,
                  StatusDecrease,StatusIncrease,AskRespond,SpecialAsk,TurnEnd};
 enum actionType{Attack,Magic};
-enum beforeactionType{aaa,Activate,Purchase,Fusion,Refine};
+enum beforeactionType{aaa,Activate,Refine,Purchase,Fusion};
 enum returnType{NoAccept,Accept};
 enum returnactionType{AcceptAttack,HeadOn,Light};
 //enum reactionType{AcceptAttack,HeadOn,Light,Accept,NoAccept};
@@ -70,7 +70,7 @@ public:
     void weakRespond(int,int);
     void poisonRespond(int,int);//中毒需要知道造成伤害的人
     void addStatus(int cardUsed);
-    void foldCard(int* idOfCard,int amount=1,bool canBeSee=true);//弃牌
+    void foldCard(int* idOfCard,int amount=1,bool canBeSee=false);//弃牌
     void getCard(int amount);//摸牌
     void increaseCure(int amount,bool limit=true);
     void decreaseCure(int amount);

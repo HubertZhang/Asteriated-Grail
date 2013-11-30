@@ -27,7 +27,7 @@ void Berserker::normalAttack()
     //assert(this->card.find(cardUsed)!=this->card.end());
     //if(!server->players[attackTarget].canBeAttacked()) throw ActionIllegal();
     int damage = 3;
-    foldCard(&cardUsed,1,false);
+    foldCard(&cardUsed);
     //暗灭无法应战，需要吗？
     bool canBeAccept;
     if (cardlist.getName(cardUsed) == darkAttack)
@@ -167,7 +167,7 @@ void Berserker::headOn(int chainLength)
     int cardUsed = receiveMessageBuffer[2];
     int damage = 3;
 
-    foldCard(&cardUsed,1,false);
+    foldCard(&cardUsed);
     bool canBeAccept;
     if (cardlist.getName(cardUsed) == darkAttack)
         canBeAccept = false;

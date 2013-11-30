@@ -209,7 +209,7 @@ void Blademaster::headOn(int chainLength)
     int cardUsed = receiveMessageBuffer[2];
     int damage = 2;
 
-    foldCard(&cardUsed,1,false);
+    foldCard(&cardUsed);
     bool canBeAccept;
     if (cardlist.getName(cardUsed) == darkAttack)
         canBeAccept = false;

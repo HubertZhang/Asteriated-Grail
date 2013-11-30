@@ -71,27 +71,23 @@ void Sealer::magicOne()
     int magicTarget = receiveMessageBuffer[2];
     int cardUsed = receiveMessageBuffer[3];
 
+    sealcard[magicTarget].insert(cardUsed);
+    number++;//五行封印个数
+
+    card.erase(cardUsed);
+    cardNumber = this->card.size();
+
+    sendMessageBuffer[0] = CardChange;
+    sendMessageBuffer[1] = -1;
+    BroadCast();
+
     sendMessageBuffer[0] = AttackHappen;
     sendMessageBuffer[1] = magicTarget;
     sendMessageBuffer[2] = cardUsed;
    // BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
     BroadCast();
 
-    sealcard[magicTarget].insert(cardUsed);
-    number++;//五行封印个数
-
-    card.erase(cardUsed);
-    cardNumber = this->card.size();
     server->players[magicTarget]->addStatus(cardUsed);
-
-    sendMessageBuffer[0] = CardChange;
-    sendMessageBuffer[1] = -1;
-    BroadCast();
-
-    sendMessageBuffer[0] = StatusIncrease;
-    sendMessageBuffer[1] = cardUsed;
-    sendMessageBuffer[2] = magicTarget;
-    BroadCast();//添加状态
 
 }
 
@@ -99,22 +95,8 @@ void Sealer::magicTwo()
 {
     int magicTarget = receiveMessageBuffer[2];
     //int cardUsed = receiveMessageBuffer[3];
-    server->players[magicTarget]->addStatus(150);
 
     connect(server->players[magicTarget],SIGNAL(beweak(int,int,int)),this,SLOT(skillone(int,int,int)));
-
-    sendMessageBuffer[0] = DrawPicture;
-    sendMessageBuffer[1] = 1;
-    sendMessageBuffer[3] = magicTarget;
-    sendMessageBuffer[2] = 0;
-    //sendMessageBuffer[2] = cardUsed;
-   // BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
-    BroadCast();
-
-    sendMessageBuffer[0] = StatusIncrease;
-    sendMessageBuffer[1] = 150;
-    sendMessageBuffer[2] = magicTarget;
-    BroadCast();//添加状态
 
     if (receiveMessageBuffer[3] == 1)
     energyGem--;
@@ -126,6 +108,15 @@ void Sealer::magicTwo()
     sendMessageBuffer[2] = 0;
     BroadCast();//改变人物能量数量
 
+    sendMessageBuffer[0] = DrawPicture;
+    sendMessageBuffer[1] = 1;
+    sendMessageBuffer[3] = magicTarget;
+    sendMessageBuffer[2] = 0;
+    //sendMessageBuffer[2] = cardUsed;
+   // BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
+    BroadCast();
+
+    server->players[magicTarget]->addStatus(150);
 }
 
 void Sealer::magicThree()

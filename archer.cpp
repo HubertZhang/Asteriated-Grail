@@ -34,7 +34,7 @@ void Archer::normalAttack()
 
     int damage = 2;
     target = attackTarget;
-    foldCard(&cardUsed,1,false);
+    foldCard(&cardUsed);
     //暗灭无法应战，需要吗？
     bool canBeAccept;
     if (cardlist.getName(cardUsed) == darkAttack)
@@ -93,7 +93,7 @@ void Archer::normalAttack()
             if (receiveMessageBuffer[0])
             {
                 server->textg->textbrowser->append("你响应了贯穿射击");
-                foldCard(&receiveMessageBuffer[1]);//弃牌
+                foldCard(&receiveMessageBuffer[1],1,true);//弃牌
                 server->players[attackTarget]->countDamage(2,Magic);
             }
         }
@@ -123,10 +123,6 @@ void Archer::magicAction()
     {
         server->textg->textbrowser->append("你发动了狙击");
         magicTwo();//狙击
-
-        server->textg->textbrowser->append("额外攻击");
-        receive();
-        normalAttack();
     }
 }
 
@@ -136,13 +132,13 @@ void  Archer::magicOne()
     int cardUsed = receiveMessageBuffer[3];
     int damage = 2;
 
+    foldCard(&cardUsed);
     sendMessageBuffer[0] = AttackHappen;
     sendMessageBuffer[1] = magicTarget;
     sendMessageBuffer[2] = cardUsed;
    // BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
     BroadCast();
 
-    foldCard(&cardUsed);
     server->players[magicTarget]->countDamage(damage,Magic);
 }
 
@@ -178,6 +174,13 @@ void  Archer::magicTwo()
         Discards(server->players[magicTarget]->cardLimit - server->players[magicTarget]->cardNumber,2);
     }
 
+    sendMessageBuffer[0] = AdditionalAction;
+    sendMessageBuffer[1] = 0;
+    sendMessage();
+
+    receive();
+    normalAttack();
+
 }
 
 void Archer::end()
@@ -202,13 +205,12 @@ void Archer::skillone(int order)
          if (receiveMessageBuffer[0])
          {
               server->textg->textbrowser->append("你响应了贯穿射击");
-              foldCard(&receiveMessageBuffer[1]);//弃牌
+              foldCard(&receiveMessageBuffer[1],1,true);//弃牌
               server->players[target]->countDamage(2,Magic);
          }
          target = -1;
     }
 }
-
 
 void Archer::headOn(int chainLength)
 {
@@ -216,7 +218,7 @@ void Archer::headOn(int chainLength)
     int cardUsed = receiveMessageBuffer[2];
     int damage = 2;
 
-    foldCard(&cardUsed,1,false);
+    foldCard(&cardUsed);
     bool canBeAccept;
     if (cardlist.getName(cardUsed) == darkAttack)
         canBeAccept = false;

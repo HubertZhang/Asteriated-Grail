@@ -75,7 +75,7 @@ void Server::Game()
             players[i]->start();
             //QCoreApplication::processEvents();
         }
-         QCoreApplication::processEvents();
+        QCoreApplication::processEvents();
         gameround++;
         if (gameround == 10) break;
     }

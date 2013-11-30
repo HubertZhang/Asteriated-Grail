@@ -64,8 +64,11 @@ void Player::getMessage()
 }
 void Player::sendMessage()
 {
+    vector<int> tempMessage;
+
     switch(sendMessageBuffer[0])
     {
+    /*
     case TurnBegin:
     {
         QString s;
@@ -75,73 +78,74 @@ void Player::sendMessage()
         server->textg->textbrowser->append(s);
         break;
     }
-    case BeforeAction:
+    */
+    case BeforeAction://Kind 6
     {
         QString s;
         s = "特殊行动阶段,请选择:";
         server->textg->textbrowser->append(s);
-        s = "0:什么也不做, 1:启动, 2:购买, 3:合成(宝石,水晶), 4:提炼(宝石,水晶)";
+        s = "0:什么也不做, 1:启动, 2:提炼(宝石,水晶), 3:合成(宝石,水晶), 4:购买";
         server->textg->textbrowser->append(s);
+
+        tempMessage.push_back(6);
         break;
     }
-    case ActionType:
+    case ActionType://Kind 7
     {
         QString s;
         s = "行动阶段,请选择:";
         server->textg->textbrowser->append(s);
         s = "0:攻击(目标,卡牌), 1:魔法(技,目标,卡牌)";
         server->textg->textbrowser->append(s);
+
+        tempMessage.push_back(7);
         break;
     }
-    case GetCard:
+    case GetCard://Kind 13
     {
         QString s;
         s.sprintf("玩家%d 获得%d张牌 ",order,sendMessageBuffer[1]);
         server->textg->textbrowser->append(s);
-        break;
-        /*
-        QString s;
-        s.sprintf("玩家%d 获得卡牌:",order);
+
+        tempMessage.push_back(13);
+        tempMessage.push_back(sendMessageBuffer[1]);
         for (int i=0; i<sendMessageBuffer[1]; i++)
         {
-            QString s1 = cardlist.getQName(sendMessageBuffer[i+2]);
-            //s1.sprintf("%d ",sendMessageBuffer[i+2]);
-            s = s + s1;
+            tempMessage.push_back(sendMessageBuffer[2+i]);
         }
-        server->textg->textbrowser->append(s);
         break;
-
-        QString s2;
-        set<int>::iterator i;
-        int j;
-        for (i=card.begin(),j=0; i!=card.end(); i++,j++)
-        {
-            s2.sprintf("%d",*i);
-            server->textg->playercard[order][j]->setText(s2);
-        }
-*/
     }
-    case WeakRespond:
+    case WeakRespond://Kind 4
     {
         server->textg->textbrowser->append("你被虚弱,请选择:");
         server->textg->textbrowser->append("0:跳过回合,1:摸三张牌");
+
+        tempMessage.push_back(4);
         break;
     }
-    case AttackRespond:
+    case AttackRespond://Kind 11
     {
         QString s;
         //if(sendMessageBuffer[3])
         s.sprintf("玩家%d 请选择:",order);
         server->textg->textbrowser->append(s);
         server->textg->textbrowser->append("0:承受攻击,1:应战(对象,卡牌),2:圣光");
+
+        tempMessage.push_back(11);
+        tempMessage.push_back(sendMessageBuffer[1]);
+        tempMessage.push_back(sendMessageBuffer[2]);
+        tempMessage.push_back(sendMessageBuffer[3]);
         break;
     }
-    case CureRespond:
+    case CureRespond://Kind 12
     {
         server->textg->textbrowser->append("请选择使用治疗数:");
+
+        tempMessage.push_back(12);
+        tempMessage.push_back(sendMessageBuffer[1]);
         break;
     }
-    case  AskRespond:
+    case AskRespond://Kind 15(doesn't finish)
     {
         for (int i=0; i<sendMessageBuffer[1]; i++)
         {
@@ -150,44 +154,88 @@ void Player::sendMessage()
             server->textg->textbrowser->append(s);
         }
         server->textg->textbrowser->append("选择技能号");
+
+        tempMessage.push_back(15);
+        tempMessage.push_back(sendMessageBuffer[1]);
+        for (int i=0; i<sendMessageBuffer[1]; i++)
+        {
+           tempMessage.push_back(sendMessageBuffer[i+2]);
+        }
+
         break;
     }
-    case SpecialAsk:
+    case SpecialAsk://Kind 18
     {
+        tempMessage.push_back(18);
+        tempMessage.push_back(sendMessageBuffer[1]);
         if (sendMessageBuffer[1] == 2)
         {
           server->textg->textbrowser->append("五系封印!");
           server->textg->textbrowser->append("0:跳过回合,1:摸三张牌");
+        }    
+        break;
+    }
+    case FoldCard://Kind 17
+    {
+        QString s;
+        s.sprintf("请选择弃牌牌号(%d)",sendMessageBuffer[1]);
+        server->textg->textbrowser->append(s);
+
+        tempMessage.push_back(17);
+        tempMessage.push_back(sendMessageBuffer[1]);
+        break;
+    }
+    case AdditionalAction://Kind 19
+    {
+        QString s;
+        s = "附加行动阶段:";
+        server->textg->textbrowser->append(s);
+        if (sendMessageBuffer[1] == 0)
+        {
+            s = "0:攻击(目标,卡牌)";
+            server->textg->textbrowser->append(s);
         }
+        else
+        {
+            s =  "1:魔法(技,目标,卡牌)";
+            server->textg->textbrowser->append(s);
+        }
+
+        tempMessage.push_back(19);
+        tempMessage.push_back(sendMessageBuffer[1]);
         break;
     }
     default:
         break;
-
     }
-    int i=0;
-    vector<int> tempMessage;
+    /*
     while(sendMessageBuffer[i]!=-1){
         tempMessage.push_back(sendMessageBuffer[i]);
         sendMessageBuffer[i] = -1;
         i++;
     }
+    */
     server->networkServer.sendMessage(order,tempMessage);
 }
 void Player::BroadCast()
 {
+    vector<int> tempMessage;
+
     switch(sendMessageBuffer[0])
     {
-    case TurnBegin:
+    case TurnBegin://Kind 3
     {
      QString s;
      s = "----------------------------";
      server->textg->textbrowser->append(s);
      s.sprintf("玩家%d:",order);
      server->textg->textbrowser->append(s);
+
+     tempMessage.push_back(3);
+     tempMessage.push_back(order);
      break;
     }
-    case Show:
+    case Show://Kind 10
     {
         QString s;
         s.sprintf("玩家%d 使用卡牌: ",order);
@@ -200,20 +248,44 @@ void Player::BroadCast()
 
         for (int i=0; i<sendMessageBuffer[1]; i++)
         {
-         emit fold(order,sendMessageBuffer[i+2]);
+           emit fold(order,sendMessageBuffer[i+2]);
+        }
+
+        tempMessage.push_back(10);
+        tempMessage.push_back(order);
+        tempMessage.push_back(0);
+        tempMessage.push_back(sendMessageBuffer[1]);
+        for (int i=0; i<sendMessageBuffer[1]; i++)
+        {
+            tempMessage.push_back(sendMessageBuffer[i+2]);
         }
         break;
     }
-    case StatusIncrease:
+    case StatusIncrease://Kind 5
     {
         QString s;
-        s.sprintf("玩家%d添加",sendMessageBuffer[2],sendMessageBuffer[1]);
+        s.sprintf("玩家%d添加",order);
         s = s + cardlist.getQName(sendMessageBuffer[1]);
         server->textg->textbrowser->append(s);
 
+        int j=0;
+        for (; j<statusnumber; j++)
+        {
+            QString s1 = cardlist.getQName(status[j]);
+            //s.sprintf("%d",status[i]);
+            //server->textg->textbrowser->append("2222");
+            server->textg->playerstatus[order][j]->setText(s1);
+        }
+        for (;j<6;j++)
+        server->textg->playerstatus[order][j]->clear();
+
+        tempMessage.push_back(5);
+        tempMessage.push_back(order);
+        tempMessage.push_back(sendMessageBuffer[1]);
+        tempMessage.push_back(1);
         break;
     }
-    case StatusDecrease:
+    case StatusDecrease://Kind 5
     {
         QString s;
         s.sprintf("玩家%d‘s",order,sendMessageBuffer[1]);
@@ -232,9 +304,14 @@ void Player::BroadCast()
         }
         for (;i<6;i++)
         server->textg->playerstatus[order][i]->clear();
+
+        tempMessage.push_back(5);
+        tempMessage.push_back(order);
+        tempMessage.push_back(sendMessageBuffer[1]);
+        tempMessage.push_back(0);
         break;
     }
-    case CardChange:
+    case CardChange://Kind 9
     {
      //QString s;
      set<int>::iterator i;
@@ -246,9 +323,17 @@ void Player::BroadCast()
      }
      for (;j<12;j++)
      server->textg->playercard[order][j]->clear();
+
+     tempMessage.push_back(9);
+     tempMessage.push_back(order);
+     tempMessage.push_back(sendMessageBuffer[1]);
+     for (int i=0; i<6; i++)
+     {
+         tempMessage.push_back(0);
+     }
      break;
     }
-    case EnergyChange:
+    case EnergyChange://Kind 9
     {
         QString s;
         //s.sprintf("玩家%d 获得了%d个宝石,%d个水晶",order,sendMessageBuffer[1],sendMessageBuffer[2]);
@@ -258,8 +343,18 @@ void Player::BroadCast()
         s.sprintf("%d",energyCrystal);
         server->textg->playercrystal[order]->setText(s);
         break;
+
+        tempMessage.push_back(9);
+        tempMessage.push_back(order);
+        tempMessage.push_back(0);
+        tempMessage.push_back(0);
+        tempMessage.push_back(0);
+        tempMessage.push_back(sendMessageBuffer[1]);
+        tempMessage.push_back(sendMessageBuffer[2]);
+        tempMessage.push_back(0);
+        tempMessage.push_back(0);
     }
-    case AttackHappen:
+    case AttackHappen://Kind 10
     {
         QString s;
         s.sprintf("玩家%d->",order);
@@ -273,9 +368,16 @@ void Player::BroadCast()
        // {
          emit fold(order,sendMessageBuffer[2]);
         //}
+
+        tempMessage.push_back(10);
+        tempMessage.push_back(order);
+        tempMessage.push_back(1);
+        tempMessage.push_back(1);
+        tempMessage.push_back(sendMessageBuffer[1]);
+        tempMessage.push_back(sendMessageBuffer[2]);
         break;
     }
-    case DrawPicture:
+    case DrawPicture://Kind 10
     {
         QString s;
         s.sprintf("玩家%d->",order);
@@ -295,39 +397,77 @@ void Player::BroadCast()
         {
           emit fold(order,sendMessageBuffer[i+3+sendMessageBuffer[1]]);
         }
+
+        tempMessage.push_back(10);
+        tempMessage.push_back(order);
+        tempMessage.push_back(sendMessageBuffer[1]);
+        tempMessage.push_back(sendMessageBuffer[2]);
+        for (int i=0; i<sendMessageBuffer[1]; i++)
+        {
+           tempMessage.push_back(sendMessageBuffer[i+3]);
+        }
+        for (int i=0; i<sendMessageBuffer[2];i++)
+        {
+           tempMessage.push_back(sendMessageBuffer[i+3+sendMessageBuffer[1]]);
+        }
         break;
     }
-    case CureChange:
+    case CureChange://Kind 9
     {
         QString s;
         s.sprintf("%d",cureNumber);
         server->textg->playercure[order]->setText(s);
+
+        tempMessage.push_back(9);
+        tempMessage.push_back(order);
+        for (int i=0; i<2; i++)
+        {
+            tempMessage.push_back(0);
+        }
+        tempMessage.push_back(sendMessageBuffer[1]);
+        for (int i=0; i<4; i++)
+        {
+            tempMessage.push_back(0);
+        }
         break;
     }
-    case Activated:
+    case Activated://Kind 16
     {
         QString s;
         s.sprintf("玩家%d 启动: ",order);
         server->textg->textbrowser->append(s);
+
+        tempMessage.push_back(16);
+        tempMessage.push_back(order);
+        tempMessage.push_back(sendMessageBuffer[1]);
         break;
     }
-    case CardLimitChange:
+    case CardLimitChange://Kind 9
     {
         QString s;
         s.sprintf("玩家%d 手牌上限变化 ",order);
         server->textg->textbrowser->append(s);
+
+        tempMessage.push_back(9);
+        tempMessage.push_back(order);
+        tempMessage.push_back(0);
+        tempMessage.push_back(sendMessageBuffer[1]);
+        for (int i=0; i<5; i++)
+        {
+            tempMessage.push_back(0);
+        }
         break;
     }
     default:
      break;
     }
-    int i=0;
-    vector<int> tempMessage;
+    /*
     while(sendMessageBuffer[i]!=-1){
         tempMessage.push_back(sendMessageBuffer[i]);
         sendMessageBuffer[i] = -1;
         i++;
     }
+    */
     server->networkServer.sendMessage(-1,tempMessage);
 }
 void Player::receive()
@@ -355,12 +495,7 @@ void Player::end()
     //BroadCast();
 }
 //----------------------------------------------------------
-/*
-actionType Player::receive(int* a)
-{
-    return Attack;
-}
-*/
+
 Player::Player(/*QObject *parent = 0,*/ Server* p,int order1,int teamnumber,int character)
     :/*QObject(parent),*/ server(p),order(order1),teamNumber(teamnumber),character(character)
 {
@@ -616,20 +751,10 @@ void Player::addStatus (int cardUsed)
 {
     status[statusnumber] = cardUsed;
     statusnumber ++;
-    //server->textg->textbrowser->append("1111");
-    //------测试------------
-    int j=0;
-    for (; j<statusnumber; j++)
-    {
-        QString s1 = cardlist.getQName(status[j]);
-        //s.sprintf("%d",status[i]);
-        //server->textg->textbrowser->append("2222");
-        server->textg->playerstatus[order][j]->setText(s1);
-    }
-    for (;j<6;j++)
-    server->textg->playerstatus[order][j]->clear();
-    //-------------------------------
-    //server->textg->textbrowser->append("3333");
+
+    sendMessageBuffer[0] = StatusIncrease;
+    sendMessageBuffer[1] = cardUsed;
+    BroadCast();
 }
 bool Player::cureExist()
 {
@@ -839,7 +964,7 @@ void Player::normalAttack()
     //assert(this->card.find(cardUsed)!=this->card.end());
     //if(!server->players[attackTarget].canBeAttacked()) throw ActionIllegal();
     int damage = 2;
-    foldCard(&cardUsed,1,false);
+    foldCard(&cardUsed);
     //暗灭无法应战，需要吗？
     bool canBeAccept;
     if (cardlist.getName(cardUsed) == darkAttack)
@@ -880,7 +1005,6 @@ void Player::normalMagic()
     {
         card.erase(cardUsed);
         cardNumber = this->card.size();
-        server->players[magicTarget]->addStatus(cardUsed);
 
         sendMessageBuffer[0] = CardChange;
         sendMessageBuffer[1] = -1;
@@ -892,11 +1016,7 @@ void Player::normalMagic()
        // BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
         BroadCast();
 
-        sendMessageBuffer[0] = StatusIncrease;
-        sendMessageBuffer[1] = cardUsed;
-        sendMessageBuffer[2] = magicTarget;
-        BroadCast();//添加状态
-
+        server->players[magicTarget]->addStatus(cardUsed);
         break;
     }
     case shield:
@@ -904,17 +1024,18 @@ void Player::normalMagic()
         card.erase(cardUsed);
         cardNumber = this->card.size();
         server->players[magicTarget]->theShield = cardUsed;
-        server->players[magicTarget]->addStatus(cardUsed);
 
         sendMessageBuffer[0] = CardChange;
         sendMessageBuffer[1] = -1;
         BroadCast();
 
-        sendMessageBuffer[0] = StatusIncrease;
-        sendMessageBuffer[1] = cardUsed;
-        sendMessageBuffer[2] = magicTarget;
-        BroadCast();//添加状态
+        sendMessageBuffer[0] = AttackHappen;
+        sendMessageBuffer[1] = magicTarget;
+        sendMessageBuffer[2] = cardUsed;
+       // BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
+        BroadCast();
 
+        server->players[magicTarget]->addStatus(cardUsed);
         break;
     }
     case missile:
@@ -970,7 +1091,7 @@ void Player::headOn(int chainLength)
     int cardUsed = receiveMessageBuffer[2];
     int damage = 2;
 
-    foldCard(&cardUsed,1,false);
+    foldCard(&cardUsed);
     bool canBeAccept;
     if (cardlist.getName(cardUsed) == darkAttack)
         canBeAccept = false;
@@ -1051,7 +1172,7 @@ void Player::beMagicMissileAttack(int cardUsed, int damage)
     if(reaction == Light)
     {
         int cardUsed = receiveMessageBuffer[1];
-        foldCard(&cardUsed);
+        foldCard(&cardUsed,1,true);
         //BroadCast();//改变手牌数量
         return;
     }
@@ -1063,7 +1184,7 @@ bool Player::beAttacked(int attacker,int cardUsed,int chainLength,bool canBeAcce
     //sendMessage(BeAttack,canBeAccept);
     sendMessageBuffer[0] = AttackRespond;
     sendMessageBuffer[1] = cardUsed;
-    //sendMessageBuffer[2] = attacker;
+    sendMessageBuffer[3] = attacker;
     sendMessageBuffer[2] = canBeAccept;
     sendMessage();
     //actionType reaction = receive(receiveMessageBuffer);
@@ -1087,7 +1208,7 @@ bool Player::beAttacked(int attacker,int cardUsed,int chainLength,bool canBeAcce
     case Light:
     {
         int cardUsed = receiveMessageBuffer[1];
-        foldCard(&cardUsed);
+        foldCard(&cardUsed,1,true);
         emit miss(order);
         //BroadCast();//改变手牌数量，展示圣光
         return false;
@@ -1147,13 +1268,13 @@ void Player::Discards(int amount,int kind)
     //}
     //catch...
 
-    //----测试------------------
-    QString s;
-    s.sprintf("请选择弃牌牌号(%d)",amount);
-    server->textg->textbrowser->append(s);
-    getmessage = false;
-    //--------------------------------
+    sendMessageBuffer[0] = FoldCard;
+    sendMessageBuffer[1] = amount;
+    sendMessage();
+
     receive();
-    foldCard(receiveMessageBuffer,amount,false);
+
+    foldCard(receiveMessageBuffer,amount);
+
     (server->team[teamNumber])->lossMorale(amount);
 }

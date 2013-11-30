@@ -25,7 +25,7 @@ void Saintess::normalAttack()
     int attackTarget = receiveMessageBuffer[1];
     int cardUsed = receiveMessageBuffer[2];
     int damage = 2;
-    foldCard(&cardUsed,1,false);
+    foldCard(&cardUsed);
     //暗灭无法应战，需要吗？
     bool canBeAccept;
     if (cardlist.getName(cardUsed) == darkAttack)
@@ -75,7 +75,7 @@ void Saintess::headOn(int chainLength)
     int cardUsed = receiveMessageBuffer[2];
     int damage = 2;
 
-    foldCard(&cardUsed,1,false);
+    foldCard(&cardUsed);
     bool canBeAccept;
     if (cardlist.getName(cardUsed) == darkAttack)
         canBeAccept = false;
@@ -126,6 +126,7 @@ void Saintess::activate()
     activation = 1;
 
     sendMessageBuffer[0] = Activated;
+    sendMessageBuffer[1] = 1;
     BroadCast();
 
     sendMessageBuffer[0] = CardLimitChange;
@@ -183,7 +184,7 @@ void Saintess::magicOne()//治疗术
     int magicTarget = receiveMessageBuffer[2];
     int cardUsed = receiveMessageBuffer[3];
 
-    foldCard(&cardUsed,1,false);
+    foldCard(&cardUsed);
 
     sendMessageBuffer[0] = AttackHappen;
     sendMessageBuffer[1] = magicTarget;
@@ -199,7 +200,7 @@ void Saintess::magicTwo()//治愈之光
     int cardUsed = receiveMessageBuffer[2];
     int targetnumber = receiveMessageBuffer[3];
 
-    foldCard(&cardUsed,1,false);
+    foldCard(&cardUsed);
 
     sendMessageBuffer[0] = DrawPicture;
     sendMessageBuffer[1] = targetnumber;

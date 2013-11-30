@@ -54,7 +54,7 @@ void Assassin::countDamage(int damage,int kind)
         if (receiveMessageBuffer[0])
         {
             server->textg->textbrowser->append("你响应了水影");
-            foldCard(receiveMessageBuffer+2,receiveMessageBuffer[1]);
+            foldCard(receiveMessageBuffer+2,receiveMessageBuffer[1],true);
         }
         //server->textg->textbrowser->append("???");
 
@@ -76,8 +76,8 @@ bool Assassin::beAttacked(int attacker, int cardUsed, int chainLength, bool canB
 {
     sendMessageBuffer[0] = AttackRespond;
     sendMessageBuffer[1] = cardUsed;
-    sendMessageBuffer[2] = attacker;
-    sendMessageBuffer[3] = canBeAccept;
+    sendMessageBuffer[3] = attacker;
+    sendMessageBuffer[2] = canBeAccept;
     sendMessage();
 
     Attacker = attacker;
@@ -103,7 +103,7 @@ bool Assassin::beAttacked(int attacker, int cardUsed, int chainLength, bool canB
     case Light:
     {
         int cardUsed = receiveMessageBuffer[1];
-        foldCard(&cardUsed);
+        foldCard(&cardUsed,1,true);
         emit miss(order);
         //BroadCast();//改变手牌数量，展示圣光
         return false;
@@ -118,7 +118,7 @@ void Assassin::normalAttack()
     //if(!server->players[attackTarget].canBeAttacked()) throw ActionIllegal();
 
     int damage = 2;
-    foldCard(&cardUsed,1,false);
+    foldCard(&cardUsed);
 
     //暗灭无法应战，需要吗？
     bool canBeAccept;
@@ -159,6 +159,7 @@ void Assassin::activate()
     changeCardLimit(-1);
 
     sendMessageBuffer[0] = Activated;
+    sendMessageBuffer[1] = 1;
     BroadCast();
 
     energyGem--;
@@ -176,7 +177,7 @@ void Assassin::beforeAction()
         changeCardLimit(1);
 
         sendMessageBuffer[0] = Activated;
-        sendMessageBuffer[1] = order;
+        sendMessageBuffer[1] = 0;
         BroadCast();
     }
 
