@@ -13,7 +13,7 @@
   5,必杀技：响应B 【天使之歌】：【能量】×1 （回合开始前发动）移除场上任意一个基础效果。
   6,必杀技：响应D 【神之庇护】：【能量】×X 为我方抵御X点因法术伤害而造成的士气下降。
 */
-
+//需要在server中链接降低士气和神之庇护槽
 Angel::Angel(Server *server, int order, int teamNumber, int character)
     :Player(server,order,teamNumber,character)
 {
@@ -84,10 +84,14 @@ void Angel::magicOne()
     int magicTarget = receiveMessageBuffer[2];
     int cardUsed = receiveMessageBuffer[3];
     int statusRemoved = receiveMessageBuffer[4];
-    //sendMessageBuffer[0] =
     foldCard(&cardUsed,1,true);
 
     server->players[magicTarget]->destroyStatus(statusRemoved);
+    //TODO: 需要判断是否为圣盾
+    sendMessageBuffer[0] = 5;//statusDecrease
+    sendMessageBuffer[1] = magicTarget;
+    sendMessageBuffer[2] = statusRemoved;
+    sendMessageBuffer[3] = 0;
     BroadCast();
 }
 
@@ -113,8 +117,9 @@ void Angel::magicThree()
     sendMessageBuffer[1] = -1;
     BroadCast();
 
-    sendMessageBuffer[0] = StatusIncrease;
-    sendMessageBuffer[1] = cardUsed;
-    sendMessageBuffer[2] = magicTarget;
+    sendMessageBuffer[0] = 5;
+    sendMessageBuffer[1] = magicTarget;
+    sendMessageBuffer[2] = cardUsed;
+    sendMessageBuffer[3] = 1;
     BroadCast();//添加状态
 }
