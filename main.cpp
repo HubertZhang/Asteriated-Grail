@@ -20,19 +20,13 @@ int main(int argc, char *argv[])
 {
 
     QApplication a(argc, argv);
-   //MainWindow w;
 
     Server* s = new Server;
     textGUI* h = new textGUI(0,s);
-
     s->init(h);
-    h->tconnect();
+  //h->tconnect();
     h->show();
     game hehe(s);
     hehe.run();
-    // h.pp = new Player(/*&h,*/1,1,1);
-   // w.show();
     return a.exec();
-    //s->Game();
-
 }

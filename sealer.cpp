@@ -98,15 +98,7 @@ void Sealer::magicTwo()
 
     connect(server->players[magicTarget],SIGNAL(beweak(int,int,int)),this,SLOT(skillone(int,int,int)));
 
-    if (receiveMessageBuffer[3] == 1)
-    energyGem--;
-    else
-    energyCrystal--;
-
-    sendMessageBuffer[0] = EnergyChange;
-    sendMessageBuffer[1] = -receiveMessageBuffer[3];
-    sendMessageBuffer[2] = 0;
-    BroadCast();//改变人物能量数量
+    useEnergy(1);
 
     sendMessageBuffer[0] = DrawPicture;
     sendMessageBuffer[1] = 1;
@@ -138,15 +130,7 @@ void Sealer::magicThree()
         server->players[magicTarget]->theShield = 0;
     }
 
-    if (receiveMessageBuffer[4] == 1)
-    energyGem--;
-    else
-    energyCrystal--;
-
-    sendMessageBuffer[0] = EnergyChange;
-    sendMessageBuffer[1] = -receiveMessageBuffer[3];
-    sendMessageBuffer[2] = 0;
-    BroadCast();//改变人物能量数量
+    useEnergy(1);
 
 
     //------收入手中--------------------------------

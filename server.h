@@ -28,12 +28,13 @@ class Server : public QObject
     //void sendMessage();
     bool connectionBuilt;
 public:
+    bool characterfinish[6];
+    int playercharacter[6];
     Team* team[2];
     Player* players[6];
     CardPile* gamePile;
     explicit Server(QObject *parent = 0, int Number=6);
     void Game();
-    int sendMessageBuffer[20];
     AGServer networkServer;
     AGChatServer chatServer;
 //--------------测试---------------------------
@@ -46,6 +47,7 @@ signals:
 
 public slots:
     void messageReceived(int id,std::vector<int> message);
+    void chooseCharacter(int id,std::vector<int> message);
     void connectionFinished(){connectionBuilt = true;}
 //--------------------------------------------
 };

@@ -106,13 +106,7 @@ void Berserker::normalAttack()
                 server->textg->textbrowser->append("你响应了撕裂");
                 damage = damage + 2;
 
-                energyGem--;
-
-                sendMessageBuffer[0] = EnergyChange;
-                sendMessageBuffer[1] = -receiveMessageBuffer[3];
-                sendMessageBuffer[2] = 0;
-                BroadCast();//改变人物能量数量
-
+                useEnergy(1,true);
             }
         }
         server->players[attackTarget]->countDamage(damage,Attack);
@@ -147,12 +141,7 @@ void Berserker::normalAttack()
                     server->textg->textbrowser->append("你响应了撕裂");
                     damage = damage + 2;
 
-                    energyGem--;
-
-                    sendMessageBuffer[0] = EnergyChange;
-                    sendMessageBuffer[1] = -receiveMessageBuffer[3];
-                    sendMessageBuffer[2] = 0;
-                    BroadCast();//改变人物能量数量
+                    useEnergy(1,true);
 
                 }
             }

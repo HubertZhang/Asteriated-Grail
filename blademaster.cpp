@@ -182,16 +182,8 @@ void Blademaster::normalAttack()
               {
                    server->textg->textbrowser->append("你响应了剑影");
                    shadowOfSword = true;
-                   if (receiveMessageBuffer[3] == 1)
-                   energyGem--;
-                   else
-                   energyCrystal--;
 
-                   sendMessageBuffer[0] = EnergyChange;
-                   sendMessageBuffer[1] = -receiveMessageBuffer[3];
-                   sendMessageBuffer[2] = 0;
-                   BroadCast();//改变人物能量数量
-
+                   useEnergy(1);
                    normalAttack();
                    break;
               }

@@ -1,0 +1,34 @@
+﻿This part will list the information that will be send and
+received during the game. It's a bunch of function with
+the prefix of send and receive.But the kind of information
+that will be used is not so much.So will can add the kind as
+the first parameter of the send and receive funtion,and than
+we just need one send and one receive function in the server
+and client.
+And the function is as following:
+Server:
+Kind = 0,(阵营分配)1：你的位置编号，2~4：分配到红色位置的编号                                                             0  //无
+Kind = 1,（角色分配）1~3：可选角色编号                                                                                1  //无
+Kind = 2,(角色广播)1~6：顺次角色编号（发送给6个人，非广播函数）                                                           2  //无
+Kind = 3,某人的回合开始（广播函数）1: 位置                                                                             3  //TurnBegin
+Kind = 4,虚弱响应                                                                                                  4  //WeakRespond
+Kind = 5,广播状态栏的变化，1：位置编号，2：牌序号，3：增加1或删除0（广播函数）                                               5  //StatusDecrease,StatusIncrease
+Kind = 6,询问特殊行动（启动，提炼，购买，合成）                                                                         6  //BeforeAction
+Kind = 7,提示行动阶段开始                                                                                             7  //ActionType
+Kind = 8,队伍状态变化，1：队伍颜色，2~5：宝石量，星石量，星杯量，士气量（广播函数）                                           8  //无
+Kind = 9,人物状态变化，1：位置，2~5：手牌变化量，手牌上限变化量，治疗变化量，宝石变化量，星石变化量，
+黄色指示物变化量，蓝色指示物变化量（广播函数）                                                                            9  //EnergyChange,CardChange,CureChange,CardLimitChange
+Kind = 10,攻击或法术绘图信息，1：发起者，2：对象个数 3：弃牌个数 4~x:对象位置，x+1~y:弃牌序号，y+1:是否为独有技能               10 //AttackHappen,Show,DrawPicture
+Kind = 11,询问应战，1：牌的序号,2:是否可以应战 3:对象                                                                   11 //AttackRespond
+Kind = 12,询问治疗，1：伤害大小                                                                                       12 //CureRespond
+Kind = 13,补牌，1：牌的个数，2~x:牌序号                                                                                13 //GetCard
+Kind = 14,指定一名角色弃掉一张牌（有返回值，返回值为牌序号和明弃暗弃的bool值，若为明弃掉调用Kind = 10来显示。
+Kind = 15,响应询问函数，1：响应个数 2：编号                                                                            15 //AskRespond
+Kind = 16，广播启动 1：位置   2：启动或解除                                                                            16 //Activated
+Kind = 17,弃牌函数1:牌的个数                                                                                          17 //FoldCard
+Kind = 18,特殊对话框 1：天使祝福 2：1或2                                                                               18 //SpecialAsk
+                     1：五系束缚
+                     1： 挑衅
+Kind = 19,1：攻击或法术或都可以                                                                                       19 //AdditionalAction
+Kind = 20.1:魔弹
+Kind = 21,游戏结束

@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     sealer.cpp \
     assassin.cpp \
     chatserver.cpp \
-    saintess.cpp
+    saintess.cpp \
+    magicsword.cpp
 
 HEADERS  += mainwindow.h \
     server.h \
@@ -46,7 +47,8 @@ HEADERS  += mainwindow.h \
     sealer.h \
     assassin.h \
     chatserver.h \
-    saintess.h
+    saintess.h \
+    magicsword.h
 
 FORMS    +=
 
@@ -54,4 +56,5 @@ OTHER_FILES += \
     RunExample.txt \
     changefoethechapter.txt \
     kindOfMessage.txt \
-    characterNum.txt
+    characterNum.txt \
+    InformationNew.txt

@@ -17,6 +17,7 @@ extern CardList cardlist;
 Saintess::Saintess(Server* server,int order,int teamNumber,int character) :
     Player(server,order,teamNumber,character)
 {
+    activation = 1;
     server->textg->character[order]->setText("圣女");
 }
 
@@ -123,7 +124,7 @@ void Saintess::headOn(int chainLength)
 }
 void Saintess::activate()
 {
-    activation = 1;
+    activation = 0;
 
     sendMessageBuffer[0] = Activated;
     sendMessageBuffer[1] = 1;
@@ -135,16 +136,12 @@ void Saintess::activate()
 
     cardLimit = 7;
 
-    energyGem--;
-    sendMessageBuffer[0] = EnergyChange;
-    sendMessageBuffer[1] = -1;
-    sendMessageBuffer[2] = 0;
-    BroadCast();
+    useEnergy(1,true);
 }
 
 void Saintess::changeCardLimit(int amount)
 {
-    if (activation != 1)
+    if (activation != 0)
     {
         cardLimit = cardLimit + amount;
 
@@ -233,22 +230,15 @@ void Saintess::magicThree()//圣疗
     }
     BroadCast();
 
-    if (receiveMessageBuffer[4] == 1)
-    energyGem--;
-    else
-    energyCrystal--;
-
-    sendMessageBuffer[0] = EnergyChange;
-    sendMessageBuffer[1] = -receiveMessageBuffer[3];
-    sendMessageBuffer[2] = 0;
-    BroadCast();//改变人物能量数量
+    useEnergy(1);
 
     for (i=0; i<targetnumber; i++)
     {
         server->players[receiveMessageBuffer[3+2*i]]->increaseCure(receiveMessageBuffer[4+2*i]);
     }
 
-    sendMessageBuffer[0] = ActionType;
+    sendMessageBuffer[0] = AdditionalAction;
+    sendMessageBuffer[1] = 2;
     sendMessage();
 
     receive();

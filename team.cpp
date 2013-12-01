@@ -2,6 +2,8 @@
 #include "textgui.h"
 #include"server.h"
 
+using namespace std;
+
 Team::Team(Server* a,int i):s(a),team(i)
 {
     grail = 0;
@@ -67,5 +69,14 @@ void Team::BroadCast()
     s->textg->teamstatus[team][2]->setText(string);
     string.sprintf("%d",crystal);
     s->textg->teamstatus[team][3]->setText(string);
+
+    vector<int> tempMessage;
+    tempMessage.push_back(8);
+    tempMessage.push_back(team);
+    tempMessage.push_back(gem);
+    tempMessage.push_back(crystal);
+    tempMessage.push_back(grail);
+    tempMessage.push_back(morale);
+    s->networkServer.sendMessage(-1,tempMessage);
 }
 //------------------------------

@@ -155,15 +155,7 @@ void  Archer::magicTwo()
    // BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
     BroadCast();
 
-    if (receiveMessageBuffer[3] == 1)
-    energyGem--;
-    else
-    energyCrystal--;
-
-    sendMessageBuffer[0] = EnergyChange;
-    sendMessageBuffer[1] = -receiveMessageBuffer[3];
-    sendMessageBuffer[2] = 0;
-    BroadCast();//改变人物能量数量
+    useEnergy(1);
 
     if (server->players[magicTarget]->cardNumber < 5)
     {
@@ -179,7 +171,11 @@ void  Archer::magicTwo()
     sendMessage();
 
     receive();
+
+    if (receiveMessageBuffer[0])
+    {
     normalAttack();
+    }
 
 }
 

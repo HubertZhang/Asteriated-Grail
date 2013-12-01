@@ -205,6 +205,16 @@ void Player::sendMessage()
         tempMessage.push_back(sendMessageBuffer[1]);
         break;
     }
+    case MissileRespond://Kind 20
+    {
+        QString s;
+        s.sprintf("玩家%d 被魔弹攻击,请选择:",order);
+        server->textg->textbrowser->append(s);
+        server->textg->textbrowser->append("0:承受攻击,1:应战(卡牌),2:圣光");
+
+        tempMessage.push_back(20);
+        break;
+    }
     default:
         break;
     }
@@ -246,10 +256,10 @@ void Player::BroadCast()
         }
         server->textg->textbrowser->append(s);
 
-        for (int i=0; i<sendMessageBuffer[1]; i++)
-        {
-           emit fold(order,sendMessageBuffer[i+2]);
-        }
+        //for (int i=0; i<sendMessageBuffer[1]; i++)
+        //{
+        //   emit fold(order,sendMessageBuffer[i+2]);
+        //}
 
         tempMessage.push_back(10);
         tempMessage.push_back(order);
@@ -366,7 +376,7 @@ void Player::BroadCast()
 
         //for (int i=0; i<sendMessageBuffer[1]; i++)
        // {
-         emit fold(order,sendMessageBuffer[2]);
+       //  emit fold(order,sendMessageBuffer[2]);
         //}
 
         tempMessage.push_back(10);
@@ -393,10 +403,10 @@ void Player::BroadCast()
         }
         server->textg->textbrowser->append(s);
 
-        for (int i=0; i<sendMessageBuffer[2]; i++)
-        {
-          emit fold(order,sendMessageBuffer[i+3+sendMessageBuffer[1]]);
-        }
+       // for (int i=0; i<sendMessageBuffer[2]; i++)
+       // {
+       //   emit fold(order,sendMessageBuffer[i+3+sendMessageBuffer[1]]);
+       // }
 
         tempMessage.push_back(10);
         tempMessage.push_back(order);
@@ -469,6 +479,28 @@ void Player::BroadCast()
     }
     */
     server->networkServer.sendMessage(-1,tempMessage);
+
+    if (sendMessageBuffer[0] == Show)
+    {
+        for (int i=0; i<sendMessageBuffer[1]; i++)
+        {
+           emit fold(order,sendMessageBuffer[i+2]);
+        }
+    }
+    else if (sendMessageBuffer[0] == AttackHappen)
+    {
+        emit fold(order,sendMessageBuffer[2]);
+    }
+    else if (sendMessageBuffer[0] == DrawPicture)
+    {
+
+        for (int i=0; i<sendMessageBuffer[2]; i++)
+        {
+          emit fold(order,sendMessageBuffer[i+3+sendMessageBuffer[1]]);
+        }
+    }
+
+
 }
 void Player::receive()
 {
@@ -529,32 +561,20 @@ Player::Player(/*QObject *parent = 0,*/ Server* p,int order1,int teamnumber,int 
 
 void Player::start()
 {
-    //BroadCast(TurnBegin,order,order);
     sendMessageBuffer[0] = TurnBegin;
-    //sendMessageBuffer[1] = order;
-    BroadCast();
-    //sendMessage();//回合开始
+    BroadCast(); //回合开始
 
     try{
     handleStatus();
-   // if ((cardLimit-cardNumber)>=3 || activation != 0)
-   // {
     beforeAction();
-   // }
-    //int receiveMessageBuffer[20];
 
     int i = 1;
     while(i--)
     {
         try{
-        //sendMessage(Action);
         sendMessageBuffer[0] = ActionType;
         sendMessage();
 
-        //actionType returnAcction = receive(receiveMessageBuffer);
-        //测试----------------------------
-        getmessage = false;
-        //--------------------------------
         receive();
         int returnAcction = receiveMessageBuffer[0];
         if (returnAcction == Attack)
@@ -577,7 +597,6 @@ void Player::start()
     {
 
     }
-
     end();
     //receiveMessageBuffer[0] = TurnEnd;
     //BroadCast(TurnEnd,order,order);
@@ -649,13 +668,15 @@ void Player::handleStatus()
 }
 void Player::beforeAction()
 {
+    if ((cardLimit - cardNumber) < 3 && activation == 0 &&
+            (energyCrystal+energyGem==3 || server->team[teamNumber]->stone==0))
+    {
+        return;
+    }
     //int receiveMessageBuffer[20];
     sendMessageBuffer[0] = BeforeAction;
     sendMessage();
-    //actionType returnAcction = receive(receiveMessageBuffer);
-    //测试----------------------------
-    getmessage = false;
-    //--------------------------------
+
     receive();
     int returnAction = receiveMessageBuffer[0];
     switch (returnAction)
@@ -881,6 +902,38 @@ void Player::changeCardLimit(int amount)
     sendMessageBuffer[1] = amount;
     BroadCast();
 }
+void Player::useEnergy(int number,bool gem)
+{
+    if (gem == true)
+    {
+        energyGem = energyGem - number;
+        sendMessageBuffer[0] = EnergyChange;
+        sendMessageBuffer[1] = -number;
+        sendMessageBuffer[2] = 0;
+        BroadCast();//改变人物能量数量
+    }
+    else
+    {
+        if (energyCrystal >= number)
+        {
+            energyCrystal = energyCrystal - number;
+            sendMessageBuffer[0] = EnergyChange;
+            sendMessageBuffer[1] = 0;
+            sendMessageBuffer[2] = -number;
+            BroadCast();//改变人物能量数量
+        }
+        else
+        {
+            int t = energyCrystal;
+            energyCrystal = 0;
+            energyGem = t - number + energyGem;
+            sendMessageBuffer[0] = EnergyChange;
+            sendMessageBuffer[1] = t - number;
+            sendMessageBuffer[2] = -t;
+            BroadCast();//改变人物能量数量
+        }
+    }
+}
 
 void Player::purchase()
 {
@@ -1057,7 +1110,7 @@ void Player::normalMagic()
         sendMessageBuffer[2] = cardUsed;
        // BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
         BroadCast();
-        server->players[target]->beMagicMissileAttack(cardUsed,2);
+        server->players[target]->beMagicMissileAttack(2);
         break;
     }
     default:
@@ -1119,17 +1172,12 @@ void Player::headOn(int chainLength)
         }
     }
 }
-void Player::beMagicMissileAttack(int cardUsed, int damage)
+void Player::beMagicMissileAttack(int damage)
 {
     //sendMessage(youMagicMissile,this->order,card);
-    sendMessageBuffer[0] = AttackRespond;
-    sendMessageBuffer[1] = cardUsed;
+    sendMessageBuffer[0] = MissileRespond;
     sendMessage();
-    //int receiveMessageBuffer[20];
-    //actionType reaction = receive(receiveMessageBuffer);
-    //测试----------------------------
-    getmessage = false;
-    //--------------------------------
+
     receive();
     int reaction = receiveMessageBuffer[0];
     if(reaction == AcceptAttack)
@@ -1147,8 +1195,8 @@ void Player::beMagicMissileAttack(int cardUsed, int damage)
     }
     if(reaction == HeadOn)
     {
-        int cardUsed1 = receiveMessageBuffer[1];
-        foldCard(&cardUsed1);
+        int cardUsed = receiveMessageBuffer[1];
+        foldCard(&cardUsed);
 
         int target;
         for (int i=1; i<6; i++)
@@ -1162,11 +1210,11 @@ void Player::beMagicMissileAttack(int cardUsed, int damage)
 
         sendMessageBuffer[0] = AttackHappen;
         sendMessageBuffer[1] = target;
-        sendMessageBuffer[2] = cardUsed1;
+        sendMessageBuffer[2] = cardUsed;
        // BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
         BroadCast();
 
-        server->players[target]->beMagicMissileAttack(cardUsed1,damage+1);
+        server->players[target]->beMagicMissileAttack(damage+1);
         return ;
     }
     if(reaction == Light)
