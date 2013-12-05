@@ -5,7 +5,13 @@
 #include"cardpile.h"
 #include"textgui.h"
 #include<QString>
+#ifdef Q_OS_WIN
 #include<Windows.h>
+#else
+#include<unistd.h>
+#define Sleep(a) usleep(1000*a)
+#endif
+
 #include <QApplication>
 #include<QTimer>
 #include<string>
