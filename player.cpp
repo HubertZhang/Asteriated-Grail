@@ -863,6 +863,7 @@ void Player::poisonRespond(int card,int order)
 {
     destroyStatus(card,order);
     server->gamePile->putIntoPile(card);
+    emit bepoison(card);
     countDamage(1,Magic);
 }
 void Player::increaseCure(int amount,bool limit)

@@ -206,20 +206,20 @@ void Server::init(textGUI *a)
 
     //Choose Role
         int character[6];
-        //for (int i=0; i<6; i++)
-        //{
-        //   character[i] = i+1;
-        //}
+        for (int i=0; i<6; i++)
+        {
+           character[i] = i+1;
+        }
         //for (int i=0; i<3; i++)
         //{
         //    character[i+3] = 3;
         //}
-        character[0] = 6 ;
-        character[1] = 6 ;
-        character[2] = 6 ;
-        character[3] = 6 ;
-        character[4] = 6 ;
-        character[5] = 6 ;
+        //character[0] = 6 ;
+        //character[1] = 6 ;
+        //character[2] = 6 ;
+        //character[3] = 6 ;
+        //character[4] = 6 ;
+        //character[5] = 6 ;
         random_shuffle(character,character+6);
 
         for(int i=0; i<PlayerNumber;i++)

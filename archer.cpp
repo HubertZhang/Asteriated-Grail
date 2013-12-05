@@ -74,6 +74,7 @@ void Archer::normalAttack()
     if (skill == 3)
     {
         damage = damage -1;
+        (server->team[teamNumber])->getStone(Gem);
         server->players[attackTarget]->countDamage(damage,Attack);
     }
     else if(server->players[attackTarget]->beAttacked(order,cardUsed,1,canBeAccept))
@@ -87,15 +88,26 @@ void Archer::normalAttack()
             sendMessageBuffer[2] = 0;
 
             sendMessage();
-            //测试----------------------------
-            getmessage = false;
-            //--------------------------------
+
             receive();
-            if (receiveMessageBuffer[0])
+
+            int temp = receiveMessageBuffer[0];
+            if (temp != 0)
             {
-                server->textg->textbrowser->append("你响应了贯穿射击");
-                foldCard(&receiveMessageBuffer[1],1,true);//弃牌
-                server->players[attackTarget]->countDamage(2,Magic);
+                 receive();
+
+                 if (receiveMessageBuffer[0] != -1)
+                 {
+                     sendMessageBuffer[0] = AttackHappen;
+                     sendMessageBuffer[1] = target;
+                     sendMessageBuffer[2] = receiveMessageBuffer[0];
+                     //BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
+                     BroadCast();
+
+                     server->textg->textbrowser->append("你响应了贯穿射击");
+                     foldCard(&receiveMessageBuffer[0],1,true);//弃牌
+                     server->players[target]->countDamage(2,Magic);
+                 }
             }
         }
         else
@@ -269,6 +281,7 @@ void Archer::headOn(int chainLength)
     if(skill == 3)
     {
         damage = damage -1;
+        (server->team[teamNumber])->getStone(Crystal);
         server->players[attackTarget]->countDamage(damage,Attack);
     }
     else if(server->players[attackTarget]->beAttacked(order,cardUsed,chainLength,canBeAccept))

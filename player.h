@@ -101,6 +101,7 @@ public:
     void fold(int,int);//封印师
     void beweak(int,int,int);//封印师
     void attacked(int attacker, int target, int& damage);
+    void bepoison(int card);
 //测试程序：
     public slots:
     void getMessage();
