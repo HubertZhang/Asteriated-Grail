@@ -3,6 +3,7 @@
 #include"server.h"
 #include"card.h"
 #include"textgui.h"
+#include <QApplication>
 
 extern CardList cardlist;
 /*剑圣技能：
@@ -11,7 +12,6 @@ extern CardList cardlist;
    2【烈风技】：（攻击的目标拥有圣盾时发动）无视对方圣盾的效果，且此攻击对方无法应战。
    3【疾风技】：（作为主动攻击打出时发动）额外+1【攻击行动】。
    4【剑影】：【能量】×1 （【攻击行动】结束时发动）额外+1【攻击行动】。
-
 */
 
 
@@ -71,6 +71,7 @@ void Blademaster::normalAttack()
     attackTime++;
     int attackTarget = receiveMessageBuffer[1];
     int cardUsed = receiveMessageBuffer[2];
+    int damage = 2;
 
     foldCard(&cardUsed);
     bool canattack = canAttack();
@@ -83,7 +84,7 @@ void Blademaster::normalAttack()
         {
         sendMessageBuffer[0] = AskRespond;
         sendMessageBuffer[1] = 1;
-        sendMessageBuffer[2] = 2;
+        sendMessageBuffer[2] = 1;
 
         sendMessage();
         //测试----------------------------
@@ -109,14 +110,16 @@ void Blademaster::normalAttack()
     sendMessageBuffer[0] = AttackHappen;
     sendMessageBuffer[1] = attackTarget;
     sendMessageBuffer[2] = cardUsed;
-    sendMessageBuffer[3] = skill;
+
     BroadCast();//展示攻击对象，攻击牌
+
+    emit attacked(order, attackTarget, damage);
 
     if (attackTime == 3)
     {
         server->textg->textbrowser->append("圣剑!!");
         (server->team[teamNumber])->getStone(Gem);
-        server->players[attackTarget]->countDamage(2,Attack);
+        server->players[attackTarget]->countDamage(damage,Attack);
     }
     else if(server->players[attackTarget]->beAttacked(order,cardUsed,1,canBeAccept))
     {
@@ -127,7 +130,7 @@ void Blademaster::normalAttack()
         else
         {
             (server->team[teamNumber])->getStone(Gem);
-            server->players[attackTarget]->countDamage(2,Attack);
+            server->players[attackTarget]->countDamage(damage,Attack);
         }
     }
 //-----------------结束前---------------------------------------------
@@ -138,17 +141,17 @@ void Blademaster::normalAttack()
         if (hasWind() && !combo)
         {
             i++;
-            sendMessageBuffer[i+1] = 1;//连续技
+            sendMessageBuffer[i+1] = 0;//连续技
         }
         if (cardlist.getSkillOne(cardUsed) == 12 ||cardlist.getSkillTwo(cardUsed) == 12)
         {
              i++;
-             sendMessageBuffer[i+1] = 3;//疾风技
+             sendMessageBuffer[i+1] = 2;//疾风技
         }
         if ((energyGem+energyCrystal >= 1) && !shadowOfSword)
         {
             i++;
-            sendMessageBuffer[i+1] = 4;//剑影
+            sendMessageBuffer[i+1] = 3;//剑影
         }
         sendMessageBuffer[1] = i;//技能个数
 
@@ -156,39 +159,47 @@ void Blademaster::normalAttack()
         {
             sendMessageBuffer[0] = AskRespond;
             sendMessage();
-            //测试----------------------------
-            getmessage = false;
-            //--------------------------------
+
             receive();//是否发动技能
 
-            switch (receiveMessageBuffer[0])
-            {
-              case 0:
-                break;
-              case 3:
-              {
-                  server->textg->textbrowser->append("你响应了疾风技");
-                  normalAttack();
-                  break;
-              }
-              case 1:
-              {
-                    server->textg->textbrowser->append("你响应了连续技");
-                    combo = true;
-                    normalAttack();
-                    break;
-              }
-              case 4:
-              {
-                   server->textg->textbrowser->append("你响应了剑影");
-                   shadowOfSword = true;
+            int temp = receiveMessageBuffer[0];
 
-                   useEnergy(1);
-                   normalAttack();
-                   break;
-              }
-            default:
-                break;
+            if (temp != 0)
+            {
+               receive();
+
+               if (receiveMessageBuffer[0] != -1)
+               {
+                  receiveMessageBuffer[2] = receiveMessageBuffer[1];
+                  receiveMessageBuffer[1] = receiveMessageBuffer[0];
+                  switch (temp)
+                  {
+                  case 3:
+                  {
+                     server->textg->textbrowser->append("你响应了疾风技");
+                     normalAttack();
+                     break;
+                  }
+                  case 1:
+                  {
+                     server->textg->textbrowser->append("你响应了连续技");
+                     combo = true;
+                     normalAttack();
+                     break;
+                  }
+                  case 4:
+                  {
+                     server->textg->textbrowser->append("你响应了剑影");
+                     shadowOfSword = true;
+
+                     useEnergy(1);
+                     normalAttack();
+                     break;
+                  }
+                  default:
+                     break;
+            }
+            }
             }
         }
     }
@@ -215,7 +226,7 @@ void Blademaster::headOn(int chainLength)
         {
         sendMessageBuffer[0] = AskRespond;
         sendMessageBuffer[1] = 1;
-        sendMessageBuffer[2] = 2;
+        sendMessageBuffer[2] = 1;
 
         sendMessage();
         //测试----------------------------
@@ -243,6 +254,7 @@ void Blademaster::headOn(int chainLength)
 
     emit miss(order);
 
+    emit attacked(order, attackTarget, damage);
     if(server->players[attackTarget]->beAttacked(order,cardUsed,chainLength,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist()&& skill != 2)//If there is a shield...
@@ -252,7 +264,7 @@ void Blademaster::headOn(int chainLength)
         else
         {
           (server->team[teamNumber])->getStone(Crystal);
-          server->players[attackTarget]->countDamage(damage,Accept);
+          server->players[attackTarget]->countDamage(damage,Attack);
         }
     }
 

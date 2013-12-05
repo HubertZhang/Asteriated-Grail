@@ -9,9 +9,16 @@ Team::Team(Server* a,int i):s(a),team(i)
     grail = 0;
     stone = gem = crystal = 0;
     morale = 15;
-    //测试-----
-    BroadCast();
-   //-------------
+
+    QString string;
+    string.sprintf("%d",grail);
+    s->textg->teamstatus[team][0]->setText(string);
+    string.sprintf("%d",morale);
+    s->textg->teamstatus[team][1]->setText(string);
+    string.sprintf("%d",gem);
+    s->textg->teamstatus[team][2]->setText(string);
+    string.sprintf("%d",crystal);
+    s->textg->teamstatus[team][3]->setText(string);
 }
 
 void Team::getStone(Stone a)

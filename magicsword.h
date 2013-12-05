@@ -13,6 +13,7 @@ public:
     void activate();
     void magicAction();
     void beforeAction();
+    void end();
 };
 
 #endif // MAGICSWORD_H

@@ -8,6 +8,8 @@
 #include"sealer.h"
 #include"assassin.h"
 #include"saintess.h"
+#include"magicsword.h"
+#include"holyspear.h"
 #include"textgui.h"
 #include"team.h"
 #include"berserker.h"
@@ -123,6 +125,16 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
         players[order] = new Saintess(this,order,teamnumber,character);
         break;
     }
+    case magicsword:
+    {
+        players[order] = new Magicsword(this,order,teamnumber,character);
+        break;
+    }
+    case holyspear:
+    {
+        players[order] = new Holyspear(this,order,teamnumber,character);
+        break;
+    }
     default:
     {
         players[order] = new Player(this,order,teamnumber,character);
@@ -141,27 +153,36 @@ void Server::init(textGUI *a)
         if (connectionBuilt)
         break;
     }
+
     textg = a;
     team[0] = new Team(this,0);
     team[1] = new Team(this,1);
-    /*Allocate Order*/
+    //Allocate Order
         //int client[PlayerNumber]={0,1,2,3,4,5};
         //random_shuffle(client,client+PlayerNumber);
 
-    /*Arrange Team*/
+    //Arrange Team
         int *arrangeteam = new int[PlayerNumber];
 
-        for (int i=0; i<PlayerNumber/2; i++)
-            arrangeteam[i] = 0;
-        for (int i=0; i<PlayerNumber/2; i++)
-            arrangeteam[i+PlayerNumber/2] = 1; 
-        random_shuffle(arrangeteam+1,arrangeteam+PlayerNumber);
-
-   /*Broadcast Team*/
+       // for (int i=0; i<PlayerNumber/2; i++)
+           // arrangeteam[i] = 0;
+        //for (int i=0; i<PlayerNumber/2; i++)
+           // arrangeteam[i+PlayerNumber/2] = 1;
+       // random_shuffle(arrangeteam+1,arrangeteam+PlayerNumber);
+        arrangeteam[0] = 0;
+        arrangeteam[1] = 1;
+        arrangeteam[2] = 0;
+        arrangeteam[3] = 1;
+        arrangeteam[4] = 0;
+        arrangeteam[5] = 1;
+   connect(&networkServer,SIGNAL(messageRecieved(int, std::vector<int>)),
+                  this,SLOT(chooseCharacter(int, std::vector<int>)));
+   //Broadcast Team
         int j=0;
+
         for (int i=0;i<PlayerNumber;i++)
         {
-            if (arrangeteam[i] == 1)
+            if (arrangeteam[i] == 0)
             {
                sendMessageBuffer[j] = i;
                j++;
@@ -179,21 +200,26 @@ void Server::init(textGUI *a)
             }
             networkServer.sendMessage(i,tempMessage);
         }
-   /*Choose Role*/
-    connect(&networkServer,SIGNAL(messageRecieved(int, std::vector<int>)),
-              this,SLOT(chooseCharacter(int, std::vector<int>)));
+        QCoreApplication::processEvents();
+
+       // system("pause");
+
+    //Choose Role
         int character[6];
         for (int i=0; i<6; i++)
         {
-            character[i] = i+1;
+           character[i] = i+1;
         }
-        //character[0] = 6 ;
-        //character[1] = 6 ;
-        //character[2] = 6 ;
-        //character[3] = 6 ;
-        //character[4] = 6 ;
-        //character[5] = 6 ;
-        //character[1] = blademaster;
+        //for (int i=0; i<3; i++)
+        //{
+        //    character[i+3] = 3;
+        //}
+       //character[0] = 8 ;
+       // character[1] = 8 ;
+       // character[2] = 8 ;
+       // character[3] = 8 ;
+       // character[4] = 8 ;
+       // character[5] = 8 ;
         random_shuffle(character,character+6);
 
         for(int i=0; i<PlayerNumber;i++)
@@ -210,6 +236,8 @@ void Server::init(textGUI *a)
             //sendMessageBuffer[3] = character[3*i+2];
         }
 
+        QCoreApplication::processEvents();
+        //system("pause");
         while(1)
         {
            QCoreApplication::processEvents();
@@ -217,17 +245,18 @@ void Server::init(textGUI *a)
                    &&characterfinish[3]&&characterfinish[4]&&characterfinish[5])
            break;
         }
-    /*Allocate Character*/
+    //Allocate Character
         for (int i=0; i<PlayerNumber; i++)
         {
-            allocateCharacter(i,playercharacter[i],arrangeteam[i]/*,client[i]*/);
+            allocateCharacter(i,playercharacter[i],arrangeteam[i]);
         }
 
         disconnect(&networkServer,SIGNAL(messageRecieved(int, std::vector<int>)),
                 this,SLOT(chooseCharacter(int, std::vector<int>)));
         connect(&networkServer,SIGNAL(messageRecieved(int, std::vector<int>)),
                 this,SLOT(messageReceived(int, std::vector<int>)));
-    /*Broadcast Character*/
+
+     //Broadcast Character
         vector<int> tempMessage;
         tempMessage.push_back(2);
         for (int i=0; i<PlayerNumber;i++)
@@ -236,7 +265,7 @@ void Server::init(textGUI *a)
         }
         networkServer.sendMessage(-1,tempMessage);
 
-    /*Deal Cards*/
+    //Deal Cards
         for (int i = 0; i<PlayerNumber; i++)
         {
             players[i]->getCard(4);
@@ -244,4 +273,40 @@ void Server::init(textGUI *a)
 
         delete []arrangeteam;
 }
+/*
+void Server::init(textGUI *a)
+{
+    textg = a;
+    team[0] = new Team(this,0);
+    team[1] = new Team(this,1);
 
+        int *arrangeteam = new int[PlayerNumber];
+
+        for (int i=0; i<PlayerNumber/2; i++)
+            arrangeteam[i] = 0;
+        for (int i=0; i<PlayerNumber/2; i++)
+            arrangeteam[i+PlayerNumber/2] = 1;
+        random_shuffle(arrangeteam+1,arrangeteam+PlayerNumber);
+
+        int character[6];
+
+        character[0] = 5 ;
+        character[1] = 5 ;
+        character[2] = 5 ;
+        character[3] = 5 ;
+        character[4] = 5 ;
+        character[5] = 5 ;
+
+        for (int i=0; i<PlayerNumber; i++)
+        {
+            allocateCharacter(i,character[i],arrangeteam[i]);
+        }
+
+        for (int i = 0; i<PlayerNumber; i++)
+        {
+            players[i]->getCard(4);
+        }
+
+        delete []arrangeteam;
+}
+*/

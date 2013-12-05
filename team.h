@@ -9,7 +9,7 @@ class Server;
 class Team: public QObject
 {
     Q_OBJECT
-    int stone;
+    //int stone;
     int crystal;
     int gem;
     int morale;
@@ -17,6 +17,7 @@ class Team: public QObject
     int team;
     Server* s;
 public:
+    int stone;
     Team(Server*,int);
     void getStone(Stone a);
     void lossStone(Stone a);

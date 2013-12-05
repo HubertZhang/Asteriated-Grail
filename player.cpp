@@ -215,6 +215,10 @@ void Player::sendMessage()
         tempMessage.push_back(20);
         break;
     }
+    case AskRespond1:
+    {
+        tempMessage.push_back(21);
+    }
     default:
         break;
     }
@@ -352,7 +356,6 @@ void Player::BroadCast()
         server->textg->playergem[order]->setText(s);
         s.sprintf("%d",energyCrystal);
         server->textg->playercrystal[order]->setText(s);
-        break;
 
         tempMessage.push_back(9);
         tempMessage.push_back(order);
@@ -363,6 +366,7 @@ void Player::BroadCast()
         tempMessage.push_back(sendMessageBuffer[2]);
         tempMessage.push_back(0);
         tempMessage.push_back(0);
+        break;
     }
     case AttackHappen://Kind 10
     {
@@ -385,6 +389,7 @@ void Player::BroadCast()
         tempMessage.push_back(1);
         tempMessage.push_back(sendMessageBuffer[1]);
         tempMessage.push_back(sendMessageBuffer[2]);
+
         break;
     }
     case DrawPicture://Kind 10
@@ -471,17 +476,12 @@ void Player::BroadCast()
     default:
      break;
     }
-    /*
-    while(sendMessageBuffer[i]!=-1){
-        tempMessage.push_back(sendMessageBuffer[i]);
-        sendMessageBuffer[i] = -1;
-        i++;
-    }
-    */
+
     server->networkServer.sendMessage(-1,tempMessage);
 
     if (sendMessageBuffer[0] == Show)
     {
+        //Sleep(1500);
         for (int i=0; i<sendMessageBuffer[1]; i++)
         {
            emit fold(order,sendMessageBuffer[i+2]);
@@ -489,11 +489,12 @@ void Player::BroadCast()
     }
     else if (sendMessageBuffer[0] == AttackHappen)
     {
+        //Sleep(1500);
         emit fold(order,sendMessageBuffer[2]);
     }
     else if (sendMessageBuffer[0] == DrawPicture)
     {
-
+        //Sleep(1500);
         for (int i=0; i<sendMessageBuffer[2]; i++)
         {
           emit fold(order,sendMessageBuffer[i+3+sendMessageBuffer[1]]);
@@ -598,9 +599,6 @@ void Player::start()
 
     }
     end();
-    //receiveMessageBuffer[0] = TurnEnd;
-    //BroadCast(TurnEnd,order,order);
-    //BroadCast();
 }
 void Player::handleStatus()
 {
@@ -968,7 +966,6 @@ void Player::refine()
         (server->team[teamNumber])->lossStone(Crystal);
         energyCrystal++;
     }
-
     sendMessageBuffer[0] = EnergyChange;
     sendMessageBuffer[1] = gem;
     sendMessageBuffer[2] = crystal;
@@ -1031,6 +1028,7 @@ void Player::normalAttack()
     sendMessageBuffer[2] = cardUsed;
     BroadCast();
 
+    emit attacked(order, attackTarget, damage);
     if(server->players[attackTarget]->beAttacked(order,cardUsed,1,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist())//If there is a shield...
@@ -1158,6 +1156,7 @@ void Player::headOn(int chainLength)
     BroadCast();
 
     emit miss(order);
+    emit attacked(order, attackTarget, damage);
 
     if(server->players[attackTarget]->beAttacked(order,cardUsed,chainLength,canBeAccept))
     {
@@ -1195,6 +1194,7 @@ void Player::beMagicMissileAttack(int damage)
     }
     if(reaction == HeadOn)
     {
+
         int cardUsed = receiveMessageBuffer[1];
         foldCard(&cardUsed);
 

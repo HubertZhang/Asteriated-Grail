@@ -50,7 +50,7 @@ void Archer::normalAttack()
     {
         sendMessageBuffer[0] = AskRespond;
         sendMessageBuffer[1] = 1;
-        sendMessageBuffer[2] = 3;
+        sendMessageBuffer[2] = 1;
 
         sendMessage();
         //测试----------------------------
@@ -70,6 +70,7 @@ void Archer::normalAttack()
     sendMessageBuffer[2] = cardUsed;
     BroadCast();//展示攻击对象，攻击牌
 
+    emit attacked(order, attackTarget, damage);
     if (skill == 3)
     {
         damage = damage -1;
@@ -83,7 +84,7 @@ void Archer::normalAttack()
 //---------------------贯穿射击-----------------------------------------
             sendMessageBuffer[0] = AskRespond;
             sendMessageBuffer[1] = 1;
-            sendMessageBuffer[2] = 1;
+            sendMessageBuffer[2] = 0;
 
             sendMessage();
             //测试----------------------------
@@ -172,9 +173,9 @@ void  Archer::magicTwo()
 
     receive();
 
-    if (receiveMessageBuffer[0])
+    if (receiveMessageBuffer[0] == 0)
     {
-    normalAttack();
+        normalAttack();
     }
 
 }
@@ -191,18 +192,29 @@ void Archer::skillone(int order)
         //---------------------贯穿射击-----------------------------------------
          sendMessageBuffer[0] = AskRespond;
          sendMessageBuffer[1] = 1;
-         sendMessageBuffer[2] = 1;
+         sendMessageBuffer[2] = 0;
 
          sendMessage();
-         //测试----------------------------
-         getmessage = false;
-         //--------------------------------
+
          receive();
-         if (receiveMessageBuffer[0])
+         int temp = receiveMessageBuffer[0];
+
+         if (temp != 0)
          {
-              server->textg->textbrowser->append("你响应了贯穿射击");
-              foldCard(&receiveMessageBuffer[1],1,true);//弃牌
-              server->players[target]->countDamage(2,Magic);
+              receive();
+
+              if (receiveMessageBuffer[0] != -1)
+              {
+                  sendMessageBuffer[0] = AttackHappen;
+                  sendMessageBuffer[1] = target;
+                  sendMessageBuffer[2] = receiveMessageBuffer[0];
+                  //BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
+                  BroadCast();
+
+                  server->textg->textbrowser->append("你响应了贯穿射击");
+                  foldCard(&receiveMessageBuffer[0],1,true);//弃牌
+                  server->players[target]->countDamage(2,Magic);
+              }
          }
          target = -1;
     }
@@ -220,6 +232,9 @@ void Archer::headOn(int chainLength)
         canBeAccept = false;
     else
         canBeAccept = true;
+    //----------闪电箭------------------------------------
+        if (cardlist.getName(cardUsed) == thunderAttack)
+            canBeAccept = false;
 
     //------------------精准射击------------------------------------------------
     if (cardlist.getSkillOne(cardUsed) == 11 ||cardlist.getSkillTwo(cardUsed) == 11)
@@ -228,7 +243,7 @@ void Archer::headOn(int chainLength)
         {
         sendMessageBuffer[0] = AskRespond;
         sendMessageBuffer[1] = 1;
-        sendMessageBuffer[2] = 2;
+        sendMessageBuffer[2] = 1;
 
         sendMessage();
         //测试----------------------------
@@ -250,7 +265,7 @@ void Archer::headOn(int chainLength)
     BroadCast();
 
     emit miss(order);
-
+    emit attacked(order, attackTarget, damage);
     if(skill == 3)
     {
         damage = damage -1;
@@ -265,7 +280,7 @@ void Archer::headOn(int chainLength)
         else
         {
           (server->team[teamNumber])->getStone(Crystal);
-          server->players[attackTarget]->countDamage(damage,Accept);
+          server->players[attackTarget]->countDamage(damage,Attack);
         }
     }
 

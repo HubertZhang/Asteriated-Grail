@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     Server* s = new Server;
     textGUI* h = new textGUI(0,s);
     s->init(h);
-  //h->tconnect();
+    h->tconnect();
     h->show();
     game hehe(s);
     hehe.run();

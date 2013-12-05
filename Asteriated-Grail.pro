@@ -29,7 +29,10 @@ SOURCES += main.cpp\
     assassin.cpp \
     chatserver.cpp \
     saintess.cpp \
-    magicsword.cpp
+    magicsword.cpp \
+    holyspear.cpp \
+    magister.cpp \
+    elementalist.cpp
 
 HEADERS  += mainwindow.h \
     server.h \
@@ -48,7 +51,10 @@ HEADERS  += mainwindow.h \
     assassin.h \
     chatserver.h \
     saintess.h \
-    magicsword.h
+    magicsword.h \
+    holyspear.h \
+    magister.h \
+    elementalist.h
 
 FORMS    +=
 

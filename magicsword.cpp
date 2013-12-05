@@ -57,6 +57,7 @@ void Magicsword::normalAttack()
         if (receiveMessageBuffer[0])
         {
             server->textg->textbrowser->append("你响应了黑暗震颤");
+            useEnergy(1,true);
             canBeAccept = false;
             skill = 4;
         }
@@ -68,6 +69,7 @@ void Magicsword::normalAttack()
     sendMessageBuffer[2] = cardUsed;
     BroadCast();
 
+    emit attacked(order, attackTarget, damage);
     if(server->players[attackTarget]->beAttacked(order,cardUsed,1,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist())
@@ -95,11 +97,17 @@ void Magicsword::normalAttack()
 
       if (receiveMessageBuffer[0])
       {
+          server->textg->textbrowser->append("你发动了修罗连斩");
           combo = true;
           normalAttack();
       }
     }
 
+}
+
+void Magicsword::end()
+{
+    combo = false;
 }
 
 void Magicsword::headOn(int chainLength)
@@ -126,6 +134,7 @@ void Magicsword::headOn(int chainLength)
     BroadCast();
 
     emit miss(order);
+    emit attacked(order, attackTarget, damage);
 
     if(server->players[attackTarget]->beAttacked(order,cardUsed,chainLength,canBeAccept))
     {
@@ -161,6 +170,7 @@ void Magicsword::magicAction()
     }
     else if (receiveMessageBuffer[1] == 3)
     {
+         server->textg->textbrowser->append("你发动了暗影流星");
          magicOne();
     }
 
@@ -174,14 +184,14 @@ void Magicsword::magicOne()
     cardUsed[1] = receiveMessageBuffer[4];
     int damage = 2;
 
-    foldCard(&cardUsed,2);
+    foldCard(cardUsed,2);
    //展示攻击对象，攻击牌
     sendMessageBuffer[0] = DrawPicture;
     sendMessageBuffer[1] = 1;
     sendMessageBuffer[2] = 2;
     for (int i=0; i<3; i++)
     {
-        sendMessageBuffer[i+3] = receiveMessageBuffer[1+i];
+        sendMessageBuffer[i+3] = receiveMessageBuffer[2+i];
     }
     BroadCast();
 

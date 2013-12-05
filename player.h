@@ -10,7 +10,7 @@ using std::set;
 
 enum messageType{TurnBegin,BeforeAction,ActionType,AttackHappen,AdditionalAction,DrawPicture,Activated,AttackRespond,
                  WeakRespond,CureRespond,Show,GetCard,FoldCard,EnergyChange,CardChange,CureChange,CardLimitChange,
-                 StatusDecrease,StatusIncrease,AskRespond,MissileRespond,SpecialAsk,TurnEnd};
+                 StatusDecrease,StatusIncrease,AskRespond,AskRespond1,MissileRespond,SpecialAsk,TurnEnd};
 enum actionType{Attack,Magic};
 enum beforeactionType{aaa,Activate,Refine,Purchase,Fusion};
 enum returnType{NoAccept,Accept};
@@ -72,11 +72,10 @@ public:
     void addStatus(int cardUsed);
     void foldCard(int* idOfCard,int amount=1,bool canBeSee=false);//弃牌
     void getCard(int amount);//摸牌
-    void increaseCure(int amount,bool limit=true);
-    void decreaseCure(int amount);
-    virtual void changeCardLimit(int amount);
-    void useEnergy(int number,bool gem=false);
-    //加治疗，减治疗函数
+    void increaseCure(int amount,bool limit=true);//增加治疗（是否无视上限）
+    void decreaseCure(int amount);//减少治疗
+    virtual void changeCardLimit(int amount);//改变手牌上限
+    void useEnergy(int number,bool gem=false);//使用能量（是否使用宝石）
 //---------特殊行动------------------------------------
     virtual void purchase();
     virtual void refine();
@@ -101,6 +100,7 @@ public:
     void decreasestatus(int,int);//封印师
     void fold(int,int);//封印师
     void beweak(int,int,int);//封印师
+    void attacked(int attacker, int target, int& damage);
 //测试程序：
     public slots:
     void getMessage();

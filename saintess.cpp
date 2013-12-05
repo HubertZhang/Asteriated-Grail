@@ -41,22 +41,20 @@ void Saintess::normalAttack()
 
     if  (cardlist.getName(cardUsed) == waterAttack)
     {
-        sendMessageBuffer[0] = AskRespond;
-        sendMessageBuffer[1] = 1;
-        sendMessageBuffer[2] = 1;
+        sendMessageBuffer[0] = AskRespond1;
+        //sendMessageBuffer[1] = 1;
+        //sendMessageBuffer[2] = 1;
 
         sendMessage();
 
         receive();
 
-        if (receiveMessageBuffer[0])
-        {
-           server->textg->textbrowser->append("你发动了冰霜祷言");
-           int target = receiveMessageBuffer[1];
-           server->players[target]->increaseCure(1);
-        }
+        server->textg->textbrowser->append("你发动了冰霜祷言");
+        int target = receiveMessageBuffer[0];
+        server->players[target]->increaseCure(1);
     }
 
+    emit attacked(order, attackTarget, damage);
     if(server->players[attackTarget]->beAttacked(order,cardUsed,1,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist())//If there is a shield...
@@ -91,23 +89,21 @@ void Saintess::headOn(int chainLength)
 
     if  (cardlist.getName(cardUsed) == waterAttack)
     {
-        sendMessageBuffer[0] = AskRespond;
-        sendMessageBuffer[1] = 1;
-        sendMessageBuffer[2] = 1;
+        sendMessageBuffer[0] = AskRespond1;
+        //sendMessageBuffer[1] = 1;
+        //sendMessageBuffer[2] = 1;
 
         sendMessage();
 
         receive();
 
-        if (receiveMessageBuffer[0])
-        {
-           server->textg->textbrowser->append("你发动了冰霜祷言");
-           int target = receiveMessageBuffer[1];
-           server->players[target]->increaseCure(1);
-        }
+        server->textg->textbrowser->append("你发动了冰霜祷言");
+        int target = receiveMessageBuffer[0];
+        server->players[target]->increaseCure(1);
     }
 
     emit miss(order);
+    emit attacked(order, attackTarget, damage);
 
     if(server->players[attackTarget]->beAttacked(order,cardUsed,chainLength,canBeAccept))
     {
@@ -218,7 +214,52 @@ void Saintess::magicTwo()//治愈之光
 
 void Saintess::magicThree()//圣疗
 {
-    int targetnumber = receiveMessageBuffer[2];
+    int target1 = receiveMessageBuffer[2];
+    int target2 = receiveMessageBuffer[3];
+    int target3 = receiveMessageBuffer[4];
+
+    int targetnumber;
+    if(target1== target2 && target1 == target3)
+    {
+        targetnumber = 1;
+        receiveMessageBuffer[3] = target1;
+        receiveMessageBuffer[4] = 3;
+    }
+    else if (target1== target2 || target1== target3 ||target3== target2)
+    {
+        targetnumber = 2;
+        if (target1 == target2)
+        {
+            receiveMessageBuffer[3] = target1;
+            receiveMessageBuffer[4] = 2;
+            receiveMessageBuffer[5] = target3;
+            receiveMessageBuffer[6] = 1;
+        }
+        else if (target1 == target3)
+        {
+            receiveMessageBuffer[3] = target1;
+            receiveMessageBuffer[4] = 2;
+            receiveMessageBuffer[5] = target2;
+            receiveMessageBuffer[6] = 1;
+        }
+        else
+        {
+            receiveMessageBuffer[3] = target1;
+            receiveMessageBuffer[4] = 1;
+            receiveMessageBuffer[5] = target2;
+            receiveMessageBuffer[6] = 2;
+        }
+    }
+    else
+    {
+        targetnumber = 3;
+        receiveMessageBuffer[3] = target1;
+        receiveMessageBuffer[4] = 1;
+        receiveMessageBuffer[5] = target2;
+        receiveMessageBuffer[6] = 1;
+        receiveMessageBuffer[7] = target3;
+        receiveMessageBuffer[8] = 1;
+    }
 
     sendMessageBuffer[0] = DrawPicture;
     sendMessageBuffer[1] = targetnumber;

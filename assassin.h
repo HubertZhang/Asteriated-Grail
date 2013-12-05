@@ -4,15 +4,19 @@
 
 class Assassin : public Player
 {
+     Q_OBJECT
     int Attacker;
 public:
     Assassin(Server* server,int order,int teamNumber,int character);
     void takeDamage(int damage,int kind);
     void countDamage(int damage,int kind);
-    bool beAttacked(int attacker, int cardUsed, int chainLength, bool canBeAccept);
     void normalAttack();
     void activate();
     void beforeAction();
+    void characterConnect();
+
+public slots:
+    void skillone(int attacker,int target, int& damage);
 };
 
 #endif // ASSASSIN_H

@@ -11,7 +11,6 @@ extern CardList cardlist;
    1,普通技：响应D 【水影】：（任何人对你造成伤害时发动③）弃X张水系牌【展示】。
    2,必杀技：启动 【潜行】：【宝石】×1 【横置】持续到你的下个行动阶段开始，你的手牌上限-1；
    你不能成为主动攻击的目标；你的主动攻击对方无法应战且伤害额外+X，X为你剩余的【能量】数。【潜行】的效果结束时【重置】。
-
  */
 Assassin::Assassin(Server* server,int order,int teamNumber,int character):
     Player(server,order,teamNumber,character)
@@ -19,6 +18,14 @@ Assassin::Assassin(Server* server,int order,int teamNumber,int character):
     Attacker = -1;
     activation = 1;
     server->textg->character[order]->setText("暗杀");
+}
+
+void Assassin::characterConnect()
+{
+    for (int i=0; i<6; i++)
+    {
+    connect(server->players[i],SIGNAL(attacked(int,int,int&)),this,SLOT(skillone(int,int,int&)));
+    }
 }
 
 void Assassin::takeDamage(int damage,int kind)
@@ -45,20 +52,20 @@ void Assassin::countDamage(int damage,int kind)
 //-----------水影-----------------------------
         sendMessageBuffer[0] = AskRespond;
         sendMessageBuffer[1] = 1;
-        sendMessageBuffer[2] = 1;
+        sendMessageBuffer[2] = 0;
 
         sendMessage();
-        //测试----------------------------
-        getmessage = false;
-        //--------------------------------
+
         receive();
         if (receiveMessageBuffer[0])
         {
-            server->textg->textbrowser->append("你响应了水影");
-            foldCard(receiveMessageBuffer+2,receiveMessageBuffer[1],true);
+            receive();
+            if (receiveMessageBuffer[0] != -1)
+            {
+               server->textg->textbrowser->append("你响应了水影");
+               foldCard(receiveMessageBuffer+1,receiveMessageBuffer[0],true);
+            }
         }
-        //server->textg->textbrowser->append("???");
-
 //-------------------------------------------
 
     if(cureExist())
@@ -73,44 +80,6 @@ void Assassin::countDamage(int damage,int kind)
     }
 }
 
-bool Assassin::beAttacked(int attacker, int cardUsed, int chainLength, bool canBeAccept)
-{
-    sendMessageBuffer[0] = AttackRespond;
-    sendMessageBuffer[1] = cardUsed;
-    sendMessageBuffer[3] = attacker;
-    sendMessageBuffer[2] = canBeAccept;
-    sendMessage();
-
-    Attacker = attacker;
-    //测试----------------------------
-    getmessage = false;
-    //--------------------------------
-    receive();
-
-
-    int reaction =receiveMessageBuffer[0];
-    switch(reaction) //returnKind: accept,noAccept,offset
-    {
-    case AcceptAttack:
-    {
-        return true;
-    }
-    case HeadOn:
-    {
-        //if(cardList[cardUsed1].type()!=cardList[cardUsed].type()) throw
-        this->headOn(chainLength+1);//there should also be a catch!
-        return false;
-    }
-    case Light:
-    {
-        int cardUsed = receiveMessageBuffer[1];
-        foldCard(&cardUsed,1,true);
-        emit miss(order);
-        //BroadCast();//改变手牌数量，展示圣光
-        return false;
-    }
-    }
-}
 void Assassin::normalAttack()
 {
     int attackTarget = receiveMessageBuffer[1];
@@ -140,6 +109,8 @@ void Assassin::normalAttack()
     sendMessageBuffer[1] = attackTarget;
     sendMessageBuffer[2] = cardUsed;
     BroadCast();//展示攻击对象，攻击牌
+
+    emit attacked(order, attackTarget, damage);
 
     if(server->players[attackTarget]->beAttacked(order,cardUsed,1,canBeAccept))
     {
@@ -178,7 +149,7 @@ void Assassin::beforeAction()
         BroadCast();
     }
 
-    if ((cardLimit - cardNumber) < 3 && activation == 0 &&
+    if ((cardLimit - cardNumber) < 3 && (activation == 0 || energyGem==0) &&
             (energyCrystal+energyGem==3 || server->team[teamNumber]->stone==0))
     {
         return;
@@ -220,4 +191,12 @@ void Assassin::beforeAction()
     }
     }
     return;
+}
+
+void Assassin::skillone(int attackplayer, int target, int &damage)
+{
+    if (target == order)
+    {
+        Attacker = attackplayer;
+    }
 }

@@ -53,16 +53,22 @@ void Sealer::magicAction()
 
     sendMessageBuffer[0] = AskRespond;
     sendMessageBuffer[1] = 1;
-    sendMessageBuffer[2] = 1;
+    sendMessageBuffer[2] = 0;
 
+    sendMessage();
+    receive();
+    if (receiveMessageBuffer[0] == 1)
+    {
+    sendMessageBuffer[0] = AdditionalAction;
+    sendMessageBuffer[1] = 0;
     sendMessage();
 
     receive();
-
-    if (receiveMessageBuffer[0])
+    if (receiveMessageBuffer[0] == 0)
     {
-    server->textg->textbrowser->append("额外攻击");
-    normalAttack();
+      server->textg->textbrowser->append("额外攻击");
+      normalAttack();
+    }
     }
 }
 

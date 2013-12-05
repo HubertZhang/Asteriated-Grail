@@ -43,12 +43,9 @@ void Berserker::normalAttack()
         {
         sendMessageBuffer[0] = AskRespond;
         sendMessageBuffer[1] = 1;
-        sendMessageBuffer[2] = 1;
+        sendMessageBuffer[2] = 0;
 
         sendMessage();
-        //测试----------------------------
-        getmessage = false;
-        //--------------------------------
         receive();
         if (receiveMessageBuffer[0])
         {
@@ -64,7 +61,7 @@ void Berserker::normalAttack()
         {
         sendMessageBuffer[0] = AskRespond;
         sendMessageBuffer[1] = 1;
-        sendMessageBuffer[2] = 2;
+        sendMessageBuffer[2] = 1;
 
         sendMessage();
         //测试----------------------------
@@ -84,8 +81,9 @@ void Berserker::normalAttack()
     sendMessageBuffer[0] = AttackHappen;
     sendMessageBuffer[1] = attackTarget;
     sendMessageBuffer[2] = cardUsed;
-    sendMessageBuffer[3] = skill;
     BroadCast();//展示攻击对象，攻击牌
+
+    emit attacked(order, attackTarget, damage);
 
     if (skill == 2)
     {
@@ -94,12 +92,10 @@ void Berserker::normalAttack()
         {
             sendMessageBuffer[0] = AskRespond;
             sendMessageBuffer[1] = 1;
-            sendMessageBuffer[2] = 3;
+            sendMessageBuffer[2] = 2;
 
             sendMessage();
-            //测试----------------------------
-            getmessage = false;
-            //--------------------------------
+
             receive();
             if (receiveMessageBuffer[0])
             {
@@ -129,7 +125,7 @@ void Berserker::normalAttack()
             {
                 sendMessageBuffer[0] = AskRespond;
                 sendMessageBuffer[1] = 1;
-                sendMessageBuffer[2] = 3;
+                sendMessageBuffer[2] = 2;
 
                 sendMessage();
                 //测试----------------------------
@@ -170,7 +166,7 @@ void Berserker::headOn(int chainLength)
     BroadCast();
 
     emit miss(order);
-
+    emit attacked(order, attackTarget, damage);
     if(server->players[attackTarget]->beAttacked(order,cardUsed,chainLength,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist())//If there is a shield...
@@ -180,7 +176,7 @@ void Berserker::headOn(int chainLength)
         else
         {
           (server->team[teamNumber])->getStone(Crystal);
-          server->players[attackTarget]->countDamage(damage,Accept);
+          server->players[attackTarget]->countDamage(damage,Attack);
         }
     }
 }
