@@ -8,6 +8,7 @@
 #include"sealer.h"
 #include"assassin.h"
 #include"saintess.h"
+#include"magister.h"
 #include"magicsword.h"
 #include"holyspear.h"
 #include"textgui.h"
@@ -125,6 +126,11 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
         players[order] = new Saintess(this,order,teamnumber,character);
         break;
     }
+    case magister:
+    {
+        players[order] = new Magister(this,order,teamnumber,character);
+        break;
+    }
     case magicsword:
     {
         players[order] = new Magicsword(this,order,teamnumber,character);
@@ -205,10 +211,10 @@ void Server::init(textGUI *a)
        // system("pause");
 
     //Choose Role
-        int character[6];
-        for (int i=0; i<6; i++)
+        int character[27];
+        for (int i=0; i<18; i++)
         {
-           character[i] = i+1;
+           character[i] = i/3 + 1;
         }
         //for (int i=0; i<3; i++)
         //{
@@ -220,7 +226,7 @@ void Server::init(textGUI *a)
         //character[3] = 6 ;
         //character[4] = 6 ;
         //character[5] = 6 ;
-        random_shuffle(character,character+6);
+        random_shuffle(character,character+18);
 
         for(int i=0; i<PlayerNumber;i++)
         {
@@ -228,7 +234,9 @@ void Server::init(textGUI *a)
             tempMessage.push_back(1);
             for(int j=0; j<3; j++)
             {
-                tempMessage.push_back(character[i]);
+                tempMessage.push_back(character[3*i]);
+                tempMessage.push_back(character[3*i+1]);
+                tempMessage.push_back(character[3*i+2]);
             }
             networkServer.sendMessage(i,tempMessage);
             //sendMessageBuffer[1] = character[3*i];
@@ -290,12 +298,12 @@ void Server::init(textGUI *a)
 
         int character[6];
 
-        character[0] = 5 ;
-        character[1] = 5 ;
-        character[2] = 5 ;
-        character[3] = 5 ;
-        character[4] = 5 ;
-        character[5] = 5 ;
+        character[0] = 7 ;
+        character[1] = 7 ;
+        character[2] = 7 ;
+        character[3] = 7 ;
+        character[4] = 7 ;
+        character[5] = 7 ;
 
         for (int i=0; i<PlayerNumber; i++)
         {

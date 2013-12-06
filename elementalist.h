@@ -6,7 +6,7 @@ class Elementalist : public Player
 {
     int element;
     void magicOne();
-    void maigcTwo();
+    void magicTwo();
     void magicThree();
 public:
     Elementalist(Server *server, int order, int teamNumber, int character);

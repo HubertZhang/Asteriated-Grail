@@ -151,7 +151,7 @@ void Player::sendMessage()
         tempMessage.push_back(sendMessageBuffer[1]);
         break;
     }
-    case AskRespond://Kind 15(doesn't finish)
+    case AskRespond://Kind 15
     {
         for (int i=0; i<sendMessageBuffer[1]; i++)
         {
@@ -235,7 +235,7 @@ void Player::sendMessage()
         i++;
     }
     */
-    server->networkServer.sendMessage(order,tempMessage);
+   server->networkServer.sendMessage(order,tempMessage);
 }
 void Player::BroadCast()
 {
@@ -1113,9 +1113,17 @@ void Player::normalMagic()
         sendMessageBuffer[0] = AttackHappen;
         sendMessageBuffer[1] = target;
         sendMessageBuffer[2] = cardUsed;
-       // BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
-        BroadCast();
-        server->players[target]->beMagicMissileAttack(2);
+        // BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
+         BroadCast();
+
+        bool missileCycle[6];
+        for (int i=0; i<6; i++)
+        {
+            missileCycle[i] = false;
+        }
+        missileCycle[order] = true;
+
+        server->players[target]->beMagicMissileAttack(2,missileCycle);
         break;
     }
     default:
@@ -1178,8 +1186,15 @@ void Player::headOn(int chainLength)
         }
     }
 }
-void Player::beMagicMissileAttack(int damage)
+void Player::beMagicMissileAttack(int damage, bool *missileCycle)
 {
+    if ((damage -1)%5 == 0)
+    {
+        for(int i=0; i<6; i++)
+        {
+            missileCycle[i] = false;
+        }
+    }
     //sendMessage(youMagicMissile,this->order,card);
     sendMessageBuffer[0] = MissileRespond;
     sendMessage();
@@ -1208,9 +1223,11 @@ void Player::beMagicMissileAttack(int damage)
         int target;
         for (int i=1; i<6; i++)
         {
-            if (server->players[(order+i)%6]->teamNumber!= teamNumber)
+            if (server->players[(order+i)%6]->teamNumber!= teamNumber &&
+                    missileCycle[(order+i)%6] == false)
             {
                 target = (order+i)%6;
+                missileCycle[order] = true;
                 break;
             }
         }
@@ -1221,7 +1238,7 @@ void Player::beMagicMissileAttack(int damage)
        // BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
         BroadCast();
 
-        server->players[target]->beMagicMissileAttack(damage+1);
+        server->players[target]->beMagicMissileAttack(damage+1,missileCycle);
         return ;
     }
     if(reaction == Light)

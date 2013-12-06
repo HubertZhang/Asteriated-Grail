@@ -35,7 +35,7 @@ void Elementalist::magicAction()
     }
     else if (receiveMessageBuffer[1] == 2)//陨石,风刃,火球,雷击,冰冻
     {
-         //magicTwo();
+         magicTwo();
     }
     else if (receiveMessageBuffer[1] == 3)//月光
     {
@@ -75,7 +75,7 @@ void Elementalist::magicOne()
     }
 }
 
-void Elementalist::maigcTwo()
+void Elementalist::magicTwo()
 {
     int magicTarget = receiveMessageBuffer[2];
     int usenumber = receiveMessageBuffer[3];

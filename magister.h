@@ -4,11 +4,11 @@
 class Magister : public Player
 {
     void magicOne();
-    void maigcTwo();
+    void magicTwo();
+    void magicThree();
 public:
     Magister(Server *server, int order, int teamNumber, int character);
     void magicAction();
-    void beMagicMissileAttack();
 };
 
 #endif // MAGISTER_H

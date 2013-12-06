@@ -49,7 +49,7 @@ void Magicsword::normalAttack()
     {
         sendMessageBuffer[0] = AskRespond;
         sendMessageBuffer[1] = 1;
-        sendMessageBuffer[2] = 4;
+        sendMessageBuffer[2] = 1;
 
         sendMessage();
 
@@ -59,7 +59,7 @@ void Magicsword::normalAttack()
             server->textg->textbrowser->append("你响应了黑暗震颤");
             useEnergy(1,true);
             canBeAccept = false;
-            skill = 4;
+            skill = 3;
         }
     }
 //------------------------------
@@ -78,7 +78,7 @@ void Magicsword::normalAttack()
         }
         else
         {
-            if (skill == 4)
+            if (skill == 3)
             {
                 getCard(cardLimit - cardNumber);
             }
@@ -91,15 +91,23 @@ void Magicsword::normalAttack()
     {
       sendMessageBuffer[0] = AskRespond;
       sendMessageBuffer[1] = 1;
-      sendMessageBuffer[2] = 1;
+      sendMessageBuffer[2] = 0;
       sendMessage();
       receive();//是否发动技能
 
-      if (receiveMessageBuffer[0])
+      int temp = receiveMessageBuffer[0];
+
+      if (temp != 0)
       {
-          server->textg->textbrowser->append("你发动了修罗连斩");
-          combo = true;
-          normalAttack();
+         receive();
+         if (receiveMessageBuffer[0] != -1)
+         {
+             receiveMessageBuffer[2] = receiveMessageBuffer[1];
+             receiveMessageBuffer[1] = receiveMessageBuffer[0];
+             server->textg->textbrowser->append("你发动了修罗连斩");
+             combo = true;
+             normalAttack();
+         }
       }
     }
 
@@ -168,7 +176,7 @@ void Magicsword::magicAction()
     {
          normalMagic();
     }
-    else if (receiveMessageBuffer[1] == 3)
+    else if (receiveMessageBuffer[1] == 2)
     {
          server->textg->textbrowser->append("你发动了暗影流星");
          magicOne();

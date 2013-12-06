@@ -86,7 +86,7 @@ public:
     virtual void normalAttack();//攻击行动
     virtual void normalMagic();//普通法术
     virtual void headOn(int chainLength);//应战
-    virtual void beMagicMissileAttack(int damage);//魔弹
+    virtual void beMagicMissileAttack(int damage, bool *missileCycle);//魔弹
 //---------伤害时间轴-----------------------
     virtual bool beAttacked(int attacker, int cardUsed, int chainLength, bool canBeAccept);//伤害时间轴第二阶段：判定阶段
     virtual void countDamage(int damage,int kind);//伤害时间轴第三阶段：伤害结算阶段
