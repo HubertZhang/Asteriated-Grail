@@ -75,7 +75,7 @@ void Magister::magicOne()//魔爆冲击
         server->players[i]->receive();
 
         int card = server->players[i]->receiveMessageBuffer[0];
-        if (card == 150)
+        if (card == -1)
         {
             allfold = false;
             server->players[magicTarget[i]]->countDamage(damage,Magic);

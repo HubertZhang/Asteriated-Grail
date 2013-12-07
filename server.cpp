@@ -148,7 +148,7 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
     }
     }
 }
-/*
+
 void Server::init(textGUI *a)
 {
     int sendMessageBuffer[6];
@@ -281,7 +281,7 @@ void Server::init(textGUI *a)
 
         delete []arrangeteam;
 }
-*/
+/*
 void Server::init(textGUI *a)
 {
     textg = a;
@@ -317,4 +317,4 @@ void Server::init(textGUI *a)
 
         delete []arrangeteam;
 }
-
+*/
