@@ -39,9 +39,11 @@ void Magister::magicAction()
 
 void Magister::magicOne()//魔爆冲击
 {
-    int magicTarget1 = receiveMessageBuffer[2];
-    int magicTarget2 = receiveMessageBuffer[3];
+    int magicTarget[2];
+    magicTarget[0] = receiveMessageBuffer[2];
+    magicTarget[1] = receiveMessageBuffer[3];
     int cardUsed = receiveMessageBuffer[4];
+    int damage = 2;
 
     foldCard(&cardUsed);
     //展示攻击对象，攻击牌
@@ -55,7 +57,38 @@ void Magister::magicOne()//魔爆冲击
     sendMessageBuffer[5] = cardUsed;
     BroadCast();
 
-   // server->players[magicTarget1]->
+    if ((magicTarget[0]+order)%6 >= (magicTarget[1]+order)%6)
+    {
+        int temp = magicTarget[0];
+        magicTarget[0] = magicTarget[1];
+        magicTarget[1] = temp;
+    }
+
+    bool allfold = true;
+    for (int i=0; i<2; i++)
+    {
+        server->players[magicTarget[i]]->sendMessageBuffer[0] = FoldOneCard;
+        server->players[magicTarget[i]]->sendMessageBuffer[1] = 1;
+        server->players[magicTarget[i]]->sendMessageBuffer[2] = 1;
+
+        server->players[magicTarget[i]]->sendMessage();
+        server->players[i]->receive();
+
+        int card = server->players[i]->receiveMessageBuffer[0];
+        if (card == 150)
+        {
+            allfold = false;
+            server->players[i]->countDamage(damage,Magic);
+        }
+        else
+        {
+            server->players[i]->foldCard(&card,1,true);
+        }
+    }
+    if (!allfold)
+    {
+        (server->team[teamNumber])->getStone(Gem);
+    }
 }
 
 void Magister::magicTwo()//魔弹掌握

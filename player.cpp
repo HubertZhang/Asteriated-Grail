@@ -224,6 +224,18 @@ void Player::sendMessage()
     case AskRespond1:
     {
         tempMessage.push_back(21);
+        break;
+    }
+    case FoldOneCard://Kind 14
+    {
+        QString s;
+        s.sprintf("玩家%d 弃一张牌 ",order);
+        server->textg->textbrowser->append(s);
+
+        tempMessage.push_back(14);
+        tempMessage.push_back(sendMessageBuffer[1]);
+        tempMessage.push_back(sendMessageBuffer[2]);
+        break;
     }
     default:
         break;
@@ -235,7 +247,7 @@ void Player::sendMessage()
         i++;
     }
     */
-   server->networkServer.sendMessage(order,tempMessage);
+   //server->networkServer.sendMessage(order,tempMessage);
 }
 void Player::BroadCast()
 {
@@ -483,7 +495,7 @@ void Player::BroadCast()
      break;
     }
 
-    server->networkServer.sendMessage(-1,tempMessage);
+    //server->networkServer.sendMessage(-1,tempMessage);
 
     if (sendMessageBuffer[0] == Show)
     {

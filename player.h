@@ -10,7 +10,7 @@ using std::set;
 
 enum messageType{TurnBegin,BeforeAction,ActionType,AttackHappen,AdditionalAction,DrawPicture,Activated,AttackRespond,
                  WeakRespond,CureRespond,Show,GetCard,FoldCard,EnergyChange,CardChange,CureChange,CardLimitChange,
-                 StatusDecrease,StatusIncrease,AskRespond,AskRespond1,MissileRespond,SpecialAsk,TurnEnd};
+                 StatusDecrease,StatusIncrease,AskRespond,AskRespond1,MissileRespond,SpecialAsk,FoldOneCard,TurnEnd};
 enum actionType{Attack,Magic};
 enum beforeactionType{aaa,Activate,Refine,Purchase,Fusion};
 enum returnType{NoAccept,Accept};
