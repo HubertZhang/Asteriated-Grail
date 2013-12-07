@@ -78,11 +78,11 @@ void Magister::magicOne()//魔爆冲击
         if (card == 150)
         {
             allfold = false;
-            server->players[i]->countDamage(damage,Magic);
+            server->players[magicTarget[i]]->countDamage(damage,Magic);
         }
         else
         {
-            server->players[i]->foldCard(&card,1,true);
+            server->players[magicTarget[i]]->foldCard(&card,1,true);
         }
     }
     if (!allfold)

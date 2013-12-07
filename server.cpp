@@ -214,18 +214,18 @@ void Server::init(textGUI *a)
         int character[27];
         for (int i=0; i<18; i++)
         {
-           character[i] = i/3 + 1;
+           character[i] = 8;
         }
         //for (int i=0; i<3; i++)
         //{
         //    character[i+3] = 3;
         //}
-        //character[0] = 6 ;
-        //character[1] = 6 ;
-        //character[2] = 6 ;
-        //character[3] = 6 ;
-        //character[4] = 6 ;
-        //character[5] = 6 ;
+        //character[0] = 8 ;
+        //character[1] = 8 ;
+        //character[2] = 8 ;
+        //character[3] = 8 ;
+        //character[4] = 8 ;
+        //character[5] = 8 ;
         random_shuffle(character,character+18);
 
         for(int i=0; i<PlayerNumber;i++)
