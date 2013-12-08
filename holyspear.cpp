@@ -43,7 +43,7 @@ void Holyspear::normalAttack()
     {
         sendMessageBuffer[0] = AskRespond;
         sendMessageBuffer[1] = 1;
-        sendMessageBuffer[2] = 3;
+        sendMessageBuffer[2] = 0;
 
         sendMessage();
 
@@ -78,17 +78,26 @@ void Holyspear::normalAttack()
             {
                 sendMessageBuffer[0] = AskRespond;
                 sendMessageBuffer[1] = 1;
-                sendMessageBuffer[2] = 4;
+                sendMessageBuffer[2] = 1;
 
                 sendMessage();
 
                 receive();
                 if (receiveMessageBuffer[0])
                 {
-                    int usecurenumber = receiveMessageBuffer[1];
-                    server->textg->textbrowser->append("你响应了地枪");
-                    decreaseCure(usecurenumber);
-                    damage = damage + usecurenumber;
+                    receive();
+                    if (receiveMessageBuffer[0] != -1)
+                    {
+                         int usecurenumber = receiveMessageBuffer[0];
+                         server->textg->textbrowser->append("你响应了地枪");
+                         decreaseCure(usecurenumber);
+                         damage = damage + usecurenumber;
+                    }
+                    else if (skill != 3)
+                    {
+                         server->textg->textbrowser->append("你发动了圣击");
+                         increaseCure(1);
+                    }
                 }
                 else if (skill != 3)
                 {
@@ -160,7 +169,7 @@ void Holyspear::magicOne()
 
      receive();
 
-     if (receiveMessageBuffer[0])
+     if (receiveMessageBuffer[0] == 0)
      {
         normalAttack();
      }
@@ -189,7 +198,7 @@ void Holyspear::magicTwo()
 
      receive();
 
-     if (receiveMessageBuffer[0])
+     if (receiveMessageBuffer[0] == 0)
      {
         normalAttack();
      }
@@ -219,7 +228,7 @@ void Holyspear::magicThree()
 
      receive();
 
-     if (receiveMessageBuffer[0])
+     if (receiveMessageBuffer[0] == 0)
      {
         normalAttack();
      }

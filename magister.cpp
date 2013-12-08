@@ -57,7 +57,7 @@ void Magister::magicOne()//魔爆冲击
     sendMessageBuffer[5] = cardUsed;
     BroadCast();
 
-    if ((magicTarget[0]+order)%6 >= (magicTarget[1]+order)%6)
+    if ((magicTarget[0]+6-order)%6 >= (magicTarget[1]+6-order)%6)
     {
         int temp = magicTarget[0];
         magicTarget[0] = magicTarget[1];
@@ -72,9 +72,9 @@ void Magister::magicOne()//魔爆冲击
         server->players[magicTarget[i]]->sendMessageBuffer[2] = 1;
 
         server->players[magicTarget[i]]->sendMessage();
-        server->players[i]->receive();
+        server->players[magicTarget[i]]->receive();
 
-        int card = server->players[i]->receiveMessageBuffer[0];
+        int card = server->players[magicTarget[i]]->receiveMessageBuffer[0];
         if (card == -1)
         {
             allfold = false;
@@ -85,6 +85,7 @@ void Magister::magicOne()//魔爆冲击
             server->players[magicTarget[i]]->foldCard(&card,1,true);
         }
     }
+
     if (!allfold)
     {
         (server->team[teamNumber])->getStone(Gem);
@@ -131,7 +132,7 @@ void Magister::magicThree()
     }
     BroadCast();
 
-    if ((magicTarget1+order)%6 >= (magicTarget2+order)%6)
+    if ((magicTarget1+6-order)%6 >= (magicTarget2-order+6)%6)
     {
         int temp = magicTarget1;
         magicTarget1 = magicTarget2;

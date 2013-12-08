@@ -884,10 +884,10 @@ void Player::increaseCure(int amount,bool limit)
     {
         if (cureLimit < cureNumber + amount)
         {
-            cureNumber = cureLimit;
             sendMessageBuffer[0] = CureChange;
             sendMessageBuffer[1] = cureLimit-cureNumber;
             BroadCast();//改变治疗数量
+            cureNumber = cureLimit;
         }
         else
         {
