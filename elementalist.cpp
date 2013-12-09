@@ -89,18 +89,18 @@ void Elementalist::magicTwo()
     sendMessageBuffer[0] = DrawPicture;
     sendMessageBuffer[1] = 1;
     sendMessageBuffer[2] = usenumber;
+    sendMessageBuffer[3] = magicTarget;
     for (int i=0; i<usenumber; i++)
     {
-        sendMessageBuffer[i+3] = receiveMessageBuffer[4+i];
+        sendMessageBuffer[i+4] = receiveMessageBuffer[4+i];
     }
-    sendMessageBuffer[3+usenumber] = magicTarget;
     BroadCast();
 
     elementIncrease();
 
-    int cardname = cardlist.getName(cardUsed);
+    int cardnature = cardlist.getNature(cardUsed);
 
-    if (cardname == groundAttack)
+    if (cardnature == ground)
     {
         server->textg->textbrowser->append("你发动了陨石");
 
@@ -117,7 +117,7 @@ void Elementalist::magicTwo()
             magicAction();
         }
     }
-    else if (cardname == windAttack)
+    else if (cardnature == wind)
     {
         server->textg->textbrowser->append("你发动了风刃");
 
@@ -134,28 +134,26 @@ void Elementalist::magicTwo()
             normalAttack();
         }
     }
-    else if (cardname == fireAttack)
+    else if (cardnature == fire)
     {
         server->textg->textbrowser->append("你发动了火球");
 
         server->players[magicTarget]->countDamage(damage + usenumber,Magic);
     }
-    else if (cardname == thunderAttack)
+    else if (cardnature == thunder)
     {
         server->textg->textbrowser->append("你发动了雷击");
 
         server->players[magicTarget]->countDamage(damage + usenumber -1,Magic);
         server->team[teamNumber]->getStone(Gem);
     }
-    else if (cardname == waterAttack)
+    else if (cardnature == water)
     {
         server->textg->textbrowser->append("你发动了冰冻");
 
         server->players[magicTarget]->countDamage(damage + usenumber -1,Magic);
 
-        sendMessageBuffer[0] = AskRespond;
-        sendMessageBuffer[1] = 1;
-        sendMessageBuffer[2] = 1;
+        sendMessageBuffer[0] = AskRespond1;
 
         sendMessage();
 
