@@ -10,7 +10,7 @@ using std::set;
 
 enum messageType{TurnBegin,BeforeAction,ActionType,AttackHappen,AdditionalAction,DrawPicture,Activated,AttackRespond,
                  WeakRespond,CureRespond,Show,GetCard,FoldCard,EnergyChange,CardChange,CureChange,CardLimitChange,
-                 StatusDecrease,StatusIncrease,AskRespond,AskRespond1,MissileRespond,SpecialAsk,FoldOneCard,TurnEnd};
+                 SpecialChange,StatusDecrease,StatusIncrease,AskRespond,AskRespond1,MissileRespond,SpecialAsk,FoldOneCard,TurnEnd};
 enum actionType{Attack,Magic};
 enum beforeactionType{aaa,Activate,Refine,Purchase,Fusion};
 enum returnType{NoAccept,Accept};
@@ -95,13 +95,15 @@ public:
     virtual void Discards(int amount,int kind);//伤害时间轴第六阶段：承受伤害阶段
 
     virtual void characterConnect(){}
+
     signals:
     void miss(int);//弓之女神
     void decreasestatus(int,int);//封印师
     void fold(int,int);//封印师
     void beweak(int,int,int);//封印师
-    void attacked(int attacker, int target, int& damage);
-    void bepoison(int card);
+    void attacked(int attacker, int target, int& damage);//暗杀
+    void bepoison(int card);//元素
+    void bemissile(int card);//元素
 //测试程序：
     public slots:
     void getMessage();

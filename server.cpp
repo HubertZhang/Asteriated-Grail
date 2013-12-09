@@ -11,6 +11,7 @@
 #include"magister.h"
 #include"magicsword.h"
 #include"holyspear.h"
+#include"elementalist.h"
 #include"textgui.h"
 #include"team.h"
 #include"berserker.h"
@@ -141,6 +142,11 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
         players[order] = new Holyspear(this,order,teamnumber,character);
         break;
     }
+    case elementalist:
+    {
+        players[order] = new Elementalist(this,order,teamnumber,character);
+        break;
+    }
     default:
     {
         players[order] = new Player(this,order,teamnumber,character);
@@ -148,7 +154,7 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
     }
     }
 }
-
+/*
 void Server::init(textGUI *a)
 {
     int sendMessageBuffer[6];
@@ -281,7 +287,7 @@ void Server::init(textGUI *a)
 
         delete []arrangeteam;
 }
-/*
+*/
 void Server::init(textGUI *a)
 {
     textg = a;
@@ -298,12 +304,12 @@ void Server::init(textGUI *a)
 
         int character[6];
 
-        character[0] = 8 ;
-        character[1] = 8 ;
-        character[2] = 8 ;
-        character[3] = 8 ;
-        character[4] = 8 ;
-        character[5] = 8 ;
+        character[0] = 11 ;
+        character[1] = 11 ;
+        character[2] = 11 ;
+        character[3] = 11 ;
+        character[4] = 11 ;
+        character[5] = 11 ;
 
         for (int i=0; i<PlayerNumber; i++)
         {
@@ -317,4 +323,4 @@ void Server::init(textGUI *a)
 
         delete []arrangeteam;
 }
-*/
+

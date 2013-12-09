@@ -132,7 +132,6 @@ void Player::sendMessage()
     case AttackRespond://Kind 11
     {
         QString s;
-        //if(sendMessageBuffer[3])
         s.sprintf("玩家%d 请选择:",order);
         server->textg->textbrowser->append(s);
         server->textg->textbrowser->append("0:承受攻击,1:应战(对象,卡牌),2:圣光");
@@ -247,7 +246,7 @@ void Player::sendMessage()
         i++;
     }
     */
-   server->networkServer.sendMessage(order,tempMessage);
+   //server->networkServer.sendMessage(order,tempMessage);
 }
 void Player::BroadCast()
 {
@@ -386,6 +385,22 @@ void Player::BroadCast()
         tempMessage.push_back(0);
         break;
     }
+    case SpecialChange:
+    {
+        QString s;
+        s.sprintf("玩家%d增加%d黄魂,%d蓝魂",order,sendMessageBuffer[1],sendMessageBuffer[2]);
+        server->textg->textbrowser->append(s);
+
+        tempMessage.push_back(9);
+        tempMessage.push_back(order);
+        for (int i=0; i<5; i++)
+        {
+            tempMessage.push_back(0);
+        }
+        tempMessage.push_back(sendMessageBuffer[1]);
+        tempMessage.push_back(sendMessageBuffer[2]);
+        break;
+    }
     case AttackHappen://Kind 10
     {
         QString s;
@@ -495,7 +510,7 @@ void Player::BroadCast()
      break;
     }
 
-    server->networkServer.sendMessage(-1,tempMessage);
+    //server->networkServer.sendMessage(-1,tempMessage);
 
     if (sendMessageBuffer[0] == Show)
     {
@@ -852,13 +867,8 @@ void Player::weakRespond(int card,int order)
 {
     destroyStatus(card,order);
     server->gamePile->putIntoPile(card);
-    //sendMessage(WEAK);//Kind = 18;
     sendMessageBuffer[0] = WeakRespond;
     sendMessage();
-    //actionType returnKind = receive(receiveMessageBuffer);
-    //测试----------------------------
-    getmessage = false;
-    //--------------------------------
     receive();
     int returnKind = receiveMessageBuffer[0];
     if(returnKind == Accept)//ACCEPT
@@ -871,9 +881,9 @@ void Player::weakRespond(int card,int order)
         //跳至下一个玩家
     }
 }
-void Player::poisonRespond(int card,int order)
+void Player::poisonRespond(int card,int theorder)
 {
-    destroyStatus(card,order);
+    destroyStatus(card,theorder);
     server->gamePile->putIntoPile(card);
     emit bepoison(card);
     countDamage(1,Magic);
@@ -884,10 +894,13 @@ void Player::increaseCure(int amount,bool limit)
     {
         if (cureLimit < cureNumber + amount)
         {
-            sendMessageBuffer[0] = CureChange;
-            sendMessageBuffer[1] = cureLimit-cureNumber;
-            BroadCast();//改变治疗数量
-            cureNumber = cureLimit;
+            if (cureLimit > cureNumber)
+            {
+              sendMessageBuffer[0] = CureChange;
+              sendMessageBuffer[1] = cureLimit-cureNumber;
+              BroadCast();//改变治疗数量
+              cureNumber = cureLimit;
+            }
         }
         else
         {
@@ -1141,27 +1154,6 @@ void Player::normalMagic()
     default:
         break;
     }
-    /*
-    if(cardname == weak || cardname == poison)
-    {
-        card.erase(cardUsed);
-        cardNumber = this->card.size();
-        server->players[magicTarget]->addStatus(cardname);
-        BroadCast();//添加状态
-    }
-    else if (cardname == shield)
-    {
-        card.erase(cardUsed);
-        cardNumber = this->card.size();
-        theShield = cardname;
-        server->players[magicTarget]->addStatus(cardname);
-        BroadCast();//添加状态
-    }
-    else if(cardname == missile)
-    {
-        server->players[magicTarget]->beMagicMissileAttack(cardUsed,2);
-    }
-    */
 }
 void Player::headOn(int chainLength)
 {
@@ -1223,6 +1215,7 @@ void Player::beMagicMissileAttack(int damage, bool *missileCycle)
 
         else
         {
+            emit bemissile(damage);
             countDamage(damage,Magic);
         }
     }
@@ -1264,20 +1257,15 @@ void Player::beMagicMissileAttack(int damage, bool *missileCycle)
 
 bool Player::beAttacked(int attacker,int cardUsed,int chainLength,bool canBeAccept)
 {
-    //int receiveMessageBuffer[20];
-    //sendMessage(BeAttack,canBeAccept);
     sendMessageBuffer[0] = AttackRespond;
     sendMessageBuffer[1] = cardUsed;
     sendMessageBuffer[3] = attacker;
     sendMessageBuffer[2] = canBeAccept;
     sendMessage();
-    //actionType reaction = receive(receiveMessageBuffer);
-    //测试----------------------------
-    getmessage = false;
-    //--------------------------------
+
     receive();
     int reaction =receiveMessageBuffer[0];
-    switch(reaction) //returnKind: accept,noAccept,offset
+    switch(reaction)
     {
     case AcceptAttack:
     {
@@ -1285,8 +1273,7 @@ bool Player::beAttacked(int attacker,int cardUsed,int chainLength,bool canBeAcce
     }
     case HeadOn:
     {
-        //if(cardList[cardUsed1].type()!=cardList[cardUsed].type()) throw
-        this->headOn(chainLength+1);//there should also be a catch!
+        this->headOn(chainLength+1);
         return false;
     }
     case Light:
@@ -1342,16 +1329,6 @@ void Player::takeDamage(int damage,int kind)
 }
 void Player::Discards(int amount,int kind)
 {
-    //BroadCast(Discard,order,order,amount);
-    //try...
-    //int receiveMessageBuffer[20];
-                                     // receive(receiveMessageBuffer);
-    //for(int i = 0; i<amount; i++)
-    //{
-        //if(card.find(receiveMessageBuffer[i])==card.end()) throw ActionIllegal;
-    //}
-    //catch...
-
     sendMessageBuffer[0] = FoldCard;
     sendMessageBuffer[1] = amount;
     sendMessage();

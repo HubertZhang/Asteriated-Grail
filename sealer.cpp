@@ -16,7 +16,6 @@ Sealer::Sealer(Server* server,int order,int teamNumber,int character):
     Player(server,order,teamNumber,character)
 {
     number = 0;
-    //target = -1;
     server->textg->character[order]->setText("封印");
 }
 
