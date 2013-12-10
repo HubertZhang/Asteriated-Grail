@@ -566,7 +566,7 @@ Player::Player(/*QObject *parent = 0,*/ Server* p,int order1,int teamnumber,int 
     :/*QObject(parent),*/ server(p),order(order1),teamNumber(teamnumber),character(character)
 {
     cardLimit = 6;
- //   cardNumber = card.size();
+ // cardNumber = card.size();
     cureLimit = 2;
     cureNumber = 0;
     energyGem = 0;

@@ -29,8 +29,8 @@ protected:
     QTcpSocket client;
     set<int> card;//手牌内容
     int order;//座位编号
-    int energyGem;
-    int energyCrystal;
+    //int energyGem;
+    //int energyCrystal;
     int stonelimit;//能量上限
     int status[10];//状态栏
     int statusnumber;//状态数量
@@ -39,6 +39,8 @@ protected:
 public:
     //int status[10];//状态栏
     //int statusnumber;//状态数量
+    int energyGem;
+    int energyCrystal;
     int teamNumber;//队伍编号
     int theShield;//盾圣
     int cureLimit;//治疗上限

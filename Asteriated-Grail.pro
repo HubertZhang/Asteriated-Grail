@@ -32,7 +32,8 @@ SOURCES += main.cpp\
     magicsword.cpp \
     holyspear.cpp \
     magister.cpp \
-    elementalist.cpp
+    elementalist.cpp \
+    adventurer.cpp
 
 HEADERS  += mainwindow.h \
     server.h \
@@ -54,7 +55,8 @@ HEADERS  += mainwindow.h \
     magicsword.h \
     holyspear.h \
     magister.h \
-    elementalist.h
+    elementalist.h \
+    adventurer.h
 
 FORMS    +=
 
