@@ -1,8 +1,5 @@
 #include "sealer.h"
-#include "cardList.h"
 #include"server.h"
-#include"card.h"
-#include"textgui.h"
 extern CardList cardlist;
 /*
   1,普通技：响应C 【法术激荡】：（【法术行动】结束时发动）额外+1【攻击行动】。

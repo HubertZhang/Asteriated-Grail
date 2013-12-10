@@ -1,8 +1,5 @@
 #include "elementalist.h"
-#include "cardList.h"
 #include"server.h"
-#include"card.h"
-#include"textgui.h"
 extern CardList cardlist;
 /*
  *0.普通技：响应D 【元素吸收】：（对目标角色造成法术伤害时发动③）你+1【元素】。

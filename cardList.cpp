@@ -1,5 +1,4 @@
-#include "cardList.h"
-#include"card.h"
+#include "cardlist.h"
 
 CardList::CardList()
 {

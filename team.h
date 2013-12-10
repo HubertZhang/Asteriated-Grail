@@ -9,23 +9,20 @@ class Server;
 class Team: public QObject
 {
     Q_OBJECT
-    //int stone;
+public:
     int crystal;
     int gem;
+    int stone;
     int morale;
     int grail;
-    int team;
+    const int team;
     Server* s;
-public:
-    int stone;
     Team(Server*,int);
     void getStone(Stone a);
     void lossStone(Stone a);
     void lossMorale(int);
     void getGrail();
-
     void BroadCast();//改变士气，星石等时广播
-public slots:
 };
 
 #endif // TEAM_H

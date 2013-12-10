@@ -2,7 +2,7 @@
 #define PLAYER_H
 
 #include <QObject>
-#include <QTcpSocket>
+#include "cardlist.h"
 #include "team.h"
 #include "termination.h"
 #include <set>
@@ -26,7 +26,6 @@ class Player : public QObject
 protected:
     Server* server;
     Team* thisTeam;
-    QTcpSocket client;
     set<int> card;//手牌内容
     int order;//座位编号
     //int energyGem;

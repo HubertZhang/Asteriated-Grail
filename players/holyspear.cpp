@@ -1,9 +1,5 @@
 #include "holyspear.h"
-#include "cardList.h"
 #include"server.h"
-#include"card.h"
-#include"textgui.h"
-#include"player.h"
 extern CardList cardlist;
 
 /*

@@ -1,8 +1,5 @@
 #include "blademaster.h"
-#include "cardList.h"
 #include"server.h"
-#include"card.h"
-#include"textgui.h"
 #include <QApplication>
 
 extern CardList cardlist;

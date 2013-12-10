@@ -1,9 +1,5 @@
 #include "adventurer.h"
-#include "cardList.h"
 #include"server.h"
-#include"card.h"
-#include"textgui.h"
-#include"player.h"
 extern CardList cardlist;
 
 /*
@@ -64,7 +60,7 @@ void Adventurer::refine()
     server->players[target]->BroadCast();//改变人物能量数量
 }
 
-void Adventurer::maigcOne()
+void Adventurer::magicOne()
 {
     if (receiveMessageBuffer[2] == 0)
     {

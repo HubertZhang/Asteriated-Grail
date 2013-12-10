@@ -1,9 +1,5 @@
 #include "magister.h"
-#include "cardList.h"
 #include"server.h"
-#include"card.h"
-#include"textgui.h"
-#include"player.h"
 extern CardList cardlist;
 /* 1.普通技：法术 【魔爆冲击】：（弃1张法术牌【展示】）指定2名对手各弃一张法术牌【展示】，若其中有人不如此做，则对他造成2点法术伤害③。只要有一名对手不如此做，我方【战绩区】+1【宝石】。
    2.普通技：被动B 【魔弹掌握】：你主动使用【魔弹】时可以选择逆向传递。

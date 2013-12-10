@@ -5,7 +5,7 @@
 class Adventurer : public Player
 {
     void attackOne();
-    void maigcOne();
+    void magicOne();
 public:
     Adventurer(Server *server, int order, int teamNumber, int character);
     void refine();

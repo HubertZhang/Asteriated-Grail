@@ -5,18 +5,21 @@
 #ifndef SERVER_H
 #define SERVER_H
 #include "player.h"
-#include "card.h"
-#include <QObject>
 #include "cardpile.h"
 #include "team.h"
-#include <cstring>
-#include <exception>
 #include "agserver.h"
 #include "chatserver.h"
+#include "textgui.h"
+#include "team.h"
+
+#include <cstring>
+#include <exception>
+
+#include <QObject>
 #define CARD_NUMBER 150
 enum messageType1{ArrangeTeam,ArrangeCharacter,BroadCastCharacter};
 enum character{normal,blademaster,berserker,archer,sealer,assassin,saintess,angle,magister,magicsword,holyspear,
-              elementalist};
+              elementalist,angel};
 class textGUI;
 class Server : public QObject
 {

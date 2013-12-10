@@ -1,20 +1,20 @@
 #include "server.h"
+
+#include "blademaster.h"
+#include "archer.h"
+#include "sealer.h"
+#include "assassin.h"
+#include "saintess.h"
+#include "magister.h"
+#include "magicsword.h"
+#include "holyspear.h"
+#include "elementalist.h"
+#include "berserker.h"
+#include "angel.h"
+
 #include <cstdlib>
 #include <ctime>
 #include <algorithm>
-#include "player.h"
-#include"blademaster.h"
-#include"archer.h"
-#include"sealer.h"
-#include"assassin.h"
-#include"saintess.h"
-#include"magister.h"
-#include"magicsword.h"
-#include"holyspear.h"
-#include"elementalist.h"
-#include"textgui.h"
-#include"team.h"
-#include"berserker.h"
 #include <QApplication>
 using namespace std;
 
@@ -146,6 +146,10 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
     {
         players[order] = new Elementalist(this,order,teamnumber,character);
         break;
+    }
+    case angel:
+    {
+        players[order] = new Angel(this,order,teamnumber,character);
     }
     default:
     {

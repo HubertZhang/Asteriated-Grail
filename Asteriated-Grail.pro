@@ -11,52 +11,54 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Asteriated-Grail
 TEMPLATE = app
 
+INCLUDEPATH += players network textgui
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
     server.cpp \
-    player.cpp \
-    card.cpp \
-    cardList.cpp \
     cardpile.cpp \
     team.cpp \
-    blademaster.cpp \
-    textgui.cpp \
-    agserver.cpp \
-    berserker.cpp \
-    archer.cpp \
-    sealer.cpp \
-    assassin.cpp \
-    chatserver.cpp \
-    saintess.cpp \
-    magicsword.cpp \
-    holyspear.cpp \
-    magister.cpp \
-    elementalist.cpp \
-    adventurer.cpp
+    cardlist.cpp \
+    textgui/mainwindow.cpp \
+    textgui/textgui.cpp \
+    network/agserver.cpp \
+    network/chatserver.cpp \
+    players/player.cpp \
+    players/berserker.cpp \
+    players/archer.cpp \
+    players/sealer.cpp \
+    players/assassin.cpp \
+    players/blademaster.cpp \
+    players/saintess.cpp \
+    players/magicsword.cpp \
+    players/holyspear.cpp \
+    players/magister.cpp \
+    players/elementalist.cpp \
+    players/adventurer.cpp \
+    players/angel.cpp
 
-HEADERS  += mainwindow.h \
-    server.h \
-    player.h \
-    card.h \
-    cardList.h \
+
+HEADERS  += server.h \
     team.h \
     cardpile.h \
     termination.h \
-    blademaster.h \
-    textgui.h \
-    agserver.h \
-    berserker.h \
-    archer.h \
-    sealer.h \
-    assassin.h \
-    chatserver.h \
-    saintess.h \
-    magicsword.h \
-    holyspear.h \
-    magister.h \
-    elementalist.h \
-    adventurer.h
+    cardlist.h \
+    textgui/mainwindow.h \
+    textgui/textgui.h \
+    network/agserver.h \
+    network/chatserver.h \
+    players/player.h \
+    players/berserker.h \
+    players/archer.h \
+    players/sealer.h \
+    players/assassin.h \
+    players/blademaster.h \
+    players/saintess.h \
+    players/magicsword.h \
+    players/holyspear.h \
+    players/magister.h \
+    players/elementalist.h \
+    players/adventurer.h \
+    players/angel.h
 
 FORMS    +=
 

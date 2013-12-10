@@ -1,8 +1,5 @@
 #include "berserker.h"
-#include "cardList.h"
-#include"server.h"
-#include"card.h"
-#include"textgui.h"
+#include "server.h"
 extern CardList cardlist;
 /*狂战技能：
  *普通技：被动A 【狂化】：你发动的所有攻击伤害额外+1。
