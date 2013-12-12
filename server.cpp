@@ -11,6 +11,9 @@
 #include "elementalist.h"
 #include "berserker.h"
 #include "angel.h"
+#include "adventurer.h"
+#include "necromancer.h"
+#include "arbiter.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -150,6 +153,22 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
     case angel:
     {
         players[order] = new Angel(this,order,teamnumber,character);
+        break;
+    }
+    case adventurer:
+    {
+        players[order] = new Adventurer(this,order,teamnumber,character);
+        break;
+    }
+    case necromancer:
+    {
+        players[order] = new Necromancer(this,order,teamnumber,character);
+        break;
+    }
+    case arbiter:
+    {
+        players[order] = new Arbiter(this,order,teamnumber,character);
+        break;
     }
     default:
     {
@@ -158,7 +177,7 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
     }
     }
 }
-/*
+
 void Server::init(textGUI *a)
 {
     int sendMessageBuffer[6];
@@ -221,10 +240,10 @@ void Server::init(textGUI *a)
        // system("pause");
 
     //Choose Role
-        int character[27];
-        for (int i=0; i<18; i++)
+        int character[21];
+        for (int i=0; i<21; i++)
         {
-           character[i] = 8;
+           character[i] = i/3+8;
         }
         //for (int i=0; i<3; i++)
         //{
@@ -236,7 +255,7 @@ void Server::init(textGUI *a)
         //character[3] = 8 ;
         //character[4] = 8 ;
         //character[5] = 8 ;
-        random_shuffle(character,character+18);
+        random_shuffle(character,character+21);
 
         for(int i=0; i<PlayerNumber;i++)
         {
@@ -291,7 +310,7 @@ void Server::init(textGUI *a)
 
         delete []arrangeteam;
 }
-*/
+/*
 void Server::init(textGUI *a)
 {
     textg = a;
@@ -308,12 +327,12 @@ void Server::init(textGUI *a)
 
         int character[6];
 
-        character[0] = 11 ;
-        character[1] = 11 ;
-        character[2] = 11 ;
-        character[3] = 11 ;
-        character[4] = 11 ;
-        character[5] = 11 ;
+        character[0] = 14 ;
+        character[1] = 14 ;
+        character[2] = 14 ;
+        character[3] = 14 ;
+        character[4] = 14 ;
+        character[5] = 14 ;
 
         for (int i=0; i<PlayerNumber; i++)
         {
@@ -327,4 +346,4 @@ void Server::init(textGUI *a)
 
         delete []arrangeteam;
 }
-
+*/

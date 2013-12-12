@@ -13,6 +13,7 @@ public:
     void normalAttack();
     void activate();
     void beforeAction();
+    bool canActivate();
     void characterConnect();
 
 public slots:

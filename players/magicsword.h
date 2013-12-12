@@ -14,6 +14,7 @@ public:
     void magicAction();
     void beforeAction();
     void end();
+    bool canActivate();
 };
 
 #endif // MAGICSWORD_H

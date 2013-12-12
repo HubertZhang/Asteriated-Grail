@@ -12,7 +12,7 @@ Assassin::Assassin(Server* server,int order,int teamNumber,int character):
     Player(server,order,teamNumber,character)
 {
     Attacker = -1;
-    activation = 1;
+    activation = 0;
     server->textg->character[order]->setText("暗杀");
 }
 
@@ -94,7 +94,7 @@ void Assassin::normalAttack()
         canBeAccept = true;
 
 //----------潜行------------------------------------
-    if (activation == 0)
+    if (activation == 1)
     {
         server->textg->textbrowser->append("你在潜下攻击");
         damage = damage + energyCrystal + energyGem;
@@ -123,7 +123,7 @@ void Assassin::normalAttack()
 }
 void Assassin::activate()
 {
-    activation = 0;
+    activation = 1;
     changeCardLimit(-1);
 
     sendMessageBuffer[0] = Activated;
@@ -133,11 +133,18 @@ void Assassin::activate()
     useEnergy(1,true);
 
 }
+
+bool Assassin::canActivate()
+{
+    return !((cardLimit - cardNumber) < 3 && (activation == 1 || energyGem==0) &&
+                (energyCrystal+energyGem==stonelimit || server->team[teamNumber]->stone==0));
+}
+
 void Assassin::beforeAction()
 {
-    if (activation == 0)
+    if (activation == 1)
     {
-        activation = 1;
+        activation = 0;
         changeCardLimit(1);
 
         sendMessageBuffer[0] = Activated;
@@ -145,8 +152,7 @@ void Assassin::beforeAction()
         BroadCast();
     }
 
-    if ((cardLimit - cardNumber) < 3 && (activation == 0 || energyGem==0) &&
-            (energyCrystal+energyGem==3 || server->team[teamNumber]->stone==0))
+    if (!canActivate())
     {
         return;
     }

@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Asteriated-Grail
 TEMPLATE = app
 
-INCLUDEPATH += players network textgui
+INCLUDEPATH += . players network textgui
 
 SOURCES += main.cpp\
     server.cpp \
@@ -34,7 +34,9 @@ SOURCES += main.cpp\
     players/magister.cpp \
     players/elementalist.cpp \
     players/adventurer.cpp \
-    players/angel.cpp
+    players/angel.cpp \
+    players/necromancer.cpp \
+    players/arbiter.cpp
 
 
 HEADERS  += server.h \
@@ -58,7 +60,9 @@ HEADERS  += server.h \
     players/magister.h \
     players/elementalist.h \
     players/adventurer.h \
-    players/angel.h
+    players/angel.h \
+    players/necromancer.h \
+    players/arbiter.h
 
 FORMS    +=
 

@@ -13,6 +13,7 @@ public:
     void normalAttack();
     void headOn(int);
     void activate();
+    bool canActivate();
     void changeCardLimit(int);
 };
 

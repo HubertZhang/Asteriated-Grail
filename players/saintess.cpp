@@ -13,7 +13,7 @@ extern CardList cardlist;
 Saintess::Saintess(Server* server,int order,int teamNumber,int character) :
     Player(server,order,teamNumber,character)
 {
-    activation = 1;
+    activation = 0;
     server->textg->character[order]->setText("圣女");
 }
 
@@ -116,7 +116,7 @@ void Saintess::headOn(int chainLength)
 }
 void Saintess::activate()
 {
-    activation = 0;
+    activation = 1;
 
     sendMessageBuffer[0] = Activated;
     sendMessageBuffer[1] = 1;
@@ -131,9 +131,15 @@ void Saintess::activate()
     useEnergy(1,true);
 }
 
+bool Saintess::canActivate()
+{
+    return (!((cardLimit - cardNumber) < 3 && (activation == 1 || energyGem == 0)
+            &&(energyCrystal+energyGem==stonelimit || server->team[teamNumber]->stone==0)));
+}
+
 void Saintess::changeCardLimit(int amount)
 {
-    if (activation != 0)
+    if (activation != 1)
     {
         cardLimit = cardLimit + amount;
 

@@ -15,7 +15,7 @@ extern CardList cardlist;
 Magicsword::Magicsword(Server* server,int order,int teamNumber,int character):
     Player(server,order,teamNumber,character)
 {
-    activation = 1;
+    activation = 0;
     combo = false;
     server->textg->character[order]->setText("魔剑");
 }
@@ -28,7 +28,7 @@ void Magicsword::normalAttack()
     int cardUsed = receiveMessageBuffer[2];
     int damage = 2;
 //----暗影之力------------------
-    if (activation == 0)
+    if (activation == 1)
      damage++;
 //-----------------------------
     foldCard(&cardUsed);
@@ -121,7 +121,7 @@ void Magicsword::headOn(int chainLength)
     int damage = 2;
 
     //----暗影之力------------------
-        if (activation == 0)
+        if (activation == 1)
          damage++;
     //-----------------------------
     foldCard(&cardUsed);
@@ -157,13 +157,19 @@ void Magicsword::headOn(int chainLength)
 void Magicsword::activate()
 {
 
-    activation =0;
+    activation =1;
 
     sendMessageBuffer[0] = Activated;
     sendMessageBuffer[1] = 1;
     BroadCast();
 
     countDamage(1,Magic);
+}
+
+bool Magicsword::canActivate()
+{
+    return !((cardLimit - cardNumber) < 3 && activation == 1 &&
+                (energyCrystal+energyGem==3 || server->team[teamNumber]->stone==0));
 }
 
 void Magicsword::magicAction()
@@ -204,17 +210,16 @@ void Magicsword::magicOne()
 
 void Magicsword::beforeAction()
 {
-    if (activation == 0)
+    if (activation == 1)
     {
-        activation = 1;
+        activation = 0;
 
         sendMessageBuffer[0] = Activated;
         sendMessageBuffer[1] = 0;
         BroadCast();
     }
 
-    if ((cardLimit - cardNumber) < 3 && activation == 0 &&
-            (energyCrystal+energyGem==3 || server->team[teamNumber]->stone==0))
+    if (!canActivate())
     {
         return;
     }

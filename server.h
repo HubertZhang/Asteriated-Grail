@@ -18,8 +18,8 @@
 #include <QObject>
 #define CARD_NUMBER 150
 enum messageType1{ArrangeTeam,ArrangeCharacter,BroadCastCharacter};
-enum character{normal,blademaster,berserker,archer,sealer,assassin,saintess,angle,magister,magicsword,holyspear,
-              elementalist,angel};
+enum character{normal,blademaster,berserker,archer,sealer,assassin,saintess,angel,magister,magicsword,holyspear,
+              elementalist,adventurer,necromancer,arbiter};
 class textGUI;
 class Server : public QObject
 {

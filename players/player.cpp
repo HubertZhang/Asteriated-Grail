@@ -90,7 +90,7 @@ void Player::sendMessage()
         QString s;
         s = "特殊行动阶段,请选择:";
         server->textg->textbrowser->append(s);
-        s = "0:什么也不做, 1:启动, 2:提炼(宝石,水晶), 3:合成(宝石,水晶), 4:购买";
+        s = "0:什么也不做, 1:启动, 2:提炼(宝石,水晶),3:购买, 3:合成(宝石,水晶)";
         server->textg->textbrowser->append(s);
 
         tempMessage.push_back(6);
@@ -246,7 +246,7 @@ void Player::sendMessage()
         i++;
     }
     */
-   //server->networkServer.sendMessage(order,tempMessage);
+   server->networkServer.sendMessage(order,tempMessage);
 }
 void Player::BroadCast()
 {
@@ -510,7 +510,7 @@ void Player::BroadCast()
      break;
     }
 
-    //server->networkServer.sendMessage(-1,tempMessage);
+    server->networkServer.sendMessage(-1,tempMessage);
 
     if (sendMessageBuffer[0] == Show)
     {
@@ -574,7 +574,7 @@ Player::Player(/*QObject *parent = 0,*/ Server* p,int order1,int teamnumber,int 
     stonelimit = 3;
     theShield = 0;
     statusnumber = 0;
-    activation = 0;
+    activation = 1;
     getmessage = false;
     for (int i=0; i<20; i++)
     {
@@ -699,8 +699,7 @@ void Player::handleStatus()
 }
 void Player::beforeAction()
 {
-    if ((cardLimit - cardNumber) < 3 && activation == 0 &&
-            (energyCrystal+energyGem==3 || server->team[teamNumber]->stone==0))
+    if (!canActivate())
     {
         return;
     }
@@ -931,6 +930,11 @@ void Player::changeCardLimit(int amount)
     sendMessageBuffer[0] = CardLimitChange;
     sendMessageBuffer[1] = amount;
     BroadCast();
+
+    if (cardLimit < cardNumber)
+    {
+         Discards(cardNumber-cardLimit,2);
+    }
 }
 void Player::useEnergy(int number,bool gem)
 {
@@ -973,8 +977,18 @@ void Player::purchase()
     //s = s + "选择购买";
     server->textg->textbrowser->append(s);
     //-----------------------
-    (server->team[teamNumber])->getStone(Gem);
-    (server->team[teamNumber])->getStone(Crystal);
+    int gem = receiveMessageBuffer[1];
+    int crystal = receiveMessageBuffer[2];
+    for (int i=0; i<gem; i++)
+    {
+         (server->team[teamNumber])->getStone(Gem);
+    }
+
+    for (int i=0; i<crystal; i++)
+    {
+        (server->team[teamNumber])->getStone(Crystal);
+    }
+
     getCard(3);
     return;
 }
@@ -1028,6 +1042,11 @@ void Player::fusion()
     getCard(3);
 }
 
+bool Player::canActivate()
+{
+    return (!((cardLimit - cardNumber) < 3 && activation == 1
+            &&(energyCrystal+energyGem==stonelimit || server->team[teamNumber]->stone==0)));
+}
 void Player::magicAction()
 {
     if (receiveMessageBuffer[1] == 0)

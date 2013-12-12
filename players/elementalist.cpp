@@ -35,7 +35,7 @@ void Elementalist::magicAction()
     }
     else if (receiveMessageBuffer[1] == 3)//月光
     {
-        magicThree();
+         magicThree();
     }
 }
 

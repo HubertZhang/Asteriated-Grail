@@ -58,7 +58,7 @@ public:
     //actionType receive(int*);
     void receive();
 //----------行动阶段流程------------------------------
-    void start();
+    virtual void start();
     virtual void handleStatus(); //判定阶段（天使等人物重载）
     virtual void beforeAction();//特殊行动阶段或启动
     virtual void end();
@@ -82,6 +82,7 @@ public:
     virtual void refine();
     virtual void fusion();
 //---------普通攻击或普通法术或人物特殊技能----------------
+    virtual bool canActivate();
     virtual void activate();//启动
     virtual void magicAction();//法术行动
     virtual void normalAttack();//攻击行动
