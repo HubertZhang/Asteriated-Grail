@@ -524,7 +524,7 @@ void Player::BroadCast()
 
     if (sendMessageBuffer[0] == Show)
     {
-        Sleep(1500);
+        //Sleep(1500);
         for (int i=0; i<sendMessageBuffer[1]; i++)
         {
            emit fold(order,sendMessageBuffer[i+2]);
@@ -532,12 +532,12 @@ void Player::BroadCast()
     }
     else if (sendMessageBuffer[0] == AttackHappen)
     {
-        Sleep(1500);
+        //Sleep(1500);
         emit fold(order,sendMessageBuffer[2]);
     }
     else if (sendMessageBuffer[0] == DrawPicture)
     {
-        Sleep(1500);
+        //Sleep(1500);
         for (int i=0; i<sendMessageBuffer[2]; i++)
         {
           emit fold(order,sendMessageBuffer[i+3+sendMessageBuffer[1]]);

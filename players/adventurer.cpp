@@ -209,6 +209,17 @@ void Adventurer::attackOne()
 
     foldCard(receiveMessageBuffer+4,usenumber);
 
+    if (energyCrystal + energyGem < 3)
+    {
+       energyCrystal++;
+
+       sendMessageBuffer[0] = EnergyChange;
+       sendMessageBuffer[1] = 0;
+       sendMessageBuffer[2] = 1;
+       BroadCast();//改变人物能量数量
+    }
+
+
     sendMessageBuffer[0] = DrawPicture;
     sendMessageBuffer[1] = 1;
     sendMessageBuffer[2] = usenumber;
@@ -218,14 +229,6 @@ void Adventurer::attackOne()
         sendMessageBuffer[i+4] = receiveMessageBuffer[4+i];
     }
     BroadCast();
-
-    if (energyCrystal + energyGem < 3)
-    energyCrystal++;
-
-    sendMessageBuffer[0] = EnergyChange;
-    sendMessageBuffer[1] = 0;
-    sendMessageBuffer[2] = 1;
-    BroadCast();//改变人物能量数量
 
     bool canBeAccept;
     if (cardlist.getName(cardUsed) == darkAttack)

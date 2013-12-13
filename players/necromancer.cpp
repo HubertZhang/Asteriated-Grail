@@ -44,6 +44,10 @@ void Necromancer::magicAction()
         sendMessageBuffer[1] = 1;
         sendMessageBuffer[2] = 0;
 
+        sendMessage();
+
+        receive();
+
         if (receiveMessageBuffer[0])
         {
         server->textg->textbrowser->append("你发动了不朽");
