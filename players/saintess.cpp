@@ -50,7 +50,6 @@ void Saintess::normalAttack()
         server->players[target]->increaseCure(1);
     }
 
-    emit attacked(order, attackTarget, damage);
     if(server->players[attackTarget]->beAttacked(order,cardUsed,1,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist())//If there is a shield...
@@ -59,10 +58,12 @@ void Saintess::normalAttack()
         }
         else
         {
+           emit attacked(order, attackTarget, damage);
            (server->team[teamNumber])->getStone(Gem);
            server->players[attackTarget]->countDamage(damage,Attack);
         }
     }
+    emit finishaction(order, Attack);
 }
 void Saintess::headOn(int chainLength)
 {
@@ -99,7 +100,6 @@ void Saintess::headOn(int chainLength)
     }
 
     emit miss(order);
-    emit attacked(order, attackTarget, damage);
 
     if(server->players[attackTarget]->beAttacked(order,cardUsed,chainLength,canBeAccept))
     {
@@ -109,6 +109,7 @@ void Saintess::headOn(int chainLength)
         }
         else
         {
+          emit attacked(order, attackTarget, damage);
           (server->team[teamNumber])->getStone(Crystal);
           server->players[attackTarget]->countDamage(damage,Attack);
         }
@@ -161,11 +162,13 @@ void Saintess::magicAction()
     {
         server->textg->textbrowser->append("你发动治疗术");
         magicOne();
+        emit finishaction(order, Magic);
     }
     else if (receiveMessageBuffer[1] == 3)
     {
         server->textg->textbrowser->append("你发动了治愈之光");
         magicTwo();
+        emit finishaction(order, Magic);
     }
     else if (receiveMessageBuffer[1] == 4)
     {
@@ -279,6 +282,8 @@ void Saintess::magicThree()//圣疗
     {
         server->players[receiveMessageBuffer[3+2*i]]->increaseCure(receiveMessageBuffer[4+2*i]);
     }
+
+    emit finishaction(order, Magic);
 
     sendMessageBuffer[0] = AdditionalAction;
     sendMessageBuffer[1] = 2;

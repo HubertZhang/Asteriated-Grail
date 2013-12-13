@@ -65,7 +65,6 @@ void Magicsword::normalAttack()
     sendMessageBuffer[2] = cardUsed;
     BroadCast();
 
-    emit attacked(order, attackTarget, damage);
     if(server->players[attackTarget]->beAttacked(order,cardUsed,1,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist())
@@ -74,6 +73,7 @@ void Magicsword::normalAttack()
         }
         else
         {
+            emit attacked(order, attackTarget, damage);
             if (skill == 3)
             {
                 getCard(cardLimit - cardNumber);
@@ -82,6 +82,8 @@ void Magicsword::normalAttack()
            server->players[attackTarget]->countDamage(damage,Attack);
         }
     }
+
+    emit finishaction(order, Attack);
 
     if (!combo)
     {
@@ -138,7 +140,6 @@ void Magicsword::headOn(int chainLength)
     BroadCast();
 
     emit miss(order);
-    emit attacked(order, attackTarget, damage);
 
     if(server->players[attackTarget]->beAttacked(order,cardUsed,chainLength,canBeAccept))
     {
@@ -148,6 +149,7 @@ void Magicsword::headOn(int chainLength)
         }
         else
         {
+          emit attacked(order, attackTarget, damage);
           (server->team[teamNumber])->getStone(Crystal);
           server->players[attackTarget]->countDamage(damage,Attack);
         }
@@ -182,6 +184,7 @@ void Magicsword::magicAction()
     {
          server->textg->textbrowser->append("你发动了暗影流星");
          magicOne();
+         emit finishaction(order, Magic);
     }
 
 }

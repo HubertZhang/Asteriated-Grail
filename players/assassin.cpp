@@ -106,8 +106,6 @@ void Assassin::normalAttack()
     sendMessageBuffer[2] = cardUsed;
     BroadCast();//展示攻击对象，攻击牌
 
-    emit attacked(order, attackTarget, damage);
-
     if(server->players[attackTarget]->beAttacked(order,cardUsed,1,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist())//If there is a shield...
@@ -116,10 +114,13 @@ void Assassin::normalAttack()
         }
         else
         {
+            emit attacked(order, attackTarget, damage);
            (server->team[teamNumber])->getStone(Gem);
            server->players[attackTarget]->countDamage(damage,Attack);
         }
     }
+
+    emit finishaction(order, Attack);
 }
 void Assassin::activate()
 {

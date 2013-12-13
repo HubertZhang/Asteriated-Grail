@@ -73,6 +73,9 @@ void Angel::magicAction()
         magicThree();//天使之墙
     }
     }
+
+
+    emit finishaction(order, Magic);
 }
 
 void Angel::magicOne()
@@ -80,13 +83,13 @@ void Angel::magicOne()
     int magicTarget = receiveMessageBuffer[2];
     int cardUsed = receiveMessageBuffer[3];
     int statusRemoved = receiveMessageBuffer[4];
-    foldCard(&cardUsed,1,true);
+    foldCard(&cardUsed,1);
 
-    sendMessageBuffer[0] = DrawPicture;
-    sendMessageBuffer[1] = 1;
-    sendMessageBuffer[3] = magicTarget;
-    sendMessageBuffer[2] = 0;
+    sendMessageBuffer[0] = AttackHappen;
+    sendMessageBuffer[1] = magicTarget;
+    sendMessageBuffer[2] = cardUsed;
     BroadCast();
+
     server->players[magicTarget]->destroyStatus(statusRemoved);
     if (server->players[magicTarget]->theShield == statusRemoved)
     {
@@ -97,6 +100,8 @@ void Angel::magicOne()
     sendMessageBuffer[2] = statusRemoved;
     sendMessageBuffer[3] = 0;
     BroadCast();
+
+    addCure();
 }
 
 void Angel::magicTwo()

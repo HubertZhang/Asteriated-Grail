@@ -35,16 +35,19 @@ void Sealer::magicAction()
     {
         server->textg->textbrowser->append("你发动了五行封印");
         magicOne();//五行封印
+        emit finishaction(order, Magic);
     }
     else if (receiveMessageBuffer[1] == 3)
     {
         server->textg->textbrowser->append("你发动了五系束缚");
         magicTwo();//五系束缚
+        emit finishaction(order, Magic);
     }
     else if (receiveMessageBuffer[1] == 4)
     {
         server->textg->textbrowser->append("你发动了封印破碎");
         magicThree();//封印破碎
+        emit finishaction(order, Magic);
     }
 
     sendMessageBuffer[0] = AskRespond;

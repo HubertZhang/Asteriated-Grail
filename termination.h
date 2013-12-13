@@ -13,13 +13,13 @@ public:
 class LostAllMorale : public GameTerminate
 {
 public:
-    LostAllMorale(int team){}
+    LostAllMorale(int team){team = 1;}
 };
 
 class GrailFinished : public GameTerminate
 {
 public:
-    GrailFinished(int team){}
+    GrailFinished(int team){team = 1;}
 };
 
 #endif // TERMINATION_H

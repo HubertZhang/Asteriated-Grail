@@ -66,10 +66,10 @@ void Archer::normalAttack()
     sendMessageBuffer[2] = cardUsed;
     BroadCast();//展示攻击对象，攻击牌
 
-    emit attacked(order, attackTarget, damage);
     if (skill == 3)
     {
         damage = damage -1;
+        emit attacked(order, attackTarget, damage);
         (server->team[teamNumber])->getStone(Gem);
         server->players[attackTarget]->countDamage(damage,Attack);
     }
@@ -108,6 +108,7 @@ void Archer::normalAttack()
         }
         else
         {
+           emit attacked(order, attackTarget, damage);
            (server->team[teamNumber])->getStone(Gem);
            server->players[attackTarget]->countDamage(damage,Attack);
         }
@@ -115,6 +116,8 @@ void Archer::normalAttack()
 
     disconnect(server->players[attackTarget],SIGNAL(miss(int)),this,SLOT(skillone(int)));
     target = -1;
+
+    emit finishaction(order, Attack);
 }
 
 void Archer::magicAction()
@@ -126,7 +129,8 @@ void Archer::magicAction()
     else if (receiveMessageBuffer[1] == 2)
     {
         server->textg->textbrowser->append("你发动了闪光陷阱");
-        magicOne();//闪光陷阱
+        magicOne();//闪光陷阱 
+        emit finishaction(order, Magic);
     }
     else if (receiveMessageBuffer[1] == 4)
     {
@@ -174,6 +178,9 @@ void  Archer::magicTwo()
     {
         Discards(server->players[magicTarget]->cardLimit - server->players[magicTarget]->cardNumber,2);
     }
+
+
+    emit finishaction(order, Magic);
 
     sendMessageBuffer[0] = AdditionalAction;
     sendMessageBuffer[1] = 0;
@@ -273,10 +280,10 @@ void Archer::headOn(int chainLength)
     BroadCast();
 
     emit miss(order);
-    emit attacked(order, attackTarget, damage);
     if(skill == 3)
     {
         damage = damage -1;
+        emit attacked(order, attackTarget, damage);
         (server->team[teamNumber])->getStone(Crystal);
         server->players[attackTarget]->countDamage(damage,Attack);
     }
@@ -288,6 +295,7 @@ void Archer::headOn(int chainLength)
         }
         else
         {
+          emit attacked(order, attackTarget, damage);
           (server->team[teamNumber])->getStone(Crystal);
           server->players[attackTarget]->countDamage(damage,Attack);
         }

@@ -177,7 +177,17 @@ void Player::sendMessage()
         {
           server->textg->textbrowser->append("五系封印!");
           server->textg->textbrowser->append("0:跳过回合,1:摸三张牌");
-        }    
+        }
+        else if (sendMessageBuffer[1] == 4)
+        {
+            server->textg->textbrowser->append("威力赐福");
+            server->textg->textbrowser->append("0:不使用,1:使用");
+        }
+        else if (sendMessageBuffer[1] == 5)
+        {
+            server->textg->textbrowser->append("迅捷赐福");
+            server->textg->textbrowser->append("0:不使用,1:使用");
+        }
         break;
     }
     case FoldCard://Kind 17
@@ -439,7 +449,7 @@ void Player::BroadCast()
         {
         s = s + cardlist.getQName(sendMessageBuffer[i+3+sendMessageBuffer[1]]);
         }
-        server->textg->textbrowser->append(s);
+        //server->textg->textbrowser->append(s);
 
        // for (int i=0; i<sendMessageBuffer[2]; i++)
        // {
@@ -514,7 +524,7 @@ void Player::BroadCast()
 
     if (sendMessageBuffer[0] == Show)
     {
-        //Sleep(1500);
+        Sleep(1500);
         for (int i=0; i<sendMessageBuffer[1]; i++)
         {
            emit fold(order,sendMessageBuffer[i+2]);
@@ -522,12 +532,12 @@ void Player::BroadCast()
     }
     else if (sendMessageBuffer[0] == AttackHappen)
     {
-        //Sleep(1500);
+        Sleep(1500);
         emit fold(order,sendMessageBuffer[2]);
     }
     else if (sendMessageBuffer[0] == DrawPicture)
     {
-        //Sleep(1500);
+        Sleep(1500);
         for (int i=0; i<sendMessageBuffer[2]; i++)
         {
           emit fold(order,sendMessageBuffer[i+3+sendMessageBuffer[1]]);
@@ -619,7 +629,6 @@ void Player::start()
         {
             magicAction();
         }
-
         }
         catch(ActionIllegal)
         {
@@ -1079,7 +1088,6 @@ void Player::normalAttack()
     sendMessageBuffer[2] = cardUsed;
     BroadCast();
 
-    emit attacked(order, attackTarget, damage);
     if(server->players[attackTarget]->beAttacked(order,cardUsed,1,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist())//If there is a shield...
@@ -1088,11 +1096,13 @@ void Player::normalAttack()
         }
         else
         {
+           emit attacked(order, attackTarget, damage);
            (server->team[teamNumber])->getStone(Gem);
            server->players[attackTarget]->countDamage(damage,Attack);
         }
     }
-    //Is there any one have a skill after his attack missed?
+
+    emit finishaction(order, Attack);
 }
 void Player::normalMagic()
 {
@@ -1173,6 +1183,7 @@ void Player::normalMagic()
     default:
         break;
     }
+    emit finishaction(order, Magic);
 }
 void Player::headOn(int chainLength)
 {
@@ -1194,7 +1205,6 @@ void Player::headOn(int chainLength)
     BroadCast();
 
     emit miss(order);
-    emit attacked(order, attackTarget, damage);
 
     if(server->players[attackTarget]->beAttacked(order,cardUsed,chainLength,canBeAccept))
     {
@@ -1204,6 +1214,7 @@ void Player::headOn(int chainLength)
         }
         else
         {
+          emit attacked(order, attackTarget, damage);
           (server->team[teamNumber])->getStone(Crystal);
           server->players[attackTarget]->countDamage(damage,Attack);
         }

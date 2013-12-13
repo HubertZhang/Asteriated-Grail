@@ -110,11 +110,10 @@ void Blademaster::normalAttack()
 
     BroadCast();//展示攻击对象，攻击牌
 
-    emit attacked(order, attackTarget, damage);
-
     if (attackTime == 3)
     {
         server->textg->textbrowser->append("圣剑!!");
+         emit attacked(order, attackTarget, damage);
         (server->team[teamNumber])->getStone(Gem);
         server->players[attackTarget]->countDamage(damage,Attack);
     }
@@ -126,11 +125,15 @@ void Blademaster::normalAttack()
         }
         else
         {
+            emit attacked(order, attackTarget, damage);
             (server->team[teamNumber])->getStone(Gem);
             server->players[attackTarget]->countDamage(damage,Attack);
         }
     }
 //-----------------结束前---------------------------------------------
+
+    emit finishaction(order, Attack);
+
     if (canattack)
     {
         skill = 0;
@@ -250,8 +253,7 @@ void Blademaster::headOn(int chainLength)
     BroadCast();
 
     emit miss(order);
-
-    emit attacked(order, attackTarget, damage);
+\
     if(server->players[attackTarget]->beAttacked(order,cardUsed,chainLength,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist()&& skill != 2)//If there is a shield...
@@ -260,6 +262,7 @@ void Blademaster::headOn(int chainLength)
         }
         else
         {
+          emit attacked(order, attackTarget, damage);
           (server->team[teamNumber])->getStone(Crystal);
           server->players[attackTarget]->countDamage(damage,Attack);
         }

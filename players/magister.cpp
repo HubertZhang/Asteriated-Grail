@@ -22,14 +22,17 @@ void Magister::magicAction()
     else if (receiveMessageBuffer[1] == 1)//魔爆冲击
     {
          magicOne();
+         emit finishaction(order, Magic);
     }
     else if (receiveMessageBuffer[1] == 2)//魔弹掌握
     {
          magicTwo();
+         emit finishaction(order, Magic);
     }
     else if (receiveMessageBuffer[1] == 3)//毁灭风暴
     {
-        magicThree();
+         magicThree();
+         emit finishaction(order, Magic);
     }
 }
 

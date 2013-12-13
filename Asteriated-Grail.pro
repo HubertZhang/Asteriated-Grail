@@ -36,7 +36,8 @@ SOURCES += main.cpp\
     players/adventurer.cpp \
     players/angel.cpp \
     players/necromancer.cpp \
-    players/arbiter.cpp
+    players/arbiter.cpp \
+    players/prayer.cpp
 
 
 HEADERS  += server.h \
@@ -62,7 +63,8 @@ HEADERS  += server.h \
     players/adventurer.h \
     players/angel.h \
     players/necromancer.h \
-    players/arbiter.h
+    players/arbiter.h \
+    players/prayer.h
 
 FORMS    +=
 

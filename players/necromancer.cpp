@@ -25,14 +25,17 @@ void Necromancer::magicAction()
     else if (receiveMessageBuffer[1] == 2)//瘟疫
     {
          magicOne();
+         emit finishaction(order, Magic);
     }
     else if (receiveMessageBuffer[1] == 3)//死亡之触
     {
          magicTwo();
+         emit finishaction(order, Magic);
     }
     else if (receiveMessageBuffer[1] == 4)//墓碑陨落
     {
         magicThree();
+        emit finishaction(order, Magic);
     }
 //------------不朽------------------
     if (message != 2)

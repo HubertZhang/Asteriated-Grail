@@ -36,6 +36,7 @@ void Elementalist::magicAction()
     else if (receiveMessageBuffer[1] == 3)//月光
     {
          magicThree();
+         emit finishaction(order, Magic);
     }
 }
 
@@ -61,6 +62,9 @@ void Elementalist::magicOne()
     BroadCast();
 
     server->players[magicTarget]->countDamage(damage,Magic);
+
+
+    emit finishaction(order, Magic);
 
     sendMessageBuffer[0] = AdditionalAction;
     sendMessageBuffer[1] = 1;
@@ -103,6 +107,8 @@ void Elementalist::magicTwo()
 
         server->players[magicTarget]->countDamage(damage + usenumber -1,Magic);
 
+        emit finishaction(order, Magic);
+
         sendMessageBuffer[0] = AdditionalAction;
         sendMessageBuffer[1] = 1;
         sendMessage();
@@ -120,6 +126,8 @@ void Elementalist::magicTwo()
 
         server->players[magicTarget]->countDamage(damage + usenumber -1,Magic);
 
+        emit finishaction(order, Magic);
+
         sendMessageBuffer[0] = AdditionalAction;
         sendMessageBuffer[1] = 0;
         sendMessage();
@@ -136,6 +144,8 @@ void Elementalist::magicTwo()
         server->textg->textbrowser->append("你发动了火球");
 
         server->players[magicTarget]->countDamage(damage + usenumber,Magic);
+
+        emit finishaction(order, Magic);
     }
     else if (cardnature == thunder)
     {
@@ -143,6 +153,8 @@ void Elementalist::magicTwo()
 
         server->players[magicTarget]->countDamage(damage + usenumber -1,Magic);
         server->team[teamNumber]->getStone(Gem);
+
+        emit finishaction(order, Magic);
     }
     else if (cardnature == water)
     {
@@ -158,6 +170,8 @@ void Elementalist::magicTwo()
 
         int target = receiveMessageBuffer[0];
         server->players[target]->increaseCure(1);
+
+        emit finishaction(order, Magic);
     }
 }
 

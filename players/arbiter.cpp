@@ -123,6 +123,9 @@ void Arbiter::magicOne()
     BroadCast();
 
     server->players[magicTarget]->countDamage(damage,Magic);
+
+
+    emit finishaction(order, Magic);
 }
 
 void Arbiter::start()
@@ -217,6 +220,9 @@ void Arbiter::magicTwo()
     }
 
     foldCard(c,cardNumber);
+
+
+    emit finishaction(order, Magic);
 }
 
 void Arbiter::magicThree()
@@ -227,6 +233,8 @@ void Arbiter::magicThree()
 
     getCard(cardLimit - cardNumber);
     server->team[teamNumber]->getStone(Gem);
+
+    emit finishaction(order, Magic);
 }
 
 

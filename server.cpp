@@ -14,6 +14,7 @@
 #include "adventurer.h"
 #include "necromancer.h"
 #include "arbiter.h"
+#include "prayer.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -170,6 +171,11 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
         players[order] = new Arbiter(this,order,teamnumber,character);
         break;
     }
+    case prayer:
+    {
+        players[order] = new Prayer(this,order,teamnumber,character);
+        break;
+    }
     default:
     {
         players[order] = new Player(this,order,teamnumber,character);
@@ -240,10 +246,10 @@ void Server::init(textGUI *a)
        // system("pause");
 
     //Choose Role
-        int character[21];
-        for (int i=0; i<21; i++)
+        int character[24];
+        for (int i=0; i<24; i++)
         {
-           character[i] = i/3+8;
+           character[i] = i/3+9;
         }
         //for (int i=0; i<3; i++)
         //{
@@ -255,7 +261,7 @@ void Server::init(textGUI *a)
         //character[3] = 8 ;
         //character[4] = 8 ;
         //character[5] = 8 ;
-        random_shuffle(character,character+21);
+        random_shuffle(character,character+24);
 
         for(int i=0; i<PlayerNumber;i++)
         {
@@ -327,12 +333,12 @@ void Server::init(textGUI *a)
 
         int character[6];
 
-        character[0] = 14 ;
-        character[1] = 14 ;
-        character[2] = 14 ;
-        character[3] = 14 ;
-        character[4] = 14 ;
-        character[5] = 14 ;
+        character[0] = 15 ;
+        character[1] = 15 ;
+        character[2] = 15 ;
+        character[3] = 15 ;
+        character[4] = 15 ;
+        character[5] = 15 ;
 
         for (int i=0; i<PlayerNumber; i++)
         {

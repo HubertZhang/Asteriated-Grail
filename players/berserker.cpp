@@ -80,8 +80,6 @@ void Berserker::normalAttack()
     sendMessageBuffer[2] = cardUsed;
     BroadCast();//展示攻击对象，攻击牌
 
-    emit attacked(order, attackTarget, damage);
-
     if (skill == 2)
     {
         (server->team[teamNumber])->getStone(Gem);
@@ -102,6 +100,7 @@ void Berserker::normalAttack()
                 useEnergy(1,true);
             }
         }
+        emit attacked(order, attackTarget, damage);
         server->players[attackTarget]->countDamage(damage,Attack);
     }
 
@@ -113,7 +112,6 @@ void Berserker::normalAttack()
         }
         else
         {
-            (server->team[teamNumber])->getStone(Gem);
             if (skill == 1)
             {
                 damage = damage + 4 - server->players[attackTarget]->cardNumber;
@@ -138,9 +136,12 @@ void Berserker::normalAttack()
 
                 }
             }
+           emit attacked(order, attackTarget, damage);
+           (server->team[teamNumber])->getStone(Gem);
            server->players[attackTarget]->countDamage(damage,Attack);
         }
     }
+    emit finishaction(order, Attack);
 }
 
 void Berserker::headOn(int chainLength)
@@ -163,7 +164,7 @@ void Berserker::headOn(int chainLength)
     BroadCast();
 
     emit miss(order);
-    emit attacked(order, attackTarget, damage);
+
     if(server->players[attackTarget]->beAttacked(order,cardUsed,chainLength,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist())//If there is a shield...
@@ -172,6 +173,7 @@ void Berserker::headOn(int chainLength)
         }
         else
         {
+          emit attacked(order, attackTarget, damage);
           (server->team[teamNumber])->getStone(Crystal);
           server->players[attackTarget]->countDamage(damage,Attack);
         }

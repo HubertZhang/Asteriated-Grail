@@ -72,6 +72,8 @@ void Adventurer::magicOne()
 
     useEnergy(1);
 
+    emit finishaction(order, Magic);
+
     sendMessageBuffer[0] = AdditionalAction;
     sendMessageBuffer[1] = 2;
     sendMessage();
@@ -100,6 +102,8 @@ void Adventurer::magicTwo()
 
     useEnergy(1);
 
+    emit finishaction(order, Magic);
+
     sendMessageBuffer[0] = AdditionalAction;
     sendMessageBuffer[1] = 2;
     sendMessage();
@@ -117,13 +121,13 @@ void Adventurer::magicTwo()
     }
 }
 
-
 void Adventurer::normalAttack()
 {
  //---------欺诈---------------
     if (receiveMessageBuffer[1] == 6)
     {
         attackOne();
+        emit finishaction(order, Attack);
         return;
     }
 //-----------------------------
@@ -142,7 +146,6 @@ void Adventurer::normalAttack()
     sendMessageBuffer[2] = cardUsed;
     BroadCast();
 
-    emit attacked(order, attackTarget, damage);
     if(server->players[attackTarget]->beAttacked(order,cardUsed,1,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist())
@@ -151,10 +154,12 @@ void Adventurer::normalAttack()
         }
         else
         {
+           emit attacked(order, attackTarget, damage);
            (server->team[teamNumber])->getStone(Gem);
            server->players[attackTarget]->countDamage(damage,Attack);
         }
     }
+    emit finishaction(order, Attack);
 }
 
 void Adventurer::attackOne()
@@ -228,7 +233,6 @@ void Adventurer::attackOne()
     else
         canBeAccept = true;
 
-    emit attacked(order, attackTarget, damage);
     if(server->players[attackTarget]->beAttacked(order,cardUsed,1,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist())
@@ -237,6 +241,7 @@ void Adventurer::attackOne()
         }
         else
         {
+           emit attacked(order, attackTarget, damage);
            (server->team[teamNumber])->getStone(Gem);
            server->players[attackTarget]->countDamage(damage,Attack);
         }

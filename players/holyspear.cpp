@@ -58,8 +58,6 @@ void Holyspear::normalAttack()
     sendMessageBuffer[2] = cardUsed;
     BroadCast();//展示攻击对象，攻击牌
 
-    emit attacked(order, attackTarget, damage);
-
     if(server->players[attackTarget]->beAttacked(order,cardUsed,1,canBeAccept))
     {
         if(server->players[attackTarget]->shieldExist())//If there is a shield...
@@ -68,7 +66,6 @@ void Holyspear::normalAttack()
         }
         else
         {
-            (server->team[teamNumber])->getStone(Gem);
 //----------------地枪------------------------------------
             if (cureNumber >= 1)
             {
@@ -108,11 +105,15 @@ void Holyspear::normalAttack()
                 increaseCure(1);
             }
 //------------------------------------------------------------
+             emit attacked(order, attackTarget, damage);
+            (server->team[teamNumber])->getStone(Gem);
             server->players[attackTarget]->countDamage(damage,Attack);
         }
     }
 
     skill = 0;
+
+    emit finishaction(order, Attack);
 }
 
 void Holyspear::magicAction()
@@ -159,6 +160,8 @@ void Holyspear::magicOne()
          server->players[j]->increaseCure(1);
      }
 
+     emit finishaction(order, Magic);
+
      sendMessageBuffer[0] = AdditionalAction;
      sendMessageBuffer[1] = 0;
      sendMessage();
@@ -187,6 +190,8 @@ void Holyspear::magicTwo()
 
      server->players[magicTarget]->decreaseCure(1);
      increaseCure(1);
+
+     emit finishaction(order, Magic);
 
      sendMessageBuffer[0] = AdditionalAction;
      sendMessageBuffer[1] = 0;
@@ -217,6 +222,8 @@ void Holyspear::magicThree()
          increaseCure(2,false);
      else
          increaseCure(5-cureNumber,false);
+
+     emit finishaction(order, Magic);
 
      sendMessageBuffer[0] = AdditionalAction;
      sendMessageBuffer[1] = 0;
@@ -251,7 +258,6 @@ void Holyspear::headOn(int chainLength)
     BroadCast();
 
     emit miss(order);
-    emit attacked(order, attackTarget, damage);
 
     if(server->players[attackTarget]->beAttacked(order,cardUsed,chainLength,canBeAccept))
     {
@@ -261,6 +267,7 @@ void Holyspear::headOn(int chainLength)
         }
         else
         {
+          emit attacked(order, attackTarget, damage);
           (server->team[teamNumber])->getStone(Crystal);
           server->textg->textbrowser->append("你发动了圣击");
           increaseCure(1);

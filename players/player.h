@@ -103,9 +103,10 @@ public:
     void decreasestatus(int,int);//封印师
     void fold(int,int);//封印师
     void beweak(int,int,int);//封印师
-    void attacked(int attacker, int target, int& damage);//暗杀
+    void attacked(int attacker, int target, int& damage);//暗杀,祈祷
     void bepoison(int card);//元素
     void bemissile(int card);//元素
+    void finishaction(int order, int kind);//祈祷
 //测试程序：
     public slots:
     void getMessage();
