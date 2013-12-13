@@ -38,7 +38,7 @@ void Necromancer::magicAction()
         emit finishaction(order, Magic);
     }
 //------------不朽------------------
-    if (message != 2)
+    if (message != 3)
     {
         sendMessageBuffer[0] = AskRespond;
         sendMessageBuffer[1] = 1;

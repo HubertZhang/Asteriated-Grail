@@ -81,6 +81,10 @@ void Prayer::magicAction()
 
         if (temp != 0)
         {
+           sendMessageBuffer[0] = AdditionalAction;
+           sendMessageBuffer[1] = 1;
+           sendMessage();
+
            receive();
            if (receiveMessageBuffer[0] != -1)
            {
