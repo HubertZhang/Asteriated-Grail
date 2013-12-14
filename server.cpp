@@ -14,7 +14,9 @@
 #include "adventurer.h"
 #include "necromancer.h"
 #include "arbiter.h"
+#include "oracle.h"
 #include "prayer.h"
+#include "paladin.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -171,9 +173,19 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
         players[order] = new Arbiter(this,order,teamnumber,character);
         break;
     }
+    case oracle:
+    {
+        players[order] = new Oracle(this,order,teamnumber,character);
+        break;
+    }
     case prayer:
     {
         players[order] = new Prayer(this,order,teamnumber,character);
+        break;
+    }
+    case paladin:
+    {
+        players[order] = new Paladin(this,order,teamnumber,character);
         break;
     }
     default:
@@ -333,12 +345,12 @@ void Server::init(textGUI *a)
 
         int character[6];
 
-        character[0] = 15 ;
-        character[1] = 15 ;
-        character[2] = 15 ;
-        character[3] = 15 ;
-        character[4] = 15 ;
-        character[5] = 15 ;
+        character[0] = 17 ;
+        character[1] = 17 ;
+        character[2] = 17 ;
+        character[3] = 17 ;
+        character[4] = 17 ;
+        character[5] = 17 ;
 
         for (int i=0; i<PlayerNumber; i++)
         {

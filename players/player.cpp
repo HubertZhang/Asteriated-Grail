@@ -1315,6 +1315,7 @@ bool Player::beAttacked(int attacker,int cardUsed,int chainLength,bool canBeAcce
         return false;
     }
     }
+    return true;
 }
 void Player::countDamage(int damage,int kind)
 {

@@ -41,6 +41,15 @@ void Prayer::markChange(int number)
        sendMessageBuffer[2] = 0;
        BroadCast();
     }
+    else if (mark != 3)
+    {
+        sendMessageBuffer[0] = SpecialChange;
+        sendMessageBuffer[1] = 3 - mark;
+        sendMessageBuffer[2] = 0;
+        BroadCast();
+
+        mark = 3;
+    }
 }
 void Prayer::magicAction()
 {
@@ -104,11 +113,26 @@ void Prayer::magicOne()
     server->textg->textbrowser->append("你发动了光辉信仰");
 
     int magicTarget = receiveMessageBuffer[2];
-    int cardUsed[2];
-    cardUsed[0] = receiveMessageBuffer[3];
-    cardUsed[1] = receiveMessageBuffer[4];
 
-    foldCard(cardUsed,2);
+    if (cardNumber >= 1)
+    {
+      int cardUsed[2];
+      cardUsed[0] = receiveMessageBuffer[3];
+      cardUsed[1] = receiveMessageBuffer[4];
+
+      foldCard(cardUsed,2);
+    }
+    else if (cardNumber == 1)
+    {
+        int cardUsed = receiveMessageBuffer[3];
+        foldCard(&cardUsed);
+    }
+
+    sendMessageBuffer[0] = DrawPicture;
+    sendMessageBuffer[1] = 1;
+    sendMessageBuffer[2] = 0;
+    sendMessageBuffer[3] = magicTarget;
+    BroadCast();
 
     markChange(-1);
 
@@ -122,6 +146,12 @@ void Prayer::magicTwo()
 
     int magicTarget = receiveMessageBuffer[2];
     int damage = 2;
+
+    sendMessageBuffer[0] = DrawPicture;
+    sendMessageBuffer[1] = 1;
+    sendMessageBuffer[2] = 0;
+    sendMessageBuffer[3] = magicTarget;
+    BroadCast();
 
     markChange(-1);
 
@@ -251,7 +281,7 @@ void Prayer::skilltwo(int target, int kind)
         server->players[target]->sendMessage();
         server->players[target]->receive();
 
-        if (server->players[target]->receiveMessageBuffer[0] == 1)
+        if (server->players[target]->receiveMessageBuffer[0] == 0)
         {
             server->players[target]->sendMessageBuffer[0] = AdditionalAction;
             server->players[target]->sendMessageBuffer[1] = 0;

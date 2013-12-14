@@ -19,7 +19,7 @@
 #define CARD_NUMBER 150
 enum messageType1{ArrangeTeam,ArrangeCharacter,BroadCastCharacter};
 enum character{normal,blademaster,berserker,archer,sealer,assassin,saintess,angel,magister,magicsword,holyspear,
-              elementalist,adventurer,necromancer,arbiter,aaaaaa,prayer};
+              elementalist,adventurer,necromancer,arbiter,oracle,prayer,paladin};
 class textGUI;
 class Server : public QObject
 {

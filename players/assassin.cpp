@@ -27,19 +27,20 @@ void Assassin::characterConnect()
 void Assassin::takeDamage(int damage,int kind)
 {
     getCard(damage);
-//--------------反噬----------------------
-    if (kind == Attack)
-    {
-        server->textg->textbrowser->append("你使用了反噬");
-        server->players[Attacker]->takeDamage(1,2);
-    }
-//----------------------------------------
-    Attacker = -1;
 
     if(cardNumber > cardLimit)
     {
         Discards(cardNumber-cardLimit,kind);
     }
+
+    //--------------反噬----------------------
+    if (kind == Attack)
+    {
+       server->textg->textbrowser->append("你使用了反噬");
+       server->players[Attacker]->takeDamage(1,2);
+    }
+    //----------------------------------------
+    Attacker = -1;
 
 }
 

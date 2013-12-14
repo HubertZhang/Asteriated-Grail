@@ -26,7 +26,6 @@ class Player : public QObject
 protected:
     Server* server;
     Team* thisTeam;
-    set<int> card;//手牌内容
     int order;//座位编号
     //int energyGem;
     //int energyCrystal;
@@ -38,6 +37,7 @@ protected:
 public:
     //int status[10];//状态栏
     //int statusnumber;//状态数量
+    set<int> card;//手牌内容
     int energyGem;
     int energyCrystal;
     int teamNumber;//队伍编号

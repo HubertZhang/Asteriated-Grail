@@ -180,15 +180,11 @@ void Arbiter::takeDamage(int damage,int kind)
 
     getCard(damage);
 
-   // if (activation == 1)
-   // {
-        trialIncrease(1);
-   // }
-
     if(cardNumber > cardLimit)
     {
         Discards(cardNumber-cardLimit,kind);
     }
+    trialIncrease(1);
 }
 
 void Arbiter::trialIncrease(int number)
