@@ -39,7 +39,10 @@ SOURCES += main.cpp\
     players/arbiter.cpp \
     players/prayer.cpp \
     players/oracle.cpp \
-    players/paladin.cpp
+    players/paladin.cpp \
+    players/charmer.cpp \
+    players/swordking.cpp \
+    players/flighter.cpp
 
 
 HEADERS  += server.h \
@@ -68,7 +71,10 @@ HEADERS  += server.h \
     players/arbiter.h \
     players/prayer.h \
     players/oracle.h \
-    players/paladin.h
+    players/paladin.h \
+    players/charmer.h \
+    players/swordking.h \
+    players/flighter.h
 
 FORMS    +=
 

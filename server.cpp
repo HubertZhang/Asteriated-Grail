@@ -17,6 +17,9 @@
 #include "oracle.h"
 #include "prayer.h"
 #include "paladin.h"
+#include "charmer.h"
+#include "swordking.h"
+#include "flighter.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -188,6 +191,21 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
         players[order] = new Paladin(this,order,teamnumber,character);
         break;
     }
+    case charmer:
+    {
+        players[order] = new Charmer(this,order,teamnumber,character);
+        break;
+    }
+    case swordking:
+    {
+        players[order] = new Swordking(this,order,teamnumber,character);
+        break;
+    }
+    case flighter:
+    {
+        players[order] = new Flighter(this,order,teamnumber,character);
+        break;
+    }
     default:
     {
         players[order] = new Player(this,order,teamnumber,character);
@@ -195,7 +213,7 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
     }
     }
 }
-
+/*
 void Server::init(textGUI *a)
 {
     int sendMessageBuffer[6];
@@ -328,7 +346,7 @@ void Server::init(textGUI *a)
 
         delete []arrangeteam;
 }
-/*
+*/
 void Server::init(textGUI *a)
 {
     textg = a;
@@ -345,12 +363,12 @@ void Server::init(textGUI *a)
 
         int character[6];
 
-        character[0] = 17 ;
-        character[1] = 17 ;
-        character[2] = 17 ;
-        character[3] = 17 ;
-        character[4] = 17 ;
-        character[5] = 17 ;
+        character[0] = 20 ;
+        character[1] = 20 ;
+        character[2] = 20 ;
+        character[3] = 20 ;
+        character[4] = 20 ;
+        character[5] = 20 ;
 
         for (int i=0; i<PlayerNumber; i++)
         {
@@ -364,4 +382,4 @@ void Server::init(textGUI *a)
 
         delete []arrangeteam;
 }
-*/
+

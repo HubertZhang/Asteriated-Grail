@@ -16,6 +16,7 @@ Prayer::Prayer(Server* server,int order,int teamNumber,int character) :
 {
     combo = false;
     activation = 0;
+    mark = 0;
     for (int i=0; i<6; i++)
     {
         damageIncrease[i] = -1;
@@ -32,10 +33,9 @@ bool Prayer::canActivate()
 
 void Prayer::markChange(int number)
 {
-    if (mark + number <= 3)
+    if ( mark + number <= 3)
     {
        mark = mark + number;
-
        sendMessageBuffer[0] = SpecialChange;
        sendMessageBuffer[1] = number;
        sendMessageBuffer[2] = 0;
@@ -114,7 +114,7 @@ void Prayer::magicOne()
 
     int magicTarget = receiveMessageBuffer[2];
 
-    if (cardNumber >= 1)
+    if (cardNumber > 1)
     {
       int cardUsed[2];
       cardUsed[0] = receiveMessageBuffer[3];
@@ -263,7 +263,7 @@ void Prayer::skillone(int attacker, int target, int& damage)
         server->players[attacker]->sendMessage();
         server->players[attacker]->receive();
 
-        if (server->players[attacker]->receiveMessageBuffer[0] == 1)
+        if (server->players[attacker]->receiveMessageBuffer[0] == 0)
         {
             damage = damage + 2;
             server->players[attacker]->destroyStatus(damageIncrease[attacker]);

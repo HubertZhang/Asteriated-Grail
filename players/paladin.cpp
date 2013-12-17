@@ -13,7 +13,7 @@ Paladin::Paladin(Server* server,int order,int teamNumber,int character) :
     Player(server,order,teamNumber,character)
 {
     stonelimit++;
-    server->textg->character[order]->setText("hehe");
+    server->textg->character[order]->setText("xianzhe");
 }
 
 void Paladin::magicAction()

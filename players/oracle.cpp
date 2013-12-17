@@ -222,7 +222,7 @@ void Oracle::magicThree()
     server->textg->textbrowser->append("你发动了神圣领域");
     int magicTarget = receiveMessageBuffer[2];
 
-    if (cardNumber >= 1)
+    if (cardNumber > 1)
     {
       int cardUsed[2];
       cardUsed[0] = receiveMessageBuffer[3];
@@ -255,7 +255,7 @@ void Oracle::magicFour()
     server->textg->textbrowser->append("你发动了神圣领域");
     int magicTarget = receiveMessageBuffer[2];
 
-    if (cardNumber >= 1)
+    if (cardNumber > 1)
     {
       int cardUsed[2];
       cardUsed[0] = receiveMessageBuffer[3];

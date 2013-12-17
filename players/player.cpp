@@ -256,7 +256,7 @@ void Player::sendMessage()
         i++;
     }
     */
-   server->networkServer.sendMessage(order,tempMessage);
+  // server->networkServer.sendMessage(order,tempMessage);
 }
 void Player::BroadCast()
 {
@@ -520,7 +520,7 @@ void Player::BroadCast()
      break;
     }
 
-    server->networkServer.sendMessage(-1,tempMessage);
+   // server->networkServer.sendMessage(-1,tempMessage);
 
     if (sendMessageBuffer[0] == Show)
     {
@@ -543,8 +543,6 @@ void Player::BroadCast()
           emit fold(order,sendMessageBuffer[i+3+sendMessageBuffer[1]]);
         }
     }
-
-
 }
 void Player::receive()
 {

@@ -148,7 +148,7 @@ void Blademaster::normalAttack()
              i++;
              sendMessageBuffer[i+1] = 2;//疾风技
         }
-        if ((energyGem+energyCrystal >= 1) && !shadowOfSword)
+        if (((energyGem+energyCrystal) >= 1) && !shadowOfSword)
         {
             i++;
             sendMessageBuffer[i+1] = 3;//剑影
