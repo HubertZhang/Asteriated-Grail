@@ -63,7 +63,7 @@ void Paladin::magicTwo()
 {
     server->textg->textbrowser->append("你发动了圣洁法典");
     int targetnumber = receiveMessageBuffer[2];
-    int cardnumber = receiveMessageBuffer[3];
+    int cardnumber = receiveMessageBuffer[3+targetnumber];
     int damage =cardnumber - 1;
 
     foldCard(receiveMessageBuffer+targetnumber+4,cardnumber);
@@ -73,15 +73,19 @@ void Paladin::magicTwo()
     sendMessageBuffer[0] = DrawPicture;
     sendMessageBuffer[1] = targetnumber;
     sendMessageBuffer[2] = cardnumber;
-    for (int i=0; i<cardnumber+targetnumber; i++)
+    for (int i=0; i<targetnumber; i++)
     {
         sendMessageBuffer[i+3] = receiveMessageBuffer[i+4];
+    }
+    for (int i=0; i<cardnumber; i++)
+    {
+        sendMessageBuffer[targetnumber+3+i] = receiveMessageBuffer[targetnumber+4];
     }
     BroadCast();
 
     for (int i=0; i<targetnumber; i++)
     {
-        server->players[receiveMessageBuffer[i+4]]->increaseCure(2);
+        server->players[receiveMessageBuffer[i+3]]->increaseCure(2);
     }
 
     countDamage(damage,Magic);
