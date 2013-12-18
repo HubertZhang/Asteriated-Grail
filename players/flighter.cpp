@@ -31,12 +31,17 @@ Flighter::Flighter(Server* server,int order,int teamNumber,int character):
     skill = 0;
     target = -1;
     thetarget = -1;
+    server->textg->character[order]->setText("格斗");
 }
 
 void Flighter::countDamage(int damage, int kind)//念气力场
 {
     if (damage > 4)
+    {
+        server->textg->textbrowser->append("念气力场");
+        server->textg->textbrowser->append("你响应了天枪");
         damage = 4;
+    }
     Player::countDamage(damage,kind);
 }
 
@@ -58,6 +63,7 @@ void Flighter::beforeAction()
         if (activation == 1)
         {
             activation = 0;
+            thetarget = -1;
             sendMessageBuffer[0] = Activated;
             sendMessageBuffer[1] = 0;
             BroadCast();
@@ -70,6 +76,7 @@ void Flighter::beforeAction()
         if (activation == 1)
         {
             activation = 0;
+            thetarget = -1;
             sendMessageBuffer[0] = Activated;
             sendMessageBuffer[1] = 0;
             BroadCast();
@@ -83,6 +90,7 @@ void Flighter::beforeAction()
         if (activation == 1)
         {
             activation = 0;
+            thetarget = -1;
             sendMessageBuffer[0] = Activated;
             sendMessageBuffer[1] = 0;
             BroadCast();
@@ -161,34 +169,45 @@ void Flighter::grudgeChange(int number)
 
 void Flighter::activate()
 {
-    if (sendMessageBuffer[1] == 1)
+    if (receiveMessageBuffer[1] == 0)
     {
 //------------百式幻龙拳------------------------
-        activation = 1;
-        sendMessageBuffer[0] = Activated;
-        sendMessageBuffer[1] = 1;
-        BroadCast();
+        receive();
+        if (receiveMessageBuffer[0] != -1)
+        {
+            server->textg->textbrowser->append("百式幻龙拳!");
+            activation = 1;
+            thetarget = receiveMessageBuffer[1];
+            sendMessageBuffer[0] = Activated;
+            sendMessageBuffer[1] = 1;
+            BroadCast();
 
-        grudgeChange(-3);
+            grudgeChange(-3);
+        }
     }
     else
     {
 //----------斗神天驱---------------------------
-        useEnergy(1);
-
-        if (cardNumber > 3)
+        receive();
+        if (receiveMessageBuffer[0] != -1)
         {
-            int amount = cardNumber - 3;
-            sendMessageBuffer[0] = FoldCard;
-            sendMessageBuffer[1] = amount;
-            sendMessage();
+           useEnergy(1);
 
-            receive();
+           if (cardNumber > 3)
+           {
+               server->textg->textbrowser->append("斗神天驱");
+               //int amount = cardNumber - 3;
+               //sendMessageBuffer[0] = FoldCard;
+               //sendMessageBuffer[1] = amount;
+               //sendMessage();
 
-            foldCard(receiveMessageBuffer,amount);
+               //receive();
+               int amount = receiveMessageBuffer[0];
+               foldCard(receiveMessageBuffer+1,amount);
+            }
+
+            increaseCure(2);
         }
-
-        increaseCure(2);
     }
 }
 
@@ -198,20 +217,17 @@ void Flighter::normalAttack()
     int cardUsed = receiveMessageBuffer[2];
     int damage = 2;
 
-    if (activation == 1 && thetarget == -1)
-    {
-        thetarget = attackTarget;
-    }
-
     if (activation == 1 && thetarget != attackTarget)
     {
         activation = 0;
+        thetarget = -1;
         sendMessageBuffer[0] = Activated;
         sendMessageBuffer[1] = 0;
         BroadCast();
     }
     else if (activation == 1 && thetarget == attackTarget)
-    {
+    {     
+        server->textg->textbrowser->append("百式幻龙拳效果:");
         damage = damage + 2;
     }
 
@@ -249,17 +265,20 @@ void Flighter::normalAttack()
             if (activation == 1)
             {
                 activation = 0;
+                thetarget = -1;
                 sendMessageBuffer[0] = Activated;
                 sendMessageBuffer[1] = 0;
                 BroadCast();
                 damage = damage - 2;
             }
+            server->textg->textbrowser->append("蓄力一击!");
             grudgeChange(1);
             damage++;
             skill = 1;
         }
         else if (receiveMessageBuffer[0] == 2)
         {
+            server->textg->textbrowser->append("苍炎之魂");
             grudgeChange(-1);
             canBeAccept = false;
             skill = 2;
@@ -277,6 +296,7 @@ void Flighter::normalAttack()
 
         if (receiveMessageBuffer[0] == 2)
         {
+            server->textg->textbrowser->append("苍炎之魂");
             grudgeChange(-1);
             canBeAccept = false;
             skill = 2;
@@ -323,6 +343,7 @@ void Flighter::magicAction()
     if (activation == 1)
     {
         activation = 0;
+        thetarget = -1;
         sendMessageBuffer[0] = Activated;
         sendMessageBuffer[1] = 0;
         BroadCast();
@@ -343,6 +364,7 @@ void Flighter::magicAction()
             receive();
             if (receiveMessageBuffer[0] != -1)
             {
+               server->textg->textbrowser->append("念弹");
                grudgeChange(1);
                int magicTarget = receiveMessageBuffer[0];
                int damage = 1;

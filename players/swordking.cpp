@@ -90,11 +90,18 @@ void Swordking::normalAttack()
         canBeAccept = true;
 
 //-----------天使之魂/恶魔之魂-----------------------
-    if (swordsoul >= 1)
+    if (swordsoul >= 1 && energyCrystal+energyGem>=1)
     {
         sendMessageBuffer[0] = AskRespond;
         sendMessageBuffer[1] = 1;
-        sendMessageBuffer[2] = 2;
+        if ((energyCrystal+energyGem)%2 == 1)
+        {
+            sendMessageBuffer[2] = 2;
+        }
+        else
+        {
+            sendMessageBuffer[2] = 3;
+        }
 
         sendMessage();
 

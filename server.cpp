@@ -213,7 +213,7 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
     }
     }
 }
-/*
+
 void Server::init(textGUI *a)
 {
     int sendMessageBuffer[6];
@@ -279,7 +279,7 @@ void Server::init(textGUI *a)
         int character[24];
         for (int i=0; i<24; i++)
         {
-           character[i] = i/3+9;
+           character[i] = i/3+13;
         }
         //for (int i=0; i<3; i++)
         //{
@@ -346,7 +346,7 @@ void Server::init(textGUI *a)
 
         delete []arrangeteam;
 }
-*/
+/*
 void Server::init(textGUI *a)
 {
     textg = a;
@@ -383,3 +383,4 @@ void Server::init(textGUI *a)
         delete []arrangeteam;
 }
 
+*/
