@@ -213,7 +213,7 @@ void Oracle::magicTwo()
 
     if (a > b)
     {
-        server->players[attackTarget]->takeDamage(a-b,2);
+        server->players[attackTarget]->Discards(a-b,2);
     }
 
 }

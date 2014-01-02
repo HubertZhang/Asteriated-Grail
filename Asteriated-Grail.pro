@@ -42,7 +42,11 @@ SOURCES += main.cpp\
     players/paladin.cpp \
     players/charmer.cpp \
     players/swordking.cpp \
-    players/flighter.cpp
+    players/flighter.cpp \
+    players/brave.cpp \
+    players/soulwarlock.cpp \
+    players/psychic.cpp \
+    players/butterflydancer.cpp
 
 
 HEADERS  += server.h \
@@ -74,7 +78,11 @@ HEADERS  += server.h \
     players/paladin.h \
     players/charmer.h \
     players/swordking.h \
-    players/flighter.h
+    players/flighter.h \
+    players/brave.h \
+    players/soulwarlock.h \
+    players/psychic.h \
+    players/butterflydancer.h
 
 FORMS    +=
 

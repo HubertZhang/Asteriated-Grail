@@ -26,6 +26,8 @@ void Assassin::characterConnect()
 
 void Assassin::takeDamage(int damage,int kind)
 {
+    if (damage > 0)
+    {
     getCard(damage);
 
     if(cardNumber > cardLimit)
@@ -41,7 +43,7 @@ void Assassin::takeDamage(int damage,int kind)
     }
     //----------------------------------------
     Attacker = -1;
-
+    }
 }
 
 void Assassin::countDamage(int damage,int kind)
@@ -69,11 +71,11 @@ void Assassin::countDamage(int damage,int kind)
     {
         int realDamage = damage - useCure(damage);
         if (realDamage > 0)
-        takeDamage(realDamage,kind);
+        actualDamage(realDamage,kind);
     }
     else
     {
-        takeDamage(damage,kind);
+        actualDamage(damage,kind);
     }
 }
 
@@ -126,7 +128,7 @@ void Assassin::normalAttack()
 void Assassin::activate()
 {
     activation = 1;
-    changeCardLimit(-1);
+    changeCardLimit1(5);
 
     sendMessageBuffer[0] = Activated;
     sendMessageBuffer[1] = 1;
@@ -147,7 +149,7 @@ void Assassin::beforeAction()
     if (activation == 1)
     {
         activation = 0;
-        changeCardLimit(1);
+        changeCardLimit1(6);
 
         sendMessageBuffer[0] = Activated;
         sendMessageBuffer[1] = 0;

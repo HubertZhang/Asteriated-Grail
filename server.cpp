@@ -20,6 +20,9 @@
 #include "charmer.h"
 #include "swordking.h"
 #include "flighter.h"
+#include "brave.h"
+#include "soulwarlock.h"
+#include "psychic.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -58,6 +61,7 @@ Server::Server(QObject *parent,int Number) :
     gamePile = new CardPile;
     srand(time(0));
     connectionBuilt = false;
+    playerOrder = 0;
     for (int i=0; i<6; i++)
     {
         characterfinish[i] = false;
@@ -79,11 +83,10 @@ void Server::Game()
     {
     while(1)
     {
-        //BroadCast();
         for(int i = 0; i<PlayerNumber; i++)
         {
+            playerOrder = i;
             players[i]->start();
-            //QCoreApplication::processEvents();
         }
         QCoreApplication::processEvents();
         gameround++;
@@ -93,7 +96,6 @@ void Server::Game()
     {
         //...
     }
-    //BroadCast();
 
     for (int i=0; i<PlayerNumber; i++)
     {
@@ -206,6 +208,21 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
         players[order] = new Flighter(this,order,teamnumber,character);
         break;
     }
+    case brave:
+    {
+        players[order] = new Brave(this,order,teamnumber,character);
+        break;
+    }
+    case soulwarlock:
+    {
+        players[order] = new Soulwarlock(this,order,teamnumber,character);
+        break;
+    }
+    case psychic:
+    {
+        players[order] = new Psychic(this,order,teamnumber,character);
+        break;
+    }
     default:
     {
         players[order] = new Player(this,order,teamnumber,character);
@@ -276,10 +293,10 @@ void Server::init(textGUI *a)
        // system("pause");
 
     //Choose Role
-        int character[24];
-        for (int i=0; i<24; i++)
+        int character[23];
+        for (int i=0; i<23; i++)
         {
-           character[i] = i/3+13;
+           character[i] = i+1;
         }
         //for (int i=0; i<3; i++)
         //{
@@ -363,12 +380,12 @@ void Server::init(textGUI *a)
 
         int character[6];
 
-        character[0] = 20 ;
-        character[1] = 20 ;
-        character[2] = 20 ;
-        character[3] = 20 ;
-        character[4] = 20 ;
-        character[5] = 20 ;
+        character[0] = 23 ;
+        character[1] = 23 ;
+        character[2] = 23 ;
+        character[3] = 23 ;
+        character[4] = 23 ;
+        character[5] = 23 ;
 
         for (int i=0; i<PlayerNumber; i++)
         {
@@ -382,5 +399,5 @@ void Server::init(textGUI *a)
 
         delete []arrangeteam;
 }
-
 */
+

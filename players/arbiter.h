@@ -15,7 +15,7 @@ public:
     void magicAction();
     void characterConnect();
     bool canActivate();
-    void changeCardLimit(int amount);
+    void changeCardLimit2(int amount);
     void start();
     void takeDamage(int damage,int kind);
 };

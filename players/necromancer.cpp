@@ -62,11 +62,11 @@ void Necromancer::countDamage(int damage, int kind)
     {
         int realDamage = damage - useCure(damage);
         if (realDamage > 0)
-        takeDamage(realDamage,kind);
+        actualDamage(realDamage,kind);
     }
     else
     {
-        takeDamage(damage,kind);
+        actualDamage(damage,kind);
     }
 }
 void Necromancer::magicOne()

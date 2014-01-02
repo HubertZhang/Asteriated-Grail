@@ -203,7 +203,7 @@ void Sealer::skilltwo(int player,int card)//弃牌与五行封印
         //server->textg->textbrowser->append(s);
         if (cardlist.getSkillOne(*i) == (41+type) || cardlist.getSkillOne(*i) == (41+type))
         {
-            server->players[player]->takeDamage(3,Magic);
+            server->players[player]->countDamage(3,Magic);
             server->players[player]->destroyStatus(*i);
             server->gamePile->putIntoPile(card);
             break;

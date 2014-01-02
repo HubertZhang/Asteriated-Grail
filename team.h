@@ -23,6 +23,9 @@ public:
     void lossMorale(int);
     void getGrail();
     void BroadCast();//改变士气，星石等时广播
+
+    signals:
+    void moraleloss(int,int);//灵魂术士
 };
 
 #endif // TEAM_H

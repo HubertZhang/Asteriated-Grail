@@ -123,11 +123,7 @@ void Saintess::activate()
     sendMessageBuffer[1] = 1;
     BroadCast();
 
-    sendMessageBuffer[0] = CardLimitChange;
-    sendMessageBuffer[1] = 7 - cardLimit;
-    BroadCast();
-
-    cardLimit = 7;
+    changeCardLimit1(7);
 
     useEnergy(1,true);
 }
@@ -138,17 +134,13 @@ bool Saintess::canActivate()
             &&(energyCrystal+energyGem==stonelimit || server->team[teamNumber]->stone==0)));
 }
 
-void Saintess::changeCardLimit(int amount)
+void Saintess::changeCardLimit2(int amount)
 {
-    if (activation != 1)
+    if (activation == 1)
     {
-        cardLimit = cardLimit + amount;
-
-        sendMessageBuffer[0] = CardLimitChange;
-        sendMessageBuffer[1] = amount;
-        BroadCast();
+        return;
     }
-
+    Player::changeCardLimit2(amount);
 }
 
 

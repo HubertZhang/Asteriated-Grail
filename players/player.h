@@ -10,7 +10,7 @@ using std::set;
 
 enum messageType{TurnBegin,BeforeAction,ActionType,AttackHappen,AdditionalAction,DrawPicture,Activated,AttackRespond,
                  WeakRespond,CureRespond,Show,GetCard,FoldCard,EnergyChange,CardChange,CureChange,CardLimitChange,
-                 SpecialChange,StatusDecrease,StatusIncrease,AskRespond,AskRespond1,MissileRespond,SpecialAsk,FoldOneCard,TurnEnd};
+                 SpecialChange,SpecialChange2,StatusDecrease,StatusIncrease,AskRespond,AskRespond1,MissileRespond,SpecialAsk,FoldOneCard,TurnEnd};
 enum actionType{Attack,Magic};
 enum beforeactionType{aaa,Activate,Refine,Purchase,Fusion};
 enum returnType{NoAccept,Accept};
@@ -29,7 +29,6 @@ protected:
     int order;//座位编号
     //int energyGem;
     //int energyCrystal;
-    int stonelimit;//能量上限
     int status[10];//状态栏
     int statusnumber;//状态数量
     int character;//人物
@@ -38,6 +37,7 @@ public:
     //int status[10];//状态栏
     //int statusnumber;//状态数量
     set<int> card;//手牌内容
+    int stonelimit;//能量上限
     int energyGem;
     int energyCrystal;
     int teamNumber;//队伍编号
@@ -75,7 +75,8 @@ public:
     void getCard(int amount);//摸牌
     void increaseCure(int amount,bool limit=true);//增加治疗（是否无视上限）
     void decreaseCure(int amount);//减少治疗
-    virtual void changeCardLimit(int amount);//改变手牌上限
+    void changeCardLimit1(int amount);//改变手牌上限
+    virtual void changeCardLimit2(int amount);
     void useEnergy(int number,bool gem=false);//使用能量（是否使用宝石）
 //---------特殊行动------------------------------------
     virtual void purchase();
@@ -93,24 +94,27 @@ public:
     virtual bool beAttacked(int attacker, int cardUsed, int chainLength, bool canBeAccept);//伤害时间轴第二阶段：判定阶段
     virtual void countDamage(int damage,int kind);//伤害时间轴第三阶段：伤害结算阶段
     virtual int useCure(int damage);//伤害时间轴第四阶段：治疗抵御阶段
-    virtual void takeDamage(int damage,int kind);//伤害时间轴第五+六阶段前部分：实际受到伤害阶段，摸牌
+    void actualDamage(int damage,int kind);  //伤害时间轴第五部分
+    virtual void takeDamage(int damage,int kind);//六阶段前部分：实际受到伤害阶段，摸牌
     virtual void Discards(int amount,int kind);//伤害时间轴第六阶段：承受伤害阶段
-
     virtual void characterConnect(){}
 
     signals:
-    void miss(int);//弓之女神
-    void decreasestatus(int,int);//封印师
+    void miss(int);//弓之女神,剑帝，格斗家，勇者
+    void decreasestatus(int,int);//封印师，祈祷
     void fold(int,int);//封印师
     void beweak(int,int,int);//封印师
     void attacked(int attacker, int target, int& damage);//暗杀,祈祷
     void bepoison(int card);//元素
     void bemissile(int card);//元素
     void finishaction(int order, int kind);//祈祷
+    void bedamage1(int order,int& damage, int kind);//灵魂
+    void bedamage2(int order,int& damage, int kind);//蝶舞
+    void changecardlimit(int);
 //测试程序：
     public slots:
     void getMessage();
-    void BroadCast();
+    virtual void BroadCast();
     void sendMessage();
 };
 #endif // PLAYER_H

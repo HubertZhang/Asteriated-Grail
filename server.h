@@ -19,7 +19,8 @@
 #define CARD_NUMBER 150
 enum messageType1{ArrangeTeam,ArrangeCharacter,BroadCastCharacter};
 enum character{normal,blademaster,berserker,archer,sealer,assassin,saintess,angel,magister,magicsword,holyspear,
-              elementalist,adventurer,necromancer,arbiter,oracle,prayer,paladin,charmer,swordking,flighter};
+              elementalist,adventurer,necromancer,arbiter,oracle,prayer,paladin,charmer,swordking,
+               flighter,brave,soulwarlock,psychic};
 class textGUI;
 class Server : public QObject
 {
@@ -34,6 +35,7 @@ class Server : public QObject
 public:
     bool characterfinish[6];
     int playercharacter[6];
+    int playerOrder;
     Team* team[2];
     Player* players[6];
     CardPile* gamePile;

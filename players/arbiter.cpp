@@ -58,17 +58,13 @@ bool Arbiter::canActivate()
             &&(energyCrystal+energyGem==stonelimit || server->team[teamNumber]->stone==0)));
 }
 
-void Arbiter::changeCardLimit(int amount)
+void Arbiter::changeCardLimit2(int amount)
 {
-    if (activation != 1)
+    if (activation == 1)
     {
-        cardLimit = cardLimit + amount;
-
-        sendMessageBuffer[0] = CardLimitChange;
-        sendMessageBuffer[1] = amount;
-        BroadCast();
+         return;
     }
-
+    Player::changeCardLimit2(amount);
 }
 
 void Arbiter::activate()
@@ -80,12 +76,7 @@ void Arbiter::activate()
         sendMessageBuffer[0] = Activated;
         sendMessageBuffer[1] = 1;
         BroadCast();
-
-        sendMessageBuffer[0] = CardLimitChange;
-        sendMessageBuffer[1] = 5 - cardLimit;
-        BroadCast();
-
-        cardLimit = 5;
+        changeCardLimit1(5);
 
         useEnergy(1,true);
     }
@@ -97,12 +88,7 @@ void Arbiter::activate()
         sendMessageBuffer[1] = 0;
         BroadCast();
 
-        sendMessageBuffer[0] = CardLimitChange;
-        sendMessageBuffer[1] = 6 - cardLimit;
-        BroadCast();
-
-        cardLimit = 6;
-
+        changeCardLimit1(6);
         (server->team[teamNumber])->getStone(Gem);
     }
 }
@@ -177,14 +163,17 @@ void Arbiter::start()
 
 void Arbiter::takeDamage(int damage,int kind)
 {
-
-    getCard(damage);
-
-    if(cardNumber > cardLimit)
+    if (damage > 0)
     {
-        Discards(cardNumber-cardLimit,kind);
+      getCard(damage);
+
+      if(cardNumber > cardLimit)
+      {
+          Discards(cardNumber-cardLimit,kind);
+      }
+
+      trialIncrease(1);
     }
-    trialIncrease(1);
 }
 
 void Arbiter::trialIncrease(int number)

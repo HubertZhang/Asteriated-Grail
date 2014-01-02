@@ -14,7 +14,7 @@ public:
     void headOn(int);
     void activate();
     bool canActivate();
-    void changeCardLimit(int);
+    void changeCardLimit2(int);
 };
 
 #endif // SAINTESS_H

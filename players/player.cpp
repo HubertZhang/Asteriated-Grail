@@ -235,6 +235,15 @@ void Player::sendMessage()
         tempMessage.push_back(21);
         break;
     }
+    case SpecialChange2:
+    {
+        tempMessage.push_back(23);
+        for (int i=0; i<sendMessageBuffer[1]+1; i++)
+        {
+            tempMessage.push_back(sendMessageBuffer[i+1]);
+        }
+        break;
+    }
     case FoldOneCard://Kind 14
     {
         QString s;
@@ -256,7 +265,7 @@ void Player::sendMessage()
         i++;
     }
     */
-   server->networkServer.sendMessage(order,tempMessage);
+    server->networkServer.sendMessage(order,tempMessage);
 }
 void Player::BroadCast()
 {
@@ -503,7 +512,7 @@ void Player::BroadCast()
     case CardLimitChange://Kind 9
     {
         QString s;
-        s.sprintf("玩家%d 手牌上限变化 ",order);
+        s.sprintf("玩家%d 手牌上限变为%d ",order,cardLimit);
         server->textg->textbrowser->append(s);
 
         tempMessage.push_back(9);
@@ -931,7 +940,20 @@ void Player::decreaseCure(int amount)
     sendMessageBuffer[1] = -amount;
     BroadCast();//改变治疗数量
 }
-void Player::changeCardLimit(int amount)
+void Player::changeCardLimit1(int amount)
+{
+    sendMessageBuffer[0] = CardLimitChange;
+    sendMessageBuffer[1] = amount - cardLimit;
+    BroadCast();
+    cardLimit = amount;
+
+    emit changecardlimit(order);
+    if (cardLimit < cardNumber)
+    {
+         Discards(cardNumber-cardLimit,2);
+    }
+}
+void Player::changeCardLimit2(int amount)
 {
     cardLimit = cardLimit + amount;
     sendMessageBuffer[0] = CardLimitChange;
@@ -1321,11 +1343,11 @@ void Player::countDamage(int damage,int kind)
     {
         int realDamage = damage - useCure(damage);
         if (realDamage > 0)
-        takeDamage(realDamage,kind);
+        actualDamage(realDamage,kind);
     }
     else
     {
-        takeDamage(damage,kind);
+        actualDamage(damage,kind);
     }
 }
 int Player::useCure(int damage)
@@ -1345,15 +1367,28 @@ int Player::useCure(int damage)
 
     return returnAmount;
 }
+void Player::actualDamage(int damage,int kind)
+{
+    if (damage > 0)
+    {
+        emit bedamage2(order,damage,kind);
+        emit bedamage1(order,damage,kind);
+        if (damage > 0)
+        {
+            takeDamage(damage,kind);
+        }
+    }
+}
 void Player::takeDamage(int damage,int kind)
 {
-    //BroadCast(TakeDamage,order,order);
-    //server->dealCards(order,damage);
-    getCard(damage);
-
-    if(cardNumber > cardLimit)
+    if (damage > 0)
     {
-        Discards(cardNumber-cardLimit,kind);
+      getCard(damage);
+
+      if(cardNumber > cardLimit)
+      {
+          Discards(cardNumber-cardLimit,kind);
+      }
     }
 }
 void Player::Discards(int amount,int kind)
@@ -1366,5 +1401,5 @@ void Player::Discards(int amount,int kind)
 
     foldCard(receiveMessageBuffer,amount);
 
-    (server->team[teamNumber])->lossMorale(amount);
+   (server->team[teamNumber])->lossMorale(amount);
 }

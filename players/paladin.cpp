@@ -93,6 +93,8 @@ void Paladin::magicTwo()
 
 void Paladin::takeDamage(int damage, int kind)
 {
+    if (damage > 0)
+    {
     getCard(damage);
 
     if(cardNumber > cardLimit)
@@ -159,5 +161,6 @@ void Paladin::takeDamage(int damage, int kind)
                countDamage(damage+1,Magic);
            }
         }
+    }
     }
 }

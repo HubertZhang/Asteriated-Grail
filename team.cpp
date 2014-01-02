@@ -55,7 +55,14 @@ void Team::lossMorale(int lostNumberOfCard)
 {
     morale-=lostNumberOfCard;
     BroadCast();//改变士气数量
-    if(morale<=0) throw LostAllMorale(team);
+    if(morale<=0)
+    {
+        throw LostAllMorale(team);
+    }
+    else if (lostNumberOfCard > 0)
+    {
+        emit moraleloss(team,lostNumberOfCard);
+    }
 }
 
 void Team::getGrail()

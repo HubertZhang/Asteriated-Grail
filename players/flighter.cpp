@@ -39,7 +39,6 @@ void Flighter::countDamage(int damage, int kind)//念气力场
     if (damage > 4)
     {
         server->textg->textbrowser->append("念气力场");
-        server->textg->textbrowser->append("你响应了天枪");
         damage = 4;
     }
     Player::countDamage(damage,kind);
@@ -276,7 +275,7 @@ void Flighter::normalAttack()
             damage++;
             skill = 1;
         }
-        else if (receiveMessageBuffer[0] == 2)
+        else if (receiveMessageBuffer[0] == 3)
         {
             server->textg->textbrowser->append("苍炎之魂");
             grudgeChange(-1);
@@ -294,7 +293,7 @@ void Flighter::normalAttack()
 
         receive();
 
-        if (receiveMessageBuffer[0] == 2)
+        if (receiveMessageBuffer[0] == 3)
         {
             server->textg->textbrowser->append("苍炎之魂");
             grudgeChange(-1);

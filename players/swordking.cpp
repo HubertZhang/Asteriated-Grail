@@ -58,8 +58,8 @@ void Swordking::swordkeeChange(int number)
     else if (swordkee != 5)
     {
         sendMessageBuffer[0] = SpecialChange;
-        sendMessageBuffer[2] = 5-swordkee;
-        sendMessageBuffer[1] = 0;
+        sendMessageBuffer[1] = 5-swordkee;
+        sendMessageBuffer[2] = 0;
         BroadCast();
         swordkee = 5;
     }
@@ -189,7 +189,7 @@ void Swordking::normalAttack()
         sendMessage();
         receive();//是否发动技能
 
-        if (receiveMessageBuffer[0] == 1)
+        if (receiveMessageBuffer[0] == 5)
         {
            sendMessageBuffer[0] = AdditionalAction;
            sendMessageBuffer[1] = 0;
@@ -233,8 +233,7 @@ void Swordking::skillone(int order)
         {
             if (server->team[teamNumber]->morale<15)
             {
-                server->team[teamNumber]->morale++;
-                server->team[teamNumber]->BroadCast();
+                server->team[teamNumber]->lossMorale(-1);
             }
         }
         else if (skill == 2)
