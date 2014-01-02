@@ -209,22 +209,38 @@ void Soulwarlock::normalAttack()
 
     if (yellow + blue >= 1)
     {
-    sendMessageBuffer[0] = AskRespond;
-    sendMessageBuffer[1] = 1;
-    sendMessageBuffer[2] = 0;
+        if (yellow >= 1 && blue >= 1)
+        {
+           sendMessageBuffer[0] = AskRespond;
+           sendMessageBuffer[1] = 2;
+           sendMessageBuffer[2] = 0;
+           sendMessageBuffer[3] = 1;
+        }
+        else if (yellow >= 1 && blue == 0)
+        {
+            sendMessageBuffer[0] = AskRespond;
+            sendMessageBuffer[1] = 1;
+            sendMessageBuffer[2] = 0;
+        }
+        else if (yellow == 0 && blue >= 1)
+        {
+            sendMessageBuffer[0] = AskRespond;
+            sendMessageBuffer[1] = 1;
+            sendMessageBuffer[2] = 1;
+        }
 
     sendMessage();
     receive();
 
     if (receiveMessageBuffer[0] == 2)
     {
-        yellowChange(1);
-        blueChange(-1);
+        yellowChange(-1);
+        blueChange(1);
     }
     else if (receiveMessageBuffer[0] == 3)
     {
-        yellowChange(-1);
-        blueChange(1);
+        yellowChange(1);
+        blueChange(-1);
     }
     }
 
@@ -290,10 +306,9 @@ void Soulwarlock::skilltwo(int target, int& damage, int kind)
     {
         if (thetarget == target || order == target)
         {
-            system("pause");
             sendMessageBuffer[0] = AskRespond;
             sendMessageBuffer[1] = 1;
-            sendMessageBuffer[2] = 1;
+            sendMessageBuffer[2] = 2;
             sendMessageBuffer[3] = damage;
             sendMessage();
             receive();

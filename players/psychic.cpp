@@ -21,6 +21,7 @@ Psychic::Psychic(Server* server,int order,int teamNumber,int character) :
 {
     specialTarget = -1;
     Blood = false;
+    activation = 0;
     server->textg->character[order]->setText("巫女");
 }
 
@@ -78,6 +79,9 @@ void Psychic::BroadCast()
         {
             server->textg->textbrowser->append("转为普通形态:");
             Blood = false;
+            sendMessageBuffer[0] = Activated;
+            sendMessageBuffer[1] = 0;
+            BroadCast();
             if (specialTarget != -1)
             {
                server->players[specialTarget]->changeCardLimit2(-3);
@@ -106,6 +110,9 @@ void Psychic::Discards(int amount, int kind)
             server->textg->textbrowser->append("转为流血形态:");
             increaseCure(1);
             Blood = true;
+            sendMessageBuffer[0] = Activated;
+            sendMessageBuffer[1] = 1;
+            BroadCast();
             if (specialTarget != -1)
             {
             server->players[specialTarget]->changeCardLimit2(3);
@@ -238,16 +245,9 @@ void Psychic::magicThree()
     sendMessageBuffer[2] = cardUsed;
     BroadCast();
 
-    if ((6-server->playerOrder+order)%6 > (6-server->playerOrder+magicTarget)%6)
-    {
-        server->players[magicTarget]->countDamage(damage,Magic);
-        countDamage(damage,Magic);
-    }
-    else
-    {
-        countDamage(damage,Magic);
-        server->players[magicTarget]->countDamage(damage,Magic);
-    }
+    server->players[magicTarget]->countDamage(damage,Magic);
+    countDamage(damage,Magic);
+
 }
 void Psychic::magicFour()
 {

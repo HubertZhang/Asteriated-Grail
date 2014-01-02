@@ -308,7 +308,7 @@ void Server::init(textGUI *a)
         //character[3] = 8 ;
         //character[4] = 8 ;
         //character[5] = 8 ;
-        random_shuffle(character,character+24);
+        random_shuffle(character,character+23);
 
         for(int i=0; i<PlayerNumber;i++)
         {
