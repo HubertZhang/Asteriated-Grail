@@ -96,7 +96,7 @@ void Brave::intellectChange(int number)
 
 void Brave::takeDamage(int damage, int kind)
 {
-    if (damage > 1)
+    if (damage > 0)
     {
     getCard(damage);
 
@@ -239,7 +239,6 @@ void Brave::normalAttack()
                     danderChange(magicnumber);
                     damage = damage + firenumber;
                     countDamage(firenumber,Magic);
-
                     combo++;
                 }
             }

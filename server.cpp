@@ -380,12 +380,12 @@ void Server::init(textGUI *a)
 
         int character[6];
 
-        character[0] = 23 ;
-        character[1] = 23 ;
-        character[2] = 23 ;
-        character[3] = 23 ;
-        character[4] = 23 ;
-        character[5] = 23 ;
+        character[0] = 21 ;
+        character[1] = 21 ;
+        character[2] = 21 ;
+        character[3] = 21 ;
+        character[4] = 21 ;
+        character[5] = 21 ;
 
         for (int i=0; i<PlayerNumber; i++)
         {
