@@ -290,9 +290,9 @@ void Charmer::normalAttack()
                         }
                         else
                         {
-                            int cardUsed = receiveMessageBuffer[1];
-                            int magicTarget1 = receiveMessageBuffer[2];
-                            int magicTarget2 = receiveMessageBuffer[3];
+                            int cardUsed = receiveMessageBuffer[3];
+                            int magicTarget1 = receiveMessageBuffer[1];
+                            int magicTarget2 = receiveMessageBuffer[2];
 
                             magicalnumber--;
                             magicalterm.erase(cardUsed);

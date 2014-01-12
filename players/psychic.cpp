@@ -101,6 +101,8 @@ void Psychic::Discards(int amount, int kind)
 
     foldCard(receiveMessageBuffer,amount);
 
+    emit moraleloss3(teamNumber, amount, kind);
+
     (server->team[teamNumber])->lossMorale(amount);
 
     if (amount > 0 && (kind == Attack || kind == Magic))

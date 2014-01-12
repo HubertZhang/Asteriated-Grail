@@ -16,10 +16,121 @@ Angel::Angel(Server *server, int order, int teamNumber, int character)
     server->textg->character[order]->setText("天使");
 }
 
+void Angel::characterConnect()
+{
+    for (int i=0; i<6; i++)
+    {
+        if (server->players[i]->teamNumber == teamNumber)
+        {
+           connect(server->players[i],SIGNAL(moraleloss3(int,int&,int)),this,SLOT(skillone(int,int&,int)));
+        }
+    }
+}
+
+void Angel::skillone(int team, int& amount, int kind)
+{
+    if (energyCrystal + energyGem >= 1 && kind == Magic)
+    {
+        sendMessageBuffer[0] = AskRespond;
+        sendMessageBuffer[1] = 1;
+        sendMessageBuffer[2] = 1;
+        sendMessageBuffer[3] = amount;
+
+        sendMessage();
+        receive();
+
+        if (sendMessageBuffer[0])
+        {
+            receive();
+            if (receiveMessageBuffer[0] != -1)
+            {
+                amount = amount - receiveMessageBuffer[0];
+                useEnergy(receiveMessageBuffer[0]);
+            }
+        }
+    }
+}
+
+void Angel::start()
+{
+    sendMessageBuffer[0] = TurnBegin;
+    BroadCast(); //回合开始
+
+    if (energyCrystal + energyGem >= 1)
+    {
+        sendMessageBuffer[0] = AskRespond;
+        sendMessageBuffer[1] = 1;
+        sendMessageBuffer[2] = 0;
+
+        sendMessage();
+        receive();
+
+        if (sendMessageBuffer[0])
+        {
+            receive();
+            if (sendMessageBuffer[0] != -1)
+            {
+                int magicTarget = receiveMessageBuffer[0];
+                int statusRemoved = receiveMessageBuffer[1];
+                useEnergy(1);
+
+                sendMessageBuffer[0] = DrawPicture;
+                sendMessageBuffer[1] = 1;
+                sendMessageBuffer[3] = magicTarget;
+                sendMessageBuffer[2] = 0;
+                BroadCast();
+
+                server->players[magicTarget]->destroyStatus(statusRemoved);
+                if (server->players[magicTarget]->theShield == statusRemoved)
+                {
+                    server->players[magicTarget]->theShield = 0;
+                }
+                server->gamePile->putIntoPile(statusRemoved);
+                addCure();
+            }
+        }
+    }
+
+    try{
+    handleStatus();
+    beforeAction();
+
+    int i = 1;
+    while(i--)
+    {
+        try{
+        sendMessageBuffer[0] = ActionType;
+        sendMessage();
+
+        receive();
+        int returnAcction = receiveMessageBuffer[0];
+        if (returnAcction == Attack)
+        {
+            normalAttack();
+        }
+        else if (returnAcction == Magic)
+        {
+            magicAction();
+        }
+        }
+        catch(ActionIllegal)
+        {
+            i++;//Do the While Loop again
+        }
+    }
+    }
+    catch(int)
+    {
+
+    }
+    end();
+}
+
 void Angel::normalMagic()
 {
+    int cardUsed = receiveMessageBuffer[2];
     Player::normalMagic();
-    if(cardlist.getName(receiveMessageBuffer[2])==shield)
+    if(cardlist.getName(cardUsed)==shield)
     {
         addCure();
     }
@@ -27,23 +138,13 @@ void Angel::normalMagic()
 
 void Angel::addCure()
 {
-    sendMessageBuffer[0] = AskRespond;
-    ///////
+    sendMessageBuffer[0] = AskRespond1;
     sendMessage();
-    getmessage = false;
     receive();
-    if(receiveMessageBuffer[0])
-    {
-        server->textg->textbrowser->append("你发动了天使羁绊");
-        QString s;
-        s.sprintf("%d",cureNumber);
-        server->textg->playercure[order]->setText(s);
-        int cureTarget = receiveMessageBuffer[1];
-        sendMessageBuffer[0] = CureChange;
-        sendMessageBuffer[1] = cureTarget;
-        sendMessageBuffer[2] = 1;
-        BroadCast();
-    }
+
+    server->textg->textbrowser->append("你发动了天使羁绊");
+    int target = receiveMessageBuffer[0];
+    server->players[target]->increaseCure(1);
 }
 
 void Angel::magicAction()
@@ -59,23 +160,25 @@ void Angel::magicAction()
     {
         server->textg->textbrowser->append("你发动了风之洁净");
         magicOne();//风之洁净
+        emit finishaction(order, Magic);
         break;
     }
     case 2:
     {
         server->textg->textbrowser->append("你发动了天使祝福");
         magicTwo();//天使祝福
+        emit finishaction(order, Magic);
         break;
     }
     case 3:
     {
         server->textg->textbrowser->append("你发动了天使之墙");
         magicThree();//天使之墙
+        emit finishaction(order, Magic);
+        break;
     }
     }
 
-
-    emit finishaction(order, Magic);
 }
 
 void Angel::magicOne()
@@ -95,12 +198,7 @@ void Angel::magicOne()
     {
         server->players[magicTarget]->theShield = 0;
     }
-    sendMessageBuffer[0] = 5;//statusDecrease
-    sendMessageBuffer[1] = magicTarget;
-    sendMessageBuffer[2] = statusRemoved;
-    sendMessageBuffer[3] = 0;
-    BroadCast();
-
+    server->gamePile->putIntoPile(statusRemoved);
     addCure();
 }
 
@@ -140,7 +238,6 @@ void Angel::magicThree()
     sendMessageBuffer[0] = AttackHappen;
     sendMessageBuffer[1] = magicTarget;
     sendMessageBuffer[2] = cardUsed;
-   // BroadCast(AttackHappen,order,attackTarget,cardUsed);//展示攻击对象，攻击牌
     BroadCast();
 
     server->players[magicTarget]->addStatus(cardUsed);

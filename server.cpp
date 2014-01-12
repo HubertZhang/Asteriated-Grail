@@ -23,6 +23,7 @@
 #include "brave.h"
 #include "soulwarlock.h"
 #include "psychic.h"
+#include "butterflydancer.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -92,9 +93,8 @@ void Server::Game()
         gameround++;
     }
     }
-    catch(...)//GameTerminate a
+    catch(GameTerminate)//GameTerminate
     {
-        //...
     }
 
     for (int i=0; i<PlayerNumber; i++)
@@ -223,6 +223,11 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
         players[order] = new Psychic(this,order,teamnumber,character);
         break;
     }
+    case butterflydancer:
+    {
+        players[order] = new Butterflydancer(this,order,teamnumber,character);
+        break;
+    }
     default:
     {
         players[order] = new Player(this,order,teamnumber,character);
@@ -230,7 +235,7 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
     }
     }
 }
-
+/*
 void Server::init(textGUI *a)
 {
     int sendMessageBuffer[6];
@@ -363,7 +368,7 @@ void Server::init(textGUI *a)
 
         delete []arrangeteam;
 }
-/*
+*/
 void Server::init(textGUI *a)
 {
     textg = a;
@@ -380,12 +385,12 @@ void Server::init(textGUI *a)
 
         int character[6];
 
-        character[0] = 21 ;
-        character[1] = 21 ;
-        character[2] = 21 ;
-        character[3] = 21 ;
-        character[4] = 21 ;
-        character[5] = 21 ;
+        character[0] = 7 ;
+        character[1] = 7 ;
+        character[2] = 7 ;
+        character[3] = 7 ;
+        character[4] = 7 ;
+        character[5] = 7 ;
 
         for (int i=0; i<PlayerNumber; i++)
         {
@@ -399,5 +404,5 @@ void Server::init(textGUI *a)
 
         delete []arrangeteam;
 }
-*/
+
 

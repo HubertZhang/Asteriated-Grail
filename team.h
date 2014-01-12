@@ -26,6 +26,7 @@ public:
 
     signals:
     void moraleloss(int,int);//灵魂术士
+    void moraleloss2(int,int&);//灵魂术士
 };
 
 #endif // TEAM_H

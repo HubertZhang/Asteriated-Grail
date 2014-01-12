@@ -20,7 +20,7 @@
 enum messageType1{ArrangeTeam,ArrangeCharacter,BroadCastCharacter};
 enum character{normal,blademaster,berserker,archer,sealer,assassin,saintess,angel,magister,magicsword,holyspear,
               elementalist,adventurer,necromancer,arbiter,oracle,prayer,paladin,charmer,swordking,
-               flighter,brave,soulwarlock,psychic};
+               flighter,brave,soulwarlock,psychic,butterflydancer};
 class textGUI;
 class Server : public QObject
 {

@@ -162,11 +162,16 @@ void Player::sendMessage()
 
         tempMessage.push_back(15);
         tempMessage.push_back(sendMessageBuffer[1]);
-        for (int i=0; i<sendMessageBuffer[1]; i++)
+        int i;
+        for (i=0; i<sendMessageBuffer[1]; i++)
         {
            tempMessage.push_back(sendMessageBuffer[i+2]);
         }
 
+        if (character == 22 && sendMessageBuffer[2] == 2)
+        {
+            tempMessage.push_back(sendMessageBuffer[i+2]);
+        }
         break;
     }
     case SpecialAsk://Kind 18
@@ -237,7 +242,7 @@ void Player::sendMessage()
     }
     case SpecialChange2:
     {
-        tempMessage.push_back(23);
+        tempMessage.push_back(22);
         for (int i=0; i<sendMessageBuffer[1]+1; i++)
         {
             tempMessage.push_back(sendMessageBuffer[i+1]);
@@ -265,7 +270,7 @@ void Player::sendMessage()
         i++;
     }
     */
-    server->networkServer.sendMessage(order,tempMessage);
+    //server->networkServer.sendMessage(order,tempMessage);
 }
 void Player::BroadCast()
 {
@@ -529,7 +534,7 @@ void Player::BroadCast()
      break;
     }
 
-    server->networkServer.sendMessage(-1,tempMessage);
+    //server->networkServer.sendMessage(-1,tempMessage);
 
     if (sendMessageBuffer[0] == Show)
     {
@@ -1126,7 +1131,6 @@ void Player::normalAttack()
 }
 void Player::normalMagic()
 {
-
     int magicTarget = receiveMessageBuffer[2];
     int cardUsed = receiveMessageBuffer[3];
 
@@ -1372,10 +1376,13 @@ void Player::actualDamage(int damage,int kind)
     if (damage > 0)
     {
         emit bedamage2(order,damage,kind);
+        if (damage > 0)
+        {
         emit bedamage1(order,damage,kind);
         if (damage > 0)
         {
             takeDamage(damage,kind);
+        }
         }
     }
 }
@@ -1401,5 +1408,6 @@ void Player::Discards(int amount,int kind)
 
     foldCard(receiveMessageBuffer,amount);
 
+    emit moraleloss3(teamNumber, amount, kind);
    (server->team[teamNumber])->lossMorale(amount);
 }

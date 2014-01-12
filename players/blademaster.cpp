@@ -84,9 +84,6 @@ void Blademaster::normalAttack()
         sendMessageBuffer[2] = 1;
 
         sendMessage();
-        //测试----------------------------
-        getmessage = false;
-        //--------------------------------
         receive();
         if (receiveMessageBuffer[0])
         {

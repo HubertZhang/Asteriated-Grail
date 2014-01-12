@@ -19,14 +19,28 @@ extern CardList cardlist;
 *【茧】为蝶舞者专有盖牌，上限为8。
 *【蛹】为蝶舞者专有指示物，没有上限。
 */
-/*
+
 Butterflydancer::Butterflydancer(Server* server,int order,int teamNumber,int character) :
     Player(server,order,teamNumber,character)
 {
     cocoonNumber = 0;
     pupa = 0;
+    Morale = false;
+    server->textg->character[order]->setText("蝶舞");
 }
-
+void Butterflydancer::start()
+{
+    Morale = false;
+    Player::start();
+}
+void Butterflydancer::characterConnect()
+{
+    for (int i=0; i<6; i++)
+    {
+         connect(server->players[i],SIGNAL(bedamage2(int,int&,int)),this,SLOT(skillone(int,int&,int)));
+    }
+    connect(server->team[teamNumber],SIGNAL(moraleloss2(int,int&)),this,SLOT(skilltwo(int,int&)));
+}
 void Butterflydancer::cocoonIncrease(int number)
 {
     if ((cocoonNumber + number) <= 8)
@@ -68,19 +82,87 @@ void Butterflydancer::cocoonIncrease(int number)
         cocoonNumber = 8;
     }
 }
-void Butterflydancer::cocoonDecrease(int * idOfCard, int number)
+void Butterflydancer::cocoonDecrease(int * idOfCard, int number, bool cansee)
 {
+    if (cansee)
+    {
+        for (int i=0; i<number; i++)
+        {
+            cocoon.erase(idOfCard[i]);
+            server->gamePile->putIntoPile(idOfCard[i]);
+            cocoonNumber--;
+            sendMessageBuffer[3+i] = idOfCard[i];
+        }
+
+            sendMessageBuffer[0] = SpecialChange;
+            sendMessageBuffer[1] = -number;
+            sendMessageBuffer[2] = 0;
+            BroadCast();
+
+            sendMessageBuffer[0] = DrawPicture;
+            sendMessageBuffer[1] = number;
+            sendMessageBuffer[2] = 0;
+            BroadCast();
+    //--------------凋零--------------------------
+            for (int i=0; i<number; i++)
+            {
+            if (cardlist.getType(idOfCard[i]) == magic)
+            {
+                sendMessageBuffer[0] = AskRespond;
+                sendMessageBuffer[1] = 1;
+                sendMessageBuffer[2] = 2;
+                sendMessage();
+
+                receive();
+                if (receiveMessageBuffer[0])
+                {
+                    Morale = true;
+                    int magicTarget = receiveMessageBuffer[1];
+                    server->players[magicTarget]->countDamage(1,Magic);
+                    countDamage(2,Magic);
+                }
+            }
+            }
+    //--------------------------------------------
+    }
+    else
+    {
     for (int i=0; i<number; i++)
     {
         cocoon.erase(idOfCard[i]);
         server->gamePile->putIntoPile(idOfCard[i]);
-    }
-    cocoonNumber = cocoonNumber - number;
+        cocoonNumber--;
 
-    sendMessageBuffer[0] = SpecialChange;
-    sendMessageBuffer[1] = -number;
-    sendMessageBuffer[2] = 0;
-    BroadCast();//改变手牌数量
+        sendMessageBuffer[0] = SpecialChange;
+        sendMessageBuffer[1] = -1;
+        sendMessageBuffer[2] = 0;
+        BroadCast();
+//--------------凋零--------------------------
+        if (cardlist.getType(idOfCard[i]) == magic)
+        {
+            sendMessageBuffer[0] = AskRespond;
+            sendMessageBuffer[1] = 1;
+            sendMessageBuffer[2] = 2;
+            sendMessage();
+
+            receive();
+            if (receiveMessageBuffer[0])
+            {
+                sendMessageBuffer[0] = DrawPicture;
+                sendMessageBuffer[1] = 1;
+                sendMessageBuffer[2] = 0;
+                sendMessageBuffer[3] = idOfCard[i];
+                BroadCast();
+
+                Morale = true;
+                int magicTarget = receiveMessageBuffer[1];
+                server->players[magicTarget]->countDamage(1,Magic);
+                countDamage(2,Magic);
+            }
+        }
+//--------------------------------------------
+    }
+    }
 }
 void Butterflydancer::pupaChange(int number)
 {
@@ -121,12 +203,23 @@ void Butterflydancer::takeDamage(int damage, int kind)
 {
     if (damage > 0)
     {
-        if (cocoonNumber >= 1)
+//--------------朝圣-----------------------------------
+        if (cocoonNumber >= 1 && (kind == Magic || kind == Attack))
         {
             sendMessageBuffer[0] = AskRespond;
             sendMessageBuffer[1] = 1;
             sendMessageBuffer[2] = 2;
+            sendMessage();
+
+            receive();
+            if (receiveMessageBuffer[0])
+            {
+                int cardUsed = receiveMessageBuffer[1];
+                cocoonDecrease(&cardUsed,1);
+                damage--;
+            }
         }
+//------------------------------------------------------
       getCard(damage);
 
       if(cardNumber > cardLimit)
@@ -166,7 +259,7 @@ void Butterflydancer::magicOne()
     }
     else if (receiveMessageBuffer[2] == 0)
     {
-        cardUsed = receiveMessageBuffer[3];
+        int cardUsed = receiveMessageBuffer[3];
         foldCard(&cardUsed);
     }
     cocoonIncrease(1);
@@ -179,21 +272,21 @@ void Butterflydancer::magicTwo()
 }
 void Butterflydancer::magicThree()
 {
-    int number = receiveMessageBuffer[3];
-    int kind = receiveMessageBuffer[4+number];
+    int number = receiveMessageBuffer[2];
+    int kind = receiveMessageBuffer[3+number];
     useEnergy(1);
-    foldCard(receiveMessageBuffer+4,number);
+    foldCard(receiveMessageBuffer+3,number);
 
     if (kind == 1)
     {
-        int magicTarget = receiveMessageBuffer[5+number];
+        int magicTarget = receiveMessageBuffer[4+number];
         server->players[magicTarget]->actualDamage(1,Magic);
     }
     else if (kind == 2)
     {
         int card[2];
-        card[0] = receiveMessageBuffer[5+number];
-        card[1] = receiveMessageBuffer[6+number];
+        card[0] = receiveMessageBuffer[4+number];
+        card[1] = receiveMessageBuffer[5+number];
         cocoonDecrease(card,2);
         pupaChange(-1);
     }
@@ -203,4 +296,59 @@ void Butterflydancer::magicThree()
         pupaChange(-1);
     }
 }
-*/
+
+void Butterflydancer::skillone(int target, int& damage, int kind)
+{
+    if (kind == Magic)
+    {
+        if (damage == 1)
+        {
+            sendMessageBuffer[0] = AskRespond;
+            sendMessageBuffer[1] = 1;
+            sendMessageBuffer[2] = 0;
+            sendMessage();
+
+            receive();
+            if (receiveMessageBuffer[0])
+            {
+                int cardUsed = receiveMessageBuffer[0];
+                cocoonDecrease(&cardUsed,1);
+                damage++;
+            }
+        }
+        else if (damage == 2)
+        {
+            sendMessageBuffer[0] = AskRespond;
+            sendMessageBuffer[1] = 1;
+            sendMessageBuffer[2] = 1;
+            sendMessage();
+
+            receive();
+            if (receiveMessageBuffer[0])
+            {
+                int card[2];
+                card[0] = receiveMessageBuffer[1];
+                card[1] = receiveMessageBuffer[2];
+                cocoonDecrease(card,2,true);
+                damage = 0;
+
+                for (int i=0; i<2; i++)
+                {
+                    server->players[target]->countDamage(1,Magic);
+                }
+            }
+        }
+    }
+}
+
+void Butterflydancer::skilltwo(int theteam,int& lossnumber)
+{
+    if (theteam == 1-teamNumber && Morale)
+    {
+        server->textg->textbrowser->append("凋零触发");
+        if ((server->team[1-teamNumber]->morale - lossnumber) <= 0)
+        {
+            lossnumber = server->team[1-teamNumber]->morale - 1;
+        }
+    }
+}

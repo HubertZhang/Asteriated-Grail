@@ -53,11 +53,19 @@ void Team::lossStone(Stone a)
 
 void Team::lossMorale(int lostNumberOfCard)
 {
+    emit moraleloss2(team,lostNumberOfCard);
     morale-=lostNumberOfCard;
-    BroadCast();//改变士气数量
-    if(morale<=0)
+    if (lostNumberOfCard > 0)
     {
-        throw LostAllMorale(team);
+        BroadCast();//改变士气数量
+    }
+    if(morale<=0)
+    { 
+        vector<int> tempMessage;
+        tempMessage.push_back(23);
+        tempMessage.push_back(1-team);
+        s->networkServer.sendMessage(-1,tempMessage);
+        throw GameTerminate(1-team);
     }
     else if (lostNumberOfCard > 0)
     {
@@ -69,7 +77,14 @@ void Team::getGrail()
 {
     grail++;
     BroadCast();//改变星杯数量
-    if(grail == 5) throw GrailFinished(team);
+    if(grail == 5)
+    {
+        vector<int> tempMessage;
+        tempMessage.push_back(23);
+        tempMessage.push_back(team);
+        s->networkServer.sendMessage(-1,tempMessage);
+        throw GameTerminate(team);
+    }
 }
 //---------------测试-----------
 void Team::BroadCast()

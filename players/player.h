@@ -111,6 +111,7 @@ public:
     void bedamage1(int order,int& damage, int kind);//灵魂
     void bedamage2(int order,int& damage, int kind);//蝶舞
     void changecardlimit(int);
+    void moraleloss3(int team, int& lostmorale, int kind);
 //测试程序：
     public slots:
     void getMessage();
