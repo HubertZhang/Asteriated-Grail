@@ -235,7 +235,7 @@ void Server::allocateCharacter(int order,int character,int teamnumber)
     }
     }
 }
-/*
+
 void Server::init(textGUI *a)
 {
     int sendMessageBuffer[6];
@@ -257,20 +257,20 @@ void Server::init(textGUI *a)
     //Arrange Team
         int *arrangeteam = new int[PlayerNumber];
 
-       // for (int i=0; i<PlayerNumber/2; i++)
-           // arrangeteam[i] = 0;
-        //for (int i=0; i<PlayerNumber/2; i++)
-           // arrangeteam[i+PlayerNumber/2] = 1;
-       // random_shuffle(arrangeteam+1,arrangeteam+PlayerNumber);
-        arrangeteam[0] = 0;
-        arrangeteam[1] = 1;
-        arrangeteam[2] = 0;
-        arrangeteam[3] = 1;
-        arrangeteam[4] = 0;
-        arrangeteam[5] = 1;
+       for (int i=0; i<PlayerNumber/2; i++)
+           arrangeteam[i] = 0;
+       for (int i=0; i<PlayerNumber/2; i++)
+           arrangeteam[i+PlayerNumber/2] = 1;
+        random_shuffle(arrangeteam+1,arrangeteam+PlayerNumber);
+        //arrangeteam[0] = 0;
+       // arrangeteam[1] = 1;
+       // arrangeteam[2] = 0;
+       // arrangeteam[3] = 1;
+       // arrangeteam[4] = 0;
+       // arrangeteam[5] = 1;
    connect(&networkServer,SIGNAL(messageRecieved(int, std::vector<int>)),
                   this,SLOT(chooseCharacter(int, std::vector<int>)));
-   //Broadcast Team
+
         int j=0;
 
         for (int i=0;i<PlayerNumber;i++)
@@ -295,25 +295,13 @@ void Server::init(textGUI *a)
         }
         QCoreApplication::processEvents();
 
-       // system("pause");
-
-    //Choose Role
-        int character[23];
-        for (int i=0; i<23; i++)
+        int character[24];
+        for (int i=0; i<24; i++)
         {
            character[i] = i+1;
         }
-        //for (int i=0; i<3; i++)
-        //{
-        //    character[i+3] = 3;
-        //}
-        //character[0] = 8 ;
-        //character[1] = 8 ;
-        //character[2] = 8 ;
-        //character[3] = 8 ;
-        //character[4] = 8 ;
-        //character[5] = 8 ;
-        random_shuffle(character,character+23);
+
+        random_shuffle(character,character+24);
 
         for(int i=0; i<PlayerNumber;i++)
         {
@@ -321,18 +309,13 @@ void Server::init(textGUI *a)
             tempMessage.push_back(1);
             for(int j=0; j<3; j++)
             {
-                tempMessage.push_back(character[3*i]);
-                tempMessage.push_back(character[3*i+1]);
-                tempMessage.push_back(character[3*i+2]);
+                tempMessage.push_back(character[3*i+j]);
             }
             networkServer.sendMessage(i,tempMessage);
-            //sendMessageBuffer[1] = character[3*i];
-            //sendMessageBuffer[2] = character[3*i+1];
-            //sendMessageBuffer[3] = character[3*i+2];
         }
 
         QCoreApplication::processEvents();
-        //system("pause");
+
         while(1)
         {
            QCoreApplication::processEvents();
@@ -368,7 +351,7 @@ void Server::init(textGUI *a)
 
         delete []arrangeteam;
 }
-*/
+/*
 void Server::init(textGUI *a)
 {
     textg = a;
@@ -404,5 +387,5 @@ void Server::init(textGUI *a)
 
         delete []arrangeteam;
 }
-
+*/
 
